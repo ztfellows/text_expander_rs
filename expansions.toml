@@ -1,0 +1,402 @@
+[case_sensitive]
+"Rtx" = "Rituximab"
+"humira" = "adalimumab"
+"enbrel" = "etanercept"
+
+[case_insensitive]
+"mtx" = "methotrexate"
+"ssz" = "sulfasalazine"
+"lef" = "leflunomide"
+"hcq" = "hydroxychloroquine"
+"tcz" = "tocilizumab"
+"cyc" = "cyclophosphamide"
+"aza" = "azathioprine"
+
+"ra" = "rheumatoid arthritis"
+"rhe" = "rheumatology"
+"op" = "osteoporosis"
+"opa" = "osteopenia"
+"scr" = "screening"
+"mon" = "monitoring"
+"wc" = "well-controlled"
+"nwc" = "not well-controlled"
+"adh" = "adherent to current medications"
+"nadh" = "not well adherent to current medications"
+"comp" = "compression"
+"lda" = "low disease activity"
+"mda" = "moderate disease activity"
+"hda" = "high disease activity"
+"sle" = "systemic lupus erythematosus"
+"ssc" = "systemic sclerosis"
+"sp" = "seropositive"
+"sn" = "seronegative"
+"hx" = "history"
+"cho" = "chondrocalcinosis"
+"hemo" = "hemochromatosis"
+"ss" = "Sjogren's syndrome"
+"cryo" = "cryoglobulin"
+"ssten" = "spinal stenosis"
+"oa" = "osteoarthritis"
+"pf" = "patellofemoral"
+"analg" = "analgesia"
+"pares" = "paresthesia"
+"radic" = "radicular"
+"nsg" = "neurosurgery"
+"ortho" = "orthopedics"
+"ank" = "ankylosing spondylitis"
+
+# Common usage text expansion
+# ========================================
+
+
+"allo" = "allopurinol"
+"colc" = "colchicine"
+"febu" = "febuxostat"
+"anak" = "anakinra"
+"tofa" = "tofacitnib"
+"beri" = "baricitinib"
+"upa" = "upadacitinib"
+"aba" = "abatacept"
+"cert" = "certolizumab"
+"rtx" = "rituximab"
+"toci" = "tocilizumab"
+"ixi" = "ixekizumab"
+"gus" = "guselkumab"
+"secu" = "secukinumab"
+"uste" = "ustekinumab"
+"apre" = "apremilast"
+"infl" = "infliximab"
+
+"/pred" = "prednisone risks and benefits were discussed w/ patient including risks of hyperglycemia, weight gain/water retention, loss of bone density, insomnia, avascular necrosis of the hip and other joints steroid myopathy, and infection risk, especially when using doses above 20mg/daily"
+"/vitd" = """
+VITAMIN D AND CALCIUM RECOMMENDATION
+For maintenance purposes, I recommend:
+-Vitamin D2 or D3 1000 IU daily
+-Calcium, at least 1200 mg daily (including what you take in from your diet! Rich sources of calcium, like dairy products, each offer around 100-150mg per serving depending on the food. Too much calcium, i.e. exceeding much more than 2000mg a day, may be harmful!)"""
+
+"/vitdk" = """
+VITAMIN D, K2, AND CALCIUM RECOMMENDATION
+For bone maintenance purposes, I recommend:
+-Vitamin D2 or D3 1000 IU daily
+-Vitamin K2 at 90-100 mcg daily (or 45 mcg twice daily) - K2 is also found in meats, cheeses, and eggs
+-Calcium, at least 1200 mg daily (including what you take in from your diet! Rich sources of calcium, like dairy products, each offer around 100-150mg per serving depending on the food. Too much calcium, i.e. exceeding much more than 2000mg a day, may be harmful!)"""
+
+
+"/mtx" = "methotrexate risks and benefits were reviewed w/ patient including risks of myelosuppression, liver/pulm toxicity, rash, GI discomfort, ulcers, and hair loss."
+"/lef" = "leflunomide risks and benefits were reviewed w/ patient including risks of myelosuppression, liver toxicity, rash, and GI discomfort"
+"/ssz" = "sulfasalazine risks and benefits were reviewed w/ patient including risks of myelosuppression, liver toxicity, rash, and GI discomfort"
+"/tnf" = "TNF inhibitors benefits/risks reviewed with patient including risks of infection, rash, injection site rxn, serum sickness, demyelination, CHF exacerbation, and theoretic risk of malignancy."
+"/hcq" = "HCQ risks/benefits were reviewed w/ patient including GI effects (nausea/diarrhea) and retinal toxicity, and they were counseled re: mandatory eye screening"
+"/allo" = "patient was counseled on benefits, risks, and use of allopurinol including instructions to gradually titrate as directed and to contact immediately if they develop rash and stop taking the drug until instructed otherwise."
+"/jak" = "JAK inhibitor benefits/risks reviewed w/ patient including risks of infection, zoster activation, and possible increased risk of DVT/PE. They were made aware there may be an increased risk of CV events, malignancy, and VTE in those over 50, particularly but not limited to those with preexisting cardiac risks."
+"/ED" = "ED precautions reviewed with patient."
+
+"/apap" = """
+TYLENOL DOSING/USAGE:
+I recommend you add Tylenol up to 3000mg/day in split doses every 4-8 hours (For example, you can take 1000 mg every 8 hours or 650 mg every 4-6 hours). This is safe to be taken on an empty stomach and can be taken WITH antiinflammatories such as ibuprofen, Aleve, naproxen, diclofenac, Celebrex, etc - in fact they work quite well when combined. Be aware some opioid/narcotic prescriptions (like Norco, for instance) also include Tylenol and therefore your total intake per day including those, if applicable, should be less than 3000mg.
+"""
+
+"/ptvitd" = """
+VITAMIN D AND CALCIUM RECOMMENDATION
+Vitamin D and calcium supplementation for all individuals at risk for fracture (including all over 50) is recommended.
+Vitamin D: 1000 IU of vitamin D2 or D3 daily is suggested.
+** Vitamin D is critical for calcium absorption from the gut and may have a role in a healthy immune system.
+** Normal levels are >30 ng/dL for 25-OH Vitamin D, the natural storage form of Vitamin D that is most often tested in a lab. Many physicians, including myself, would recommend a higher goal of 40 ng/dL, in virtually all cases.
+** We DO synthesize our own vitamin D from natural sunlight exposure, however the vast majoirty of us will never get enough sunlight exposure to maintain a normal D level without increasing risk of sun damage and skin cancer. Therefore, supplements are recommended regardless of sun exposure.
+** Dangers of a low vitamin D level include fragile bones (calcium will be leeched from the bones if not absorbed!), fatigue, and bone pain. Autoimmune conditions may be more common in those with very low D levels.
+Calcium: 1200mg of calcium daily is suggested.
+**This includes dietary sources of calcium; when not meeting an adequate calcium intake with diet, taking a calcium supplement is a good recommendation.
+**Low calcium can cause a variety of symptoms including muscle locking ("tetany"), weakness, and cardiac rhythm changes.
+
+"""
+
+"/us" = """
+Ultrasound procedures carried out as above. Precautions discussed for injection to include limitation of activity for rest of day involving that joint, avoid soaking puncture site in water/pool for 48 hours, and to call immediately should they develop symptoms of septic joint including but not limited to dramatic increase in pain, swelling, red color, warmth, fevers, chills, and limited range of motion.
+ Recommendations:
+ 1. Follow-up with regular rheumatologist as directed
+ 2. May return for repeat injection as needed no more frequently than every 3 months per joint.
+"""
+
+"/homept" = "I certify this patient is under my care and I certify they are expected to benefit from and improve in a reasonable and predictable period of time from skilled physical therapy. I find they are homebound and would have an extreme/undue burden traveling due to ***."
+
+"/ex" = "discussed exercise/diet\ndiscussed vaccination recs"
+"/59" = "Diagnostic ultrasound procedure was done prior to therapeutic injection and clearly provided essential information that was used in the decision to proceed with the therapeutic injection."
+
+"/startmtx" = """
+-start MTX 12.5mg weekly, folic acid 1mg daily; methotrexate risks and benefits were reviewed w/ patient including risks of myelosuppression, liver/pulm toxicity, rash, GI discomfort, ulcers, and hair loss.
+ -labs monthly x3mo then q3mo once stable
+"""
+
+"/newctd" = """
+They present for CTD evaluation
+
+Associated symptoms:
+
+Medications/interventions tried:
+
+Workup to date:
+
+Relevant history:
+FH:
+SH:
+"""
+
+"/newia" = """
+They present for IA evaluation
+
+Associated symptoms:
+
+Medications/interventions tried:
+
+Workup to date:
+
+Relevant history:
+FH:
+SH:
+"""
+
+"/newrps" = """
+They present for RPS/pain evaluation
+
+Associated symptoms:
+
+Medications/interventions tried:
+
+Workup to date:
+
+Relevant history:
+FH:
+SH:
+"""
+
+"/newgout" = """
+They present for gout evaluation
+First episode of gout
+Allopurinol tried:
+Febuxostat tried:
+Associated symptoms:
+Workup to date:
+Most recent SUA:
+Most recent Cr:
+Relevant history:
+FH of gout:
+SH:
+"""
+
+"/newvasc" = """
+They present for vasculitis evaluation
+
+Associated symptoms:
+
+Medications/interventions tried:
+
+Workup to date:
+
+Relevant history:
+FH:
+SH:
+"""
+
+"/newo" = """
+Here for osteoporosis evaluation
+
+Fracture history:
+
+Most recent DXA:
+Other DXAs:
+
+Prev op tx:
+
+Cr:
+Dysphagia/esophagitis hx:
+Calcium dietary intake est:
+Vit D supplement:
+Ca supplement:
+Family hx of osteoporosis or hip fx:
+Steroid use:
+Smoking:
+Etoh:
+Caffeine/carbonated drinks:
+
+PMH:
+"""
+
+"/newfms" = """
+They present for FMS evaluation:
+
+Therapeutic trials:
+
+Workup completed:
+
+Associated symptoms:
+IBS:
+Migraines:
+PEM:
+
+Brain fog:
+Fatigue:
+Sleep:
+Mood:
+Past history of trauma/abuse/neglect:
+Exercise/activity level:
+
+Relevant PMH:
+FH:
+SH:
+"""
+
+"/hxneck" = "denies neck pain with rotation, denies pain w/ neck flexion, denies pain w/ extension"
+"/hxlowback" = "denies low back pain at rest, denies low back pain with activity.  Patient denies limitation with daily activites."
+"/hxia" = "denies peripheral joint pain that worsens with rest and improves w/ activity.  Denies sig morning stiffness"
+"/hxspa" = "denies history of psoriasis, IBD, dactylitis, or uveitis."
+"/hxmyo" = "denies skin rash, Raynaud's, arthralgias, arthritis, dyspnea or persistent cough."
+
+"/hxfms" = """
+Brain fog (y); paresthesias (y); fatigue (y)
+IBS (y); migraines (y); PEM (y)
+Sleep: insomnia
+Mood: anxiety/depression
+Past history of trauma/abuse/neglect: denies
+Exercise/activity level: sedentary
+"""
+
+"/ros5ctd" = """
+Const: Denies fevers, chills, weight changes, or night sweats.
+Eyes: Denies ocular dryness, denies painful/red eye
+ENMT: Denies dysphagia, denies significant heartburn, denies oral ulcers, denies nasal ulcers
+CV: Denies pleuritic chest pain.
+Resp: Denies dyspnea on exertion, denies resting dyspnea
+GI: Denies bloating after eating, chronic diarrhea
+GU: Denies frothy urine
+MSK: Denies swollen joints, denies arthralgias
+Skin: Denies rashes, denies nail changes, denies Raynaud's, denies photosensitivity
+Neuro: Denies headaches, denies paresthesias, denies focal weakness
+Immunologic: Denies repeated infections
+Heme: Denies history of DVT/PE, denies miscarriages
+All other systems were reviewed and are negative.
+"""
+
+"/ros4sle" = """
+ENMT: Denies oral ulcers, denies nasal ulcers
+CV: Denies pleuritic chest pain.
+Resp: Denies dyspnea on exertion, denies resting dyspnea
+MSK: Denies swollen joints, denies arthralgias
+Skin: Denies rashes
+"""
+
+"/ros5ia" = """
+Const: Denies fevers, chills, weight changes, or night sweats.
+Eyes: Denies ocular dryness, denies painful/red eye
+EENT: Denies hearing change, odynophagia, recent strep infection
+CV: Denies chest pain, arrhythmia
+Resp: Denies dyspnea, chronic dry cough, O2 use
+MSK: Endorses joint pain; denies joint swelling
+Abd: Denies bloody stool, abdominal pain
+Neuro: Denies paresthesias or focal weakness
+Skin: Denies rashes, denies nail changes, denies Raynaud's, denies photosensitivity
+Heme: Denies DVT/PE
+Other: Denies recent infection
+All other systems reviewed and were negative.
+"""
+
+"/ros4ia" = """
+Const: Denies fevers, chills, weight changes, or night sweats.
+Skin: Denies rashes, denies nail changes
+Resp: Denies chronic dyspnea, persistent cough
+"""
+
+"/ros4rps" = """
+MSK: Denies swollen joints, denies arthralgias
+Neuro: Denies headaches, denies paresthesias, denies focal weakness
+"""
+
+"/ros4gca" = """
+Eyes: Denies vision changes, diplopia, or vision drop out
+HENT: Denies temporal headaches or new headaches of a similar quality
+Const: Denies fevers, denies night sweats, denies weight changes
+"""
+
+"/ros4pmr" = """
+Eyes: Denies vision changes, diplopia, or vision drop out
+HENT: Denies temporal headaches or new headaches of a similar quality
+Const: Denies fevers, denies night sweats, denies weight changes
+"""
+
+"/ros4fms" = """
+Const: Denies fevers, night sweats, weight changes.PSYCH: Denies depression, anxiety
+"""
+
+"/ros5vasc" = """
+Const: Denies fevers, chills, weight changes, or night sweats.
+Eyes: Denies vision change, denies painful/red eye, no new temporal headaches
+ENNT: Denies dysphagia, denies oral ulcers, denies nasal ulcers, no jaw pain/claudication, no scalp tenderness
+CV: Denies pleuritic chest pain, exertional chest pain.
+Resp: Denies hemoptysis, chronic cough
+GI: Denies abdominal pain, bloody/dark stools
+GU: Denies frothy urine or obvious hematuria
+MSK: Denies swollen joints, denies arthralgias
+Skin: Denies rashes, denies Raynaud's, denies photosensitivity
+Neuro: Denies headaches, denies paresthesias, denies focal weakness
+Immunologic: Denies repeated infections, denies recent infection, denies recent new medication use
+Heme: Denies history of DVT/PE
+"""
+
+"/ros4vasc" = """
+Const: Denies fevers, chills, weight changes, or night sweats.
+CV: Denies pleuritic chest pain, exertional chest pain.
+Resp: Denies hemoptysis, chronic cough
+GU: Denies frothy urine or obvious hematuria
+MSK: Denies swollen joints, denies arthralgias
+Skin: Denies rashes
+Neuro: Denies headaches, denies paresthesias, denies focal weakness
+"""
+
+"/rosneg" = "All other systems were reviewed and are negative."
+
+"/pe4" = """
+GEN: Well-appearing individual in no distress
+HEENT: Oropharynx clear w/o ulceration, nares clear of obvious ulcers; MMM
+CV: RRR no MRG
+PULM: Normal inspection, CTAB
+MSK: Bilat upper/lower extremities inspected/palpated and examined for ROM, stability, tone including 28 joint exam were normal except as below:
+-see joint diagram
+SKIN: No rashes evident; no nail pitting noted.
+"""
+
+"/pe28j" = """
+28 joint exam:
+R PIPs 2 s/t 3-4s/t
+R MCPs
+L PIPs
+L MCPs
+CMC
+Wrists
+Elbow
+Shoulder
+Knee
+Ankle
+
+"""
+
+"/peneuro" = "Intact upper extremity strength (shoulder abduct, UE flexion, extension, grip) and lower extremity strength (hip flexion, leg ext, leg flex, dorsi/plantarflexion).  Intact light touch upper/lower extremities."
+"/pesens" = "Intact light touch upper/lower extremities."
+"/pemotor" = "Intact upper extremity strength (shoulder abduct, UE flexion, extension, grip) and lower extremity strength (hip flexion, leg ext, leg flex, dorsi/plantarflexion)."
+
+"/pevasc" = "VASC: No carotid, subclavian bruits. Intact, equal pulses in wrists, DPs."
+
+"/peneck" = " Neck has full ROM w/ rotation laterally; chin can touch chest; can extend neck fully; no tenderness to palpation along spinal processes or paraspinally; patient demonstrates negative Lhermette's."
+
+"/pe5" = """
+CONST: See above for vitals. Well-appearing individual in no distress
+EYES: Normal appearance of lids, conjunctivae; PERRLA + pupils equal, normal iris b/l.
+ENMT: Oropharynx clear w/o ulceration, nares clear of obvious ulcers; MMM
+Lymph: No palpable LNs in cervical chain, supraclavicular areas
+CV: RRR no MRG. No peripheral edema noted.
+PULM: Normal effort, CTAB
+MSK: Bilat upper/lower extremities inspected/palpated and examined for ROM, stability, tone including 76 joint exam were normal except as below:
+-see joint diagram for details
+SKIN: No rashes evident; no nail pitting noted.
+NEURO: Gait normal. Orientation to person/time/place intact.
+"""
+
+"/pefms" = "-diffuse tender points bilateral upper back, mid back, low back; diffusely tender to palpation of upper arms, forearms, thighs, calves"

@@ -1,4 +1,4 @@
-use std::f32::consts::E;
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use std::{collections::HashMap, sync::Mutex};
 use std::sync::{MutexGuard};
@@ -78,6 +78,9 @@ impl ExpansionData {
 }
 
 
+// atomic boolean for listening state
+static GLOBAL_LISTENING: AtomicBool = AtomicBool::new(true);
+
 fn main() {
     // load up toml and create hashmap
     let expansion_table = load_expansion_table().unwrap();
@@ -126,7 +129,7 @@ fn handle_key_press(event: Event, expansion_data: Arc<Mutex<ExpansionData>>, key
 
     println!("Handling key press event: {:?}", event);
     // check global listening flag
-    if !expansion_data.global_listening {
+    if GLOBAL_LISTENING.load(Ordering::SeqCst) == false {
         println!("Global listening disabled, ignoring key press");
         return;
     }
@@ -271,6 +274,7 @@ fn expand_trigger_phrase(length: usize, completion: String)
     
     thread::spawn(move || {
     // expansion_data.global_listening = false; // disable global listening during expansion
+    GLOBAL_LISTENING.store(false, Ordering::SeqCst);
     let completion = completion.replace("\n", "\r\n");
     
     delete_characters(length);
@@ -293,6 +297,8 @@ fn expand_trigger_phrase(length: usize, completion: String)
     sleep(Duration::from_millis(50)); // wait a bit to ensure paste is done
     // restore old clipboard contents
     clipboard.set_text(old_clipboard).unwrap();
+
+    GLOBAL_LISTENING.store(true, Ordering::SeqCst);
 
     });
 

@@ -5,10 +5,7 @@ use std::sync::{MutexGuard};
 use rdev::{listen, Button, Event, EventType, Key};
 use std::thread::{self, sleep};
 use std::time::Duration;
-use enigo::{
-    Direction::{Click, Press, Release},
-    Enigo, Key as EnigoKey, Keyboard, Mouse, Settings,
-};use serde::Deserialize;
+use serde::Deserialize;
 use arboard::Clipboard;
 
 #[derive(Debug, Deserialize)]
@@ -86,7 +83,8 @@ fn main() {
     let expansion_table = load_expansion_table().unwrap();
 
     let expansion_data = Arc::new(Mutex::new(ExpansionData::new(expansion_table)));
-    let expansion_clone = expansion_data.clone();
+
+    // let expansion_clone = expansion_data.clone();
 
     // set key buffer + clone it for the callback closure
     // let key_buffer = Arc::new(Mutex::new(String::new()));
@@ -99,14 +97,12 @@ fn main() {
             EventType::KeyPress(key) => {
                 // key press: send event (to get name), buffer, and key to handler
                 // let mut data = expansion_clone.lock().unwrap();
-                let mut data = expansion_clone.lock().unwrap();
-                handle_key_press(event, &mut data, key);
+                handle_key_press(event, expansion_data.clone(), key);
 
             },
             EventType::ButtonPress(button) => {
                 // mouse button: just send the buffer + button to handler
-                let mut data = expansion_clone.lock().unwrap();
-                handle_mouse_press(&mut data, button);
+                handle_mouse_press(expansion_data.clone(), button);
             },
             _ => { return; }
         }
@@ -122,9 +118,11 @@ fn main() {
 
 }
 
-fn handle_key_press(event: Event, expansion_data: &mut MutexGuard<ExpansionData>, key: Key) {
+fn handle_key_press(event: Event, expansion_data: Arc<Mutex<ExpansionData>>, key: Key) {
 
     //let mut expansion_data = expansion_data.lock().unwrap();
+
+    let mut expansion_data = expansion_data.lock().unwrap();
 
     println!("Handling key press event: {:?}", event);
     // check global listening flag
@@ -132,6 +130,7 @@ fn handle_key_press(event: Event, expansion_data: &mut MutexGuard<ExpansionData>
         println!("Global listening disabled, ignoring key press");
         return;
     }
+
     println!("Key pressed: {:?}", key);
 
     match key {
@@ -140,9 +139,10 @@ fn handle_key_press(event: Event, expansion_data: &mut MutexGuard<ExpansionData>
                 
                 TypingState::Typing => {
                 // check for match; if we don't find one, set primed flag
-                if let Some((trigger_length, completion)) = check_for_completion(expansion_data) {
+                if let Some((trigger_length, completion)) = check_for_completion(&mut expansion_data) {
                     println!("Found match: {}", completion);
-                    expand_trigger_phrase(trigger_length, completion, expansion_data).unwrap();
+                    expand_trigger_phrase(trigger_length, completion).unwrap();
+
                     expansion_data.reset();
                     return;
                 }
@@ -225,11 +225,11 @@ fn handle_key_press(event: Event, expansion_data: &mut MutexGuard<ExpansionData>
     }
 }
 
-fn handle_mouse_press(buffer: &mut MutexGuard<ExpansionData>, button: Button) {
+fn handle_mouse_press(buffer: Arc<Mutex<ExpansionData>>, button: Button) {
     // handle mouse clicks
     match button {
         rdev::Button::Left | rdev::Button::Right | rdev::Button::Middle => {
-            buffer.reset();
+            { buffer.lock().unwrap().reset(); }
             println!("Mouse button pressed, buffer cleared");
         },
         _ => {}
@@ -266,31 +266,35 @@ fn check_for_completion(expansion_data: &mut MutexGuard<ExpansionData>) ->
     None
 }
 
-fn expand_trigger_phrase(length: usize, completion: String, expansion_data: &mut MutexGuard<ExpansionData>) 
+fn expand_trigger_phrase(length: usize, completion: String) 
     -> Result<(), Box<dyn std::error::Error>> {
     
-
-    expansion_data.global_listening = false; // disable global listening during expansion
+    thread::spawn(move || {
+    // expansion_data.global_listening = false; // disable global listening during expansion
     let completion = completion.replace("\n", "\r\n");
     
     delete_characters(length);
 
     println!("deleted {} characters", length);
 
-    let mut clipboard = Clipboard::new()?;
+    let mut clipboard = Clipboard::new().unwrap();
 
     // get old clipboard contents
     let old_clipboard = clipboard.get_text().unwrap_or_default();
-    clipboard.set_text(completion.to_owned())?;
+    clipboard.set_text(completion.to_owned()).unwrap();
+    sleep(Duration::from_millis(50)); // wait a bit to ensure clipboard is set
 
-        rdev::simulate(&EventType::KeyPress(Key::ControlLeft)).unwrap();
-        rdev::simulate(&EventType::KeyPress(Key::KeyV)).unwrap();
-        rdev::simulate(&EventType::KeyRelease(Key::KeyV)).unwrap();
-        rdev::simulate(&EventType::KeyRelease(Key::ControlLeft)).unwrap();
+    rdev::simulate(&EventType::KeyPress(Key::ControlLeft)).unwrap();
+    rdev::simulate(&EventType::KeyPress(Key::KeyV)).unwrap();
+    rdev::simulate(&EventType::KeyRelease(Key::KeyV)).unwrap();
+    rdev::simulate(&EventType::KeyRelease(Key::ControlLeft)).unwrap();
 
     println!("pasted: {}", completion);
+    sleep(Duration::from_millis(50)); // wait a bit to ensure paste is done
     // restore old clipboard contents
-    clipboard.set_text(old_clipboard)?;
+    clipboard.set_text(old_clipboard).unwrap();
+
+    });
 
     Ok(())
 
@@ -311,4 +315,5 @@ fn delete_characters(count: usize) {
         }
         println!("Backspace released");
     }
+    
 }

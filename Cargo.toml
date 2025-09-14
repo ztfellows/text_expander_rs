@@ -8,4 +8,3 @@ rdev = "0.5.3"
 serde = { version = "1.0", features = ["derive"] }
 toml = "0.8"
 arboard = "3"
-enigo = "0.6.1"

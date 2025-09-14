@@ -8,6 +8,26 @@ use std::time::Duration;
 use serde::Deserialize;
 use arboard::Clipboard;
 
+/// A macro that functions like `println!`, but only compiles in debug builds.
+#[macro_export]
+macro_rules! debug_println {
+    ($($arg:tt)*) => {
+        // This version is used in debug builds
+        #[cfg(debug_assertions)]
+        {
+            print!("[DEBUG] "); // Optional: Add a prefix to easily spot debug prints
+            println!($($arg)*);
+        }
+        // This version is used in release builds and expands to nothing
+        #[cfg(not(debug_assertions))]
+        {
+            // The macro call is replaced with an empty expression,
+            // so there is zero performance impact.
+        }
+    };
+}
+
+
 #[derive(Debug, Deserialize)]
 struct ExpansionFile {
     case_sensitive: HashMap<String, String>,
@@ -145,7 +165,7 @@ fn handle_key_press(expansion_data: Arc<Mutex<ExpansionData>>, key: rdev::Key, e
         return;
     }
 
-    // println!("Key pressed: {:?}", key);
+    debug_println!("Key pressed: {:?}", key);
 
     match key {
         Key::Space | Key::Return => {
@@ -154,7 +174,7 @@ fn handle_key_press(expansion_data: Arc<Mutex<ExpansionData>>, key: rdev::Key, e
                 TypingState::Typing => {
                 // check for match; if we don't find one, set primed flag
                 if let Some((trigger_length, completion)) = check_for_completion(&mut expansion_data) {
-                    // println!("Found match: {}", completion);
+                    debug_println!("Found match: {}", completion);
                     thread::spawn( move || {
                         expand_trigger_phrase(trigger_length, completion).unwrap();
                         
@@ -198,7 +218,7 @@ fn handle_key_press(expansion_data: Arc<Mutex<ExpansionData>>, key: rdev::Key, e
             expansion_data.set_typing_state(TypingState::Typing);
             expansion_data.decrement();
 
-            println!("{:?}", &expansion_data.key_buffer);
+            debug_println!("{:?}", &expansion_data.key_buffer);
         },
 
         //cases that adjust cursor position
@@ -236,11 +256,11 @@ fn handle_key_press(expansion_data: Arc<Mutex<ExpansionData>>, key: rdev::Key, e
             }
             expansion_data.set_typing_state(TypingState::Typing);
             if let Some(c) = event.name {
-                // println!("{:?}", c);
-                // println!("Char to push: '{}', len: {}, bytes: {:?}", c, c.len(), c.as_bytes());
+                debug_println!("{:?}", c);
+                debug_println!("Char to push: '{}', len: {}, bytes: {:?}", c, c.len(), c.as_bytes());
 
                 expansion_data.push_to_buffer(&c);
-                println!("{:?}", &expansion_data.key_buffer);
+                debug_println!("{:?}", &expansion_data.key_buffer);
             }
         },
         _ => {}
@@ -252,7 +272,7 @@ fn handle_mouse_press(buffer: Arc<Mutex<ExpansionData>>, button: Button) {
     match button {
         rdev::Button::Left | rdev::Button::Right | rdev::Button::Middle => {
             { buffer.lock().unwrap().reset(); }
-            // println!("Mouse button pressed, buffer cleared");
+            debug_println!("Mouse button pressed, buffer cleared");
         },
         _ => {}
     }
@@ -298,7 +318,7 @@ fn expand_trigger_phrase(length: usize, completion: String)
     
     delete_characters(length);
 
-    // println!("deleted {} characters", length);
+    debug_println!("deleted {} characters", length);
 
     let mut clipboard = Clipboard::new().unwrap();
 
@@ -324,7 +344,7 @@ fn expand_trigger_phrase(length: usize, completion: String)
 }
 
 fn delete_characters(count: usize) {
-    // println!("Deleting {} characters", count);
+    debug_println!("Deleting {} characters", count);
 
     for _ in 0..count + 1 {
 

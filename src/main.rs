@@ -28,6 +28,11 @@ enum TypingState {
     NoMatch,
 }
 
+enum KeyEventMessage {
+    KeyPress(rdev::Key, rdev::Event),
+    MouseClick(rdev::Button),
+}
+
 impl ExpansionData {
     fn new(expansion_table: ExpansionFile) -> Self {
         ExpansionData {
@@ -87,27 +92,33 @@ fn main() {
 
     let expansion_data = Arc::new(Mutex::new(ExpansionData::new(expansion_table)));
 
-    // let expansion_clone = expansion_data.clone();
+    let (sender, receiver) = std::sync::mpsc::channel();
 
-    // set key buffer + clone it for the callback closure
-    // let key_buffer = Arc::new(Mutex::new(String::new()));
-    // let callback_buffer = key_buffer.clone();
-    // if we need to go back to passing the buffer, we can
-
+    thread::spawn(move || {
+        // This thread loops forever, receiving messages.
+        for message in receiver {
+            // All your complex logic now lives safely on this one thread.
+            match message {
+                KeyEventMessage::KeyPress(key, event) => {
+                    handle_key_press(expansion_data.clone(), key, event);
+                },
+                KeyEventMessage::MouseClick(button) => {
+                    handle_mouse_press(expansion_data.clone(), button);
+                },
+            }
+        }
+    });
 
     let callback = move |event: Event| {
-        match event.event_type {
-            EventType::KeyPress(key) => {
-                // key press: send event (to get name), buffer, and key to handler
-                // let mut data = expansion_clone.lock().unwrap();
-                handle_key_press(event, expansion_data.clone(), key);
+        let message = match event.event_type {
+            EventType::KeyPress(key) => Some(KeyEventMessage::KeyPress(key, event)),
+            EventType::ButtonPress(button) => Some(KeyEventMessage::MouseClick(button)),
+            _ => None,
+        };
 
-            },
-            EventType::ButtonPress(button) => {
-                // mouse button: just send the buffer + button to handler
-                handle_mouse_press(expansion_data.clone(), button);
-            },
-            _ => { return; }
+        if let Some(msg) = message {
+            // Send the thread-safe message. This is non-blocking and very fast.
+            sender.send(msg).unwrap();
         }
     };
 
@@ -121,20 +132,20 @@ fn main() {
 
 }
 
-fn handle_key_press(event: Event, expansion_data: Arc<Mutex<ExpansionData>>, key: Key) {
+fn handle_key_press(expansion_data: Arc<Mutex<ExpansionData>>, key: rdev::Key, event: rdev::Event) {
 
     //let mut expansion_data = expansion_data.lock().unwrap();
 
     let mut expansion_data = expansion_data.lock().unwrap();
 
-    println!("Handling key press event: {:?}", event);
+    // println!("Handling key press event: {:?}", key);
     // check global listening flag
     if GLOBAL_LISTENING.load(Ordering::SeqCst) == false {
-        println!("Global listening disabled, ignoring key press");
+        // println!("Global listening disabled, ignoring key press");
         return;
     }
 
-    println!("Key pressed: {:?}", key);
+    // println!("Key pressed: {:?}", key);
 
     match key {
         Key::Space | Key::Return => {
@@ -143,8 +154,11 @@ fn handle_key_press(event: Event, expansion_data: Arc<Mutex<ExpansionData>>, key
                 TypingState::Typing => {
                 // check for match; if we don't find one, set primed flag
                 if let Some((trigger_length, completion)) = check_for_completion(&mut expansion_data) {
-                    println!("Found match: {}", completion);
-                    expand_trigger_phrase(trigger_length, completion).unwrap();
+                    // println!("Found match: {}", completion);
+                    thread::spawn( move || {
+                        expand_trigger_phrase(trigger_length, completion).unwrap();
+                        
+                    });
 
                     expansion_data.reset();
                     return;
@@ -217,9 +231,14 @@ fn handle_key_press(event: Event, expansion_data: Arc<Mutex<ExpansionData>>, key
         Key::Num6 | Key::Num7 | Key::Num8 | Key::Num9 |
         Key::Minus | Key::Equal | Key::LeftBracket | Key::RightBracket |
         Key::Quote | Key::Comma | Key::Dot | Key::Slash => {
+            if matches!(expansion_data.typing_state, TypingState::NoMatch) {
+                expansion_data.reset();
+            }
             expansion_data.set_typing_state(TypingState::Typing);
             if let Some(c) = event.name {
-                println!("{:?}", c);
+                // println!("{:?}", c);
+                // println!("Char to push: '{}', len: {}, bytes: {:?}", c, c.len(), c.as_bytes());
+
                 expansion_data.push_to_buffer(&c);
                 println!("{:?}", &expansion_data.key_buffer);
             }
@@ -233,7 +252,7 @@ fn handle_mouse_press(buffer: Arc<Mutex<ExpansionData>>, button: Button) {
     match button {
         rdev::Button::Left | rdev::Button::Right | rdev::Button::Middle => {
             { buffer.lock().unwrap().reset(); }
-            println!("Mouse button pressed, buffer cleared");
+            // println!("Mouse button pressed, buffer cleared");
         },
         _ => {}
     }
@@ -272,14 +291,14 @@ fn check_for_completion(expansion_data: &mut MutexGuard<ExpansionData>) ->
 fn expand_trigger_phrase(length: usize, completion: String) 
     -> Result<(), Box<dyn std::error::Error>> {
     
-    thread::spawn(move || {
+    // thread::spawn(move || {
     // expansion_data.global_listening = false; // disable global listening during expansion
     GLOBAL_LISTENING.store(false, Ordering::SeqCst);
     let completion = completion.replace("\n", "\r\n");
     
     delete_characters(length);
 
-    println!("deleted {} characters", length);
+    // println!("deleted {} characters", length);
 
     let mut clipboard = Clipboard::new().unwrap();
 
@@ -293,33 +312,33 @@ fn expand_trigger_phrase(length: usize, completion: String)
     rdev::simulate(&EventType::KeyRelease(Key::KeyV)).unwrap();
     rdev::simulate(&EventType::KeyRelease(Key::ControlLeft)).unwrap();
 
-    println!("pasted: {}", completion);
+    // println!("pasted: {}", completion);
     sleep(Duration::from_millis(50)); // wait a bit to ensure paste is done
     // restore old clipboard contents
     clipboard.set_text(old_clipboard).unwrap();
 
     GLOBAL_LISTENING.store(true, Ordering::SeqCst);
 
-    });
-
     Ok(())
 
 }
 
 fn delete_characters(count: usize) {
-    println!("Deleting {} characters", count);
+    // println!("Deleting {} characters", count);
 
-    for _ in 0..count {
+    for _ in 0..count + 1 {
 
-        println!("Simulating backspace");
+        // println!("Simulating backspace");
         if let Err(e) = rdev::simulate(&EventType::KeyPress(Key::Backspace)) {
             println!("Error simulating backspace: {}", e);
         }
-        println!("Backspace pressed");
+        thread::sleep(Duration::from_millis(10)); // slight delay to ensure key press is registered
+        // println!("Backspace pressed");
         if let Err(e) = rdev::simulate(&EventType::KeyRelease(Key::Backspace)) {
             println!("Error simulating backspace release: {}", e);
         }
-        println!("Backspace released");
+        // println!("Backspace released");
+        thread::sleep(Duration::from_millis(10));
     }
     
 }

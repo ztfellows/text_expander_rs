@@ -7,6 +7,8 @@ use std::thread::{self, sleep};
 use std::time::Duration;
 use serde::Deserialize;
 use arboard::Clipboard;
+use chrono::Local;
+
 
 /// A macro that functions like `println!`, but only compiles in debug builds.
 #[macro_export]
@@ -49,7 +51,7 @@ enum TypingState {
 }
 
 enum KeyEventMessage {
-    KeyPress(rdev::Key, rdev::Event),
+    KeyPress(rdev::Key, Option<String>),
     MouseClick(rdev::Button),
 }
 
@@ -119,8 +121,8 @@ fn main() {
         for message in receiver {
             // All your complex logic now lives safely on this one thread.
             match message {
-                KeyEventMessage::KeyPress(key, event) => {
-                    handle_key_press(expansion_data.clone(), key, event);
+                KeyEventMessage::KeyPress(key, event_name) => {
+                    handle_key_press(expansion_data.clone(), key, event_name);
                 },
                 KeyEventMessage::MouseClick(button) => {
                     handle_mouse_press(expansion_data.clone(), button);
@@ -131,7 +133,7 @@ fn main() {
 
     let callback = move |event: Event| {
         let message = match event.event_type {
-            EventType::KeyPress(key) => Some(KeyEventMessage::KeyPress(key, event)),
+            EventType::KeyPress(key) => Some(KeyEventMessage::KeyPress(key, event.name)),
             EventType::ButtonPress(button) => Some(KeyEventMessage::MouseClick(button)),
             _ => None,
         };
@@ -152,18 +154,16 @@ fn main() {
 
 }
 
-fn handle_key_press(expansion_data: Arc<Mutex<ExpansionData>>, key: rdev::Key, event: rdev::Event) {
+fn handle_key_press(expansion_data: Arc<Mutex<ExpansionData>>, key: rdev::Key, event_name: Option<String>) {
 
-    //let mut expansion_data = expansion_data.lock().unwrap();
-
-    let mut expansion_data = expansion_data.lock().unwrap();
-
-    // println!("Handling key press event: {:?}", key);
-    // check global listening flag
+    
     if GLOBAL_LISTENING.load(Ordering::SeqCst) == false {
         // println!("Global listening disabled, ignoring key press");
         return;
     }
+
+    // acquire lock on expansion data
+    let mut expansion_data = expansion_data.lock().unwrap();
 
     debug_println!("Key pressed: {:?}", key);
 
@@ -186,9 +186,70 @@ fn handle_key_press(expansion_data: Arc<Mutex<ExpansionData>>, key: rdev::Key, e
 
                 //check for special cases here, like ff
                 // TODO, build these!
-                if expansion_data.key_buffer == "ff" {}
-                if expansion_data.key_buffer == "nn" {}
-                if expansion_data.key_buffer.starts_with("/days") {}
+                if expansion_data.key_buffer == "ff" {
+                    delete_characters(3);
+                    rdev::simulate(&EventType::KeyPress(Key::ShiftLeft)).unwrap();
+                    rdev::simulate(&EventType::KeyPress(Key::ShiftRight)).unwrap();
+                    rdev::simulate(&EventType::KeyPress(Key::End)).unwrap();
+                    rdev::simulate(&EventType::KeyRelease(Key::End)).unwrap();
+                    rdev::simulate(&EventType::KeyPress(Key::Space)).unwrap();
+                    rdev::simulate(&EventType::KeyRelease(Key::Space)).unwrap();                  
+                    rdev::simulate(&EventType::KeyRelease(Key::ShiftLeft)).unwrap();
+                    rdev::simulate(&EventType::KeyRelease(Key::ShiftRight)).unwrap();
+                }
+
+                if expansion_data.key_buffer == "nn" {
+                    // inputs date and simulates keys to type: "mm/dd/yy:" without leading 0s
+                    let now = chrono::Local::now();
+                    let date_string = now.format("%-m/%-d/%y").to_string();
+                    
+                    GLOBAL_LISTENING.store(false, Ordering::SeqCst);
+
+                    sleep(Duration::from_millis(20));
+                    delete_characters(2);
+                    for c in date_string.chars() {
+                        let key_event = match c {
+                            '0' => Key::Num0,
+                            '1' => Key::Num1,
+                            '2' => Key::Num2,
+                            '3' => Key::Num3,
+                            '4' => Key::Num4,
+                            '5' => Key::Num5,
+                            '6' => Key::Num6,
+                            '7' => Key::Num7,
+                            '8' => Key::Num8,
+                            '9' => Key::Num9,
+                            '/' => Key::Slash,
+                            ' ' => Key::Space,
+                            _ => continue, // Skip unsupported characters
+                        };
+                        rdev::simulate(&EventType::KeyPress(key_event)).unwrap();
+                        rdev::simulate(&EventType::KeyRelease(key_event)).unwrap();
+                        sleep(Duration::from_millis(10)); // slight delay between key presses
+                    }
+                    rdev::simulate(&EventType::KeyPress(Key::ShiftLeft)).unwrap();
+                    rdev::simulate(&EventType::KeyPress(Key::SemiColon)).unwrap();
+                    rdev::simulate(&EventType::KeyRelease(Key::SemiColon)).unwrap();
+                    rdev::simulate(&EventType::KeyRelease(Key::ShiftLeft)).unwrap();
+
+                    rdev::simulate(&EventType::KeyPress(Key::Space)).unwrap();
+                    rdev::simulate(&EventType::KeyRelease(Key::Space)).unwrap();
+                    
+                    GLOBAL_LISTENING.store(true, Ordering::SeqCst);
+                }
+                    
+                if let Some(date_string) = handle_date_expansion(&expansion_data.key_buffer) {
+                    let trigger_length = expansion_data.key_buffer.len();
+                    debug_println!("Date expansion triggered: {}", date_string);
+                    GLOBAL_LISTENING.store(false, Ordering::SeqCst);
+                    // Spawn a thread to do the simulation. Delete the trigger + the space/enter.
+                    thread::spawn(move || {
+                        expand_trigger_phrase(trigger_length + 1, date_string).unwrap();
+                    });
+
+                    expansion_data.reset();
+                    return;
+                }
 
                 // no match, set the typing state to NoMatch/prime it
                 // special function if this was a space key
@@ -255,7 +316,7 @@ fn handle_key_press(expansion_data: Arc<Mutex<ExpansionData>>, key: rdev::Key, e
                 expansion_data.reset();
             }
             expansion_data.set_typing_state(TypingState::Typing);
-            if let Some(c) = event.name {
+            if let Some(c) = event_name {
                 debug_println!("{:?}", c);
                 debug_println!("Char to push: '{}', len: {}, bytes: {:?}", c, c.len(), c.as_bytes());
 
@@ -360,5 +421,41 @@ fn delete_characters(count: usize) {
         // println!("Backspace released");
         thread::sleep(Duration::from_millis(10));
     }
+}
     
+
+/// Checks for date expansion triggers like "/days40" or "/wks8".
+/// Returns a formatted date string (e.g., "9/16/25") if a valid trigger is found.
+fn handle_date_expansion(buffer: &str) -> Option<String> {
+    let (prefix, num_str) = if buffer.starts_with("/days") {
+        ("/days", &buffer[5..])
+    } else if buffer.starts_with("/wks") {
+        ("/wks", &buffer[4..])
+    } else {
+        return None; // Not a date expansion trigger
+    };
+
+    // Try to parse the number part of the trigger
+    if let Ok(num) = num_str.parse::<i64>() {
+        let current_date = Local::now().date_naive();
+        let future_date = if prefix == "/days" {
+            current_date + chrono::Duration::days(num)
+        } else { // "/wks"
+            current_date + chrono::Duration::weeks(num)
+        };
+        
+        // --- UPDATED FORMATTING ---
+        // Select the correct format specifier based on the operating system
+        // to remove leading zeros from the month and day.
+        #[cfg(windows)]
+        let format_specifier = "%#m/%#d/%y"; // For Windows
+        #[cfg(not(windows))]
+        let format_specifier = "%-m/%-d/%y"; // For Linux and macOS
+
+        // Format the date into the desired "9/16/25" style.
+        let formatted_date = future_date.format(format_specifier).to_string();
+        return Some(formatted_date);
+    }
+
+    None
 }

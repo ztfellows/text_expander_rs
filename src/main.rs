@@ -7,7 +7,7 @@ use std::thread::{self, sleep};
 use std::time::Duration;
 use serde::Deserialize;
 use arboard::Clipboard;
-use chrono::Local;
+use chrono::{Local, DateTime};
 
 
 /// A macro that functions like `println!`, but only compiles in debug builds.
@@ -239,9 +239,10 @@ fn handle_key_press(expansion_data: Arc<Mutex<ExpansionData>>, key: rdev::Key, e
                 }
                     
                 if let Some(date_string) = handle_date_expansion(&expansion_data.key_buffer) {
+                    GLOBAL_LISTENING.store(false, Ordering::SeqCst);
                     let trigger_length = expansion_data.key_buffer.len();
                     debug_println!("Date expansion triggered: {}", date_string);
-                    GLOBAL_LISTENING.store(false, Ordering::SeqCst);
+                    
                     // Spawn a thread to do the simulation. Delete the trigger + the space/enter.
                     thread::spawn(move || {
                         expand_trigger_phrase(trigger_length + 1, date_string).unwrap();
@@ -423,10 +424,11 @@ fn delete_characters(count: usize) {
     }
 }
     
-
 /// Checks for date expansion triggers like "/days40" or "/wks8".
 /// Returns a formatted date string (e.g., "9/16/25") if a valid trigger is found.
 fn handle_date_expansion(buffer: &str) -> Option<String> {
+    println!("doing the date expansion thing!");
+    
     let (prefix, num_str) = if buffer.starts_with("/days") {
         ("/days", &buffer[5..])
     } else if buffer.starts_with("/wks") {
@@ -434,28 +436,38 @@ fn handle_date_expansion(buffer: &str) -> Option<String> {
     } else {
         return None; // Not a date expansion trigger
     };
+    
+    println!("made it through 1st if: {prefix}, {num_str}");
 
     // Try to parse the number part of the trigger
     if let Ok(num) = num_str.parse::<i64>() {
-        let current_date = Local::now().date_naive();
-        let future_date = if prefix == "/days" {
-            current_date + chrono::Duration::days(num)
-        } else { // "/wks"
-            current_date + chrono::Duration::weeks(num)
-        };
+        let current_date = Local::now();
         
-        // --- UPDATED FORMATTING ---
-        // Select the correct format specifier based on the operating system
-        // to remove leading zeros from the month and day.
-        #[cfg(windows)]
-        let format_specifier = "%#m/%#d/%y"; // For Windows
-        #[cfg(not(windows))]
-        let format_specifier = "%-m/%-d/%y"; // For Linux and macOS
+        // Calculate the future date safely
+        let future_date = if prefix == "/days" {
+            current_date.checked_add_signed(chrono::Duration::days(num))
+        } else { // "/wks"
+            current_date.checked_add_signed(chrono::Duration::weeks(num))
+        };
 
-        // Format the date into the desired "9/16/25" style.
-        let formatted_date = future_date.format(format_specifier).to_string();
-        return Some(formatted_date);
+        // Only proceed if we got a valid future date
+        if let Some(date) = future_date {
+            // Use format with standard specifiers that work everywhere
+            // %m = month with zero padding, %d = day with zero padding, %y = 2-digit year
+            let formatted_with_padding = date.format("%m/%d/%y").to_string();
+            
+            // Now remove leading zeros manually
+            let parts: Vec<&str> = formatted_with_padding.split('/').collect();
+            let formatted = format!("{}/{}/{}",
+                parts[0].parse::<u32>().unwrap(),  // Parsing removes leading zeros
+                parts[1].parse::<u32>().unwrap(),
+                parts[2]  // Year is already 2 digits
+            );
+            
+            debug_println!("formatted date str, returning: {formatted}");
+            return Some(formatted);
+        }
     }
-
+    
     None
 }

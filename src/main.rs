@@ -251,10 +251,11 @@ fn handle_key_press(expansion_data: Arc<Mutex<ExpansionData>>, key: rdev::Key, e
                         sleep(Duration::from_millis(10)); // slight delay between key presses
                     }
                     rdev::simulate(&EventType::KeyPress(Key::ShiftLeft)).unwrap();
+                    sleep(Duration::from_millis(10));
                     rdev::simulate(&EventType::KeyPress(Key::SemiColon)).unwrap();
                     rdev::simulate(&EventType::KeyRelease(Key::SemiColon)).unwrap();
                     rdev::simulate(&EventType::KeyRelease(Key::ShiftLeft)).unwrap();
-
+                    sleep(Duration::from_millis(5));
                     rdev::simulate(&EventType::KeyPress(Key::Space)).unwrap();
                     rdev::simulate(&EventType::KeyRelease(Key::Space)).unwrap();
                     
@@ -321,7 +322,7 @@ fn handle_key_press(expansion_data: Arc<Mutex<ExpansionData>>, key: rdev::Key, e
         }
 
         // Key::Delete => {}
-        
+
         //cases that instantly clear the buffer and resets
         Key::UpArrow | Key::DownArrow | Key::Escape | Key::Tab |
         Key::PageDown | Key::PageUp | Key::Home | Key::End => {

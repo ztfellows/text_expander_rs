@@ -1,5 +1,6 @@
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
+use std::usize;
 use std::{collections::HashMap, sync::Mutex};
 use std::sync::{MutexGuard};
 use rdev::{listen, Button, Event, EventType, Key};
@@ -7,7 +8,7 @@ use std::thread::{self, sleep};
 use std::time::Duration;
 use serde::Deserialize;
 use arboard::Clipboard;
-use chrono::{Local, DateTime};
+use chrono::{Local};
 
 
 /// A macro that functions like `println!`, but only compiles in debug builds.
@@ -39,7 +40,7 @@ struct ExpansionFile {
 struct ExpansionData {
     key_buffer: String,
     expansion_table: ExpansionFile,
-    cursor_position: i8,
+    cursor_position: usize,
     typing_state: TypingState,
     global_listening: bool,
 }
@@ -71,11 +72,33 @@ impl ExpansionData {
     }
 
     fn push_to_buffer(&mut self, c: &str) {
-        self.key_buffer.push_str(c);
-    }
+        // Cast the cursor position to usize, as string indexing requires it.
+        // We'll also clamp the value to prevent panics if the cursor is out of bounds.
+        let index = (self.cursor_position as usize).min(self.key_buffer.len());
 
+        // Insert the string slice 'c' at the calculated index.
+        self.key_buffer.insert_str(index, c);
+
+        // After inserting, we must advance the cursor by the length of what was inserted.
+        // Note: This might cause issues with your i8 type if 'c' is long! (More on this below)
+        self.cursor_position += c.len();
+    }
     fn pop_from_buffer(&mut self) {
-        self.key_buffer.pop();
+        // We can only remove a character if the buffer is not empty AND the cursor is not at the start.
+        if self.cursor_position > 0 && !self.key_buffer.is_empty() {
+            // The cursor is positioned AFTER the character we want to remove.
+            // So, we need to calculate the index of the character to remove.
+            let remove_index = self.cursor_position - 1;
+
+            // Ensure the calculated index is valid before removing.
+            // This check is important if cursor logic and buffer length can get out of sync.
+            if self.key_buffer.is_char_boundary(remove_index as usize) {
+                self.key_buffer.remove(remove_index as usize);
+                
+                // After removing the character, move the cursor back.
+                self.cursor_position -= 1;
+            }
+        }
     }
 
     fn set_typing_state(&mut self, state: TypingState) {
@@ -89,16 +112,16 @@ impl ExpansionData {
         self.global_listening = true;
     }
 
-    fn decrement(&mut self) {
-        if self.cursor_position >= 0 {
+    fn decrement_cursor_position(&mut self) {
+        if self.cursor_position > 0 {
             self.cursor_position -= 1;
         }
         if self.cursor_position == 0 {
-            self.typing_state = TypingState::Empty;
+            self.reset();
         }
     }
 
-    fn increment(&mut self) {
+    fn increment_cursor_position(&mut self) {
         self.cursor_position += 1;
     }
     
@@ -256,7 +279,7 @@ fn handle_key_press(expansion_data: Arc<Mutex<ExpansionData>>, key: rdev::Key, e
                 // special function if this was a space key
                 if let Key::Space = key {
                     expansion_data.push_to_buffer(" ");
-                    expansion_data.increment();
+                    //expansion_data.increment();
                     expansion_data.set_typing_state(TypingState::NoMatch);
                 }
                 else { // enter key
@@ -278,29 +301,30 @@ fn handle_key_press(expansion_data: Arc<Mutex<ExpansionData>>, key: rdev::Key, e
         Key::Backspace => {
             expansion_data.pop_from_buffer();
             expansion_data.set_typing_state(TypingState::Typing);
-            expansion_data.decrement();
+            //expansion_data.decrement();
 
             debug_println!("{:?}", &expansion_data.key_buffer);
         },
 
         //cases that adjust cursor position
-        Key::LeftArrow => { expansion_data.decrement();}
+        Key::LeftArrow => { expansion_data.decrement_cursor_position();}
         Key::RightArrow => {
             // if we're at the end of the buffer, reset
-            if expansion_data.key_buffer.len() as i8 == expansion_data.cursor_position {
+            if expansion_data.key_buffer.len() == expansion_data.cursor_position {
                 expansion_data.reset();
                 return;
             }
             else {
-                expansion_data.increment();
+                expansion_data.increment_cursor_position();
             }
             // if we're not, just increment
         }
 
         // Key::Delete => {}
-
+        
         //cases that instantly clear the buffer and resets
-        Key::UpArrow | Key::DownArrow | Key::Escape | Key::Tab => {
+        Key::UpArrow | Key::DownArrow | Key::Escape | Key::Tab |
+        Key::PageDown | Key::PageUp | Key::Home | Key::End => {
             expansion_data.reset();
             return;
         }
@@ -427,7 +451,7 @@ fn delete_characters(count: usize) {
 /// Checks for date expansion triggers like "/days40" or "/wks8".
 /// Returns a formatted date string (e.g., "9/16/25") if a valid trigger is found.
 fn handle_date_expansion(buffer: &str) -> Option<String> {
-    println!("doing the date expansion thing!");
+    debug_println!("doing the date expansion thing!");
     
     let (prefix, num_str) = if buffer.starts_with("/days") {
         ("/days", &buffer[5..])
@@ -437,7 +461,7 @@ fn handle_date_expansion(buffer: &str) -> Option<String> {
         return None; // Not a date expansion trigger
     };
     
-    println!("made it through 1st if: {prefix}, {num_str}");
+    debug_println!("made it through 1st if: {prefix}, {num_str}");
 
     // Try to parse the number part of the trigger
     if let Ok(num) = num_str.parse::<i64>() {

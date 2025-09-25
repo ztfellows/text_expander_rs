@@ -1,6 +1,8 @@
+use std::path::PathBuf;
+use std::process::exit;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
-use std::usize;
+use std::{env, fs, usize};
 use std::{collections::HashMap, sync::Mutex};
 use std::sync::{MutexGuard};
 use rdev::{listen, Button, Event, EventType, Key};
@@ -367,6 +369,17 @@ fn handle_mouse_press(buffer: Arc<Mutex<ExpansionData>>, button: Button) {
 
 fn load_expansion_table() -> Result<ExpansionFile, Box<dyn std::error::Error> > 
 {
+    
+    let mut path: PathBuf = env::current_dir().expect("Failed to get current directory");
+    
+    path.push("expansions.toml");
+    
+    println!("{:?}", path);
+    if let Err(err) = fs::exists(path) {
+        println!("Unable to open");
+        std::process::exit(1);
+    };
+
     let path = "C:\\Projects\\text_expander\\expansions.toml";
     let contents = std::fs::read_to_string(path)?;
     let expansion_file: ExpansionFile = toml::from_str(&contents)?;    

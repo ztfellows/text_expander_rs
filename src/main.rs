@@ -2,7 +2,7 @@ use std::path::PathBuf;
 use std::process::exit;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
-use std::{env, fs, usize};
+use std::{env, fs, usize, vec};
 use std::{collections::HashMap, sync::Mutex};
 use std::sync::{MutexGuard};
 use rdev::{listen, Button, Event, EventType, Key};
@@ -226,53 +226,26 @@ fn handle_key_press(expansion_data: Arc<Mutex<ExpansionData>>, key: rdev::Key, e
                 if expansion_data.key_buffer == "nn" {
                     // inputs date and simulates keys to type: "mm/dd/yy:" without leading 0s
                     let now = chrono::Local::now();
-                    let date_string = now.format("%-m/%-d/%y").to_string();
+                    let date_string = now.format("%-m/%-d/%y: ").to_string();
                     
-                    GLOBAL_LISTENING.store(false, Ordering::SeqCst);
-
-                    sleep(Duration::from_millis(20));
-                    delete_characters(2);
-                    for c in date_string.chars() {
-                        let key_event = match c {
-                            '0' => Key::Num0,
-                            '1' => Key::Num1,
-                            '2' => Key::Num2,
-                            '3' => Key::Num3,
-                            '4' => Key::Num4,
-                            '5' => Key::Num5,
-                            '6' => Key::Num6,
-                            '7' => Key::Num7,
-                            '8' => Key::Num8,
-                            '9' => Key::Num9,
-                            '/' => Key::Slash,
-                            ' ' => Key::Space,
-                            _ => continue, // Skip unsupported characters
-                        };
-                        rdev::simulate(&EventType::KeyPress(key_event)).unwrap();
-                        rdev::simulate(&EventType::KeyRelease(key_event)).unwrap();
-                        sleep(Duration::from_millis(10)); // slight delay between key presses
-                    }
-                    rdev::simulate(&EventType::KeyPress(Key::ShiftLeft)).unwrap();
-                    sleep(Duration::from_millis(10));
-                    rdev::simulate(&EventType::KeyPress(Key::SemiColon)).unwrap();
-                    rdev::simulate(&EventType::KeyRelease(Key::SemiColon)).unwrap();
-                    rdev::simulate(&EventType::KeyRelease(Key::ShiftLeft)).unwrap();
-                    sleep(Duration::from_millis(5));
-                    rdev::simulate(&EventType::KeyPress(Key::Space)).unwrap();
-                    rdev::simulate(&EventType::KeyRelease(Key::Space)).unwrap();
+                    // GLOBAL_LISTENING.store(false, Ordering::SeqCst);
+                    // expand w/ a length of 2 since no space here
+                    expand_trigger_phrase(2, date_string)
+                        .expect("Error in expanding date phrase - panic!");
                     
-                    GLOBAL_LISTENING.store(true, Ordering::SeqCst);
+                    expansion_data.reset();
+                    return;
                 }
                     
                 if let Some(date_string) = handle_date_expansion(&expansion_data.key_buffer) {
-                    GLOBAL_LISTENING.store(false, Ordering::SeqCst);
+                    // GLOBAL_LISTENING.store(false, Ordering::SeqCst);
                     let trigger_length = expansion_data.key_buffer.len();
                     debug_println!("Date expansion triggered: {}", date_string);
                     
                     // Spawn a thread to do the simulation. Delete the trigger + the space/enter.
-                    thread::spawn(move || {
-                        expand_trigger_phrase(trigger_length + 1, date_string).unwrap();
-                    });
+                    // thread::spawn(move || {
+                        expand_trigger_phrase(trigger_length, date_string).unwrap();
+                    // });
 
                     expansion_data.reset();
                     return;
@@ -448,18 +421,21 @@ fn delete_characters(count: usize) {
 
     for _ in 0..count + 1 {
 
+        thread::sleep(Duration::from_millis(25));
+
         // println!("Simulating backspace");
         if let Err(e) = rdev::simulate(&EventType::KeyPress(Key::Backspace)) {
             println!("Error simulating backspace: {}", e);
         }
-        thread::sleep(Duration::from_millis(10)); // slight delay to ensure key press is registered
+        thread::sleep(Duration::from_millis(25)); // slight delay to ensure key press is registered
         // println!("Backspace pressed");
         if let Err(e) = rdev::simulate(&EventType::KeyRelease(Key::Backspace)) {
             println!("Error simulating backspace release: {}", e);
         }
         // println!("Backspace released");
-        thread::sleep(Duration::from_millis(10));
     }
+
+    // thread::sleep(Duration::from_millis(25));
 }
     
 /// Checks for date expansion triggers like "/days40" or "/wks8".
@@ -508,4 +484,15 @@ fn handle_date_expansion(buffer: &str) -> Option<String> {
     }
     
     None
+}
+
+fn type_characters(output_string: String) {
+    // convert the output string to a vector of characters
+    let mut char_vec: Vec<char> = vec![];
+    for c in output_string.chars(){
+        char_vec.push(c);
+    }
+
+    
+
 }

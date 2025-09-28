@@ -1,8 +1,7 @@
 use std::path::PathBuf;
-use std::process::exit;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
-use std::{env, fs, usize, vec};
+use std::{env, fs, usize};
 use std::{collections::HashMap, sync::Mutex};
 use std::sync::{MutexGuard};
 use rdev::{listen, Button, Event, EventType, Key};
@@ -349,7 +348,7 @@ fn load_expansion_table() -> Result<ExpansionFile, Box<dyn std::error::Error> >
     
     println!("{:?}", path);
     if let Err(err) = fs::exists(path) {
-        println!("Unable to open");
+        println!("Unable to open: {err}");
         std::process::exit(1);
     };
 
@@ -386,7 +385,7 @@ fn expand_trigger_phrase(length: usize, completion: String)
     
     // thread::spawn(move || {
     // expansion_data.global_listening = false; // disable global listening during expansion
-    GLOBAL_LISTENING.store(false, Ordering::SeqCst);
+    disable_keyboard_listening();
     let completion = completion.replace("\n", "\r\n");
     
     delete_characters(length);
@@ -410,7 +409,7 @@ fn expand_trigger_phrase(length: usize, completion: String)
     // restore old clipboard contents
     clipboard.set_text(old_clipboard).unwrap();
 
-    GLOBAL_LISTENING.store(true, Ordering::SeqCst);
+    enable_keyboard_listening();
 
     Ok(())
 
@@ -486,13 +485,6 @@ fn handle_date_expansion(buffer: &str) -> Option<String> {
     None
 }
 
-fn type_characters(output_string: String) {
-    // convert the output string to a vector of characters
-    let mut char_vec: Vec<char> = vec![];
-    for c in output_string.chars(){
-        char_vec.push(c);
-    }
+fn disable_keyboard_listening() { GLOBAL_LISTENING.store(false, Ordering::SeqCst); }
+fn enable_keyboard_listening() { GLOBAL_LISTENING.store(true, Ordering::SeqCst); }
 
-    
-
-}

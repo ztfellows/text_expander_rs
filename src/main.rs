@@ -11,6 +11,10 @@ use serde::Deserialize;
 use arboard::Clipboard;
 use chrono::{Local};
 
+use crate::windows_input::{expand_text_directly};
+
+mod windows_input;
+
 
 /// A macro that functions like `println!`, but only compiles in debug builds.
 #[macro_export]
@@ -201,6 +205,7 @@ fn handle_key_press(expansion_data: Arc<Mutex<ExpansionData>>, key: rdev::Key, e
                     debug_println!("Found match: {}", completion);
                     thread::spawn( move || {
                         expand_trigger_phrase(trigger_length, completion).unwrap();
+                        // expand_text_directly(trigger_length, completion).unwrap();
                         
                     });
 
@@ -383,29 +388,35 @@ fn check_for_completion(expansion_data: &mut MutexGuard<ExpansionData>) ->
 fn expand_trigger_phrase(length: usize, completion: String) 
     -> Result<(), Box<dyn std::error::Error>> {
     
-    // thread::spawn(move || {
-    // expansion_data.global_listening = false; // disable global listening during expansion
     disable_keyboard_listening();
     let completion = completion.replace("\n", "\r\n");
+  
+    // get old clipboard contents and set new
+    let mut clipboard = Clipboard::new().unwrap();
+    let old_clipboard = clipboard.get_text().unwrap_or_default();
+    clipboard.clear()?;
     
-    delete_characters(length);
 
+    clipboard.set_text(completion.to_owned()).unwrap();
+    windows_input::force_clipboard_update();
+    
+    // set_clipboard_text_winapi(&completion);
+    thread::sleep(Duration::from_millis(10));    
+
+    // delete_characters(length);
+    windows_input::send_backspaces_fast(length + 1)?;
     debug_println!("deleted {} characters", length);
 
-    let mut clipboard = Clipboard::new().unwrap();
-
-    // get old clipboard contents
-    let old_clipboard = clipboard.get_text().unwrap_or_default();
-    clipboard.set_text(completion.to_owned()).unwrap();
-    sleep(Duration::from_millis(50)); // wait a bit to ensure clipboard is set
-
-    rdev::simulate(&EventType::KeyPress(Key::ControlLeft)).unwrap();
-    rdev::simulate(&EventType::KeyPress(Key::KeyV)).unwrap();
-    rdev::simulate(&EventType::KeyRelease(Key::KeyV)).unwrap();
-    rdev::simulate(&EventType::KeyRelease(Key::ControlLeft)).unwrap();
+    thread::sleep(Duration::from_millis(100));
+    
+    windows_input::send_ctrl_v()?;
+    // rdev::simulate(&EventType::KeyPress(Key::ControlLeft)).unwrap();
+    // rdev::simulate(&EventType::KeyPress(Key::KeyV)).unwrap();
+    // rdev::simulate(&EventType::KeyRelease(Key::KeyV)).unwrap();
+    // rdev::simulate(&EventType::KeyRelease(Key::ControlLeft)).unwrap();
 
     // println!("pasted: {}", completion);
-    sleep(Duration::from_millis(50)); // wait a bit to ensure paste is done
+    // sleep(Duration::from_millis(50)); // wait a bit to ensure paste is done
     // restore old clipboard contents
     clipboard.set_text(old_clipboard).unwrap();
 

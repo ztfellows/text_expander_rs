@@ -3,7 +3,6 @@
 "humira" = "adalimumab"
 "enbrel" = "etanercept"
 
-[case_insensitive]
 "mtx" = "methotrexate"
 "ssz" = "sulfasalazine"
 "lef" = "leflunomide"
@@ -44,6 +43,10 @@
 "nsg" = "neurosurgery"
 "ortho" = "orthopedics"
 "ank" = "ankylosing spondylitis"
+
+
+
+[case_insensitive]
 
 # Common usage text expansion
 # ========================================
@@ -126,6 +129,41 @@ Ultrasound procedures carried out as above. Precautions discussed for injection 
 -start MTX 12.5mg weekly, folic acid 1mg daily; methotrexate risks and benefits were reviewed w/ patient including risks of myelosuppression, liver/pulm toxicity, rash, GI discomfort, ulcers, and hair loss.
  -labs monthly x3mo then q3mo once stable
 """
+
+"/new" = """
+type of visit:
+
+DISCRETE EDITS:
+HPI:
+
+
+
+
+ROS:
+
+
+
+
+PE:
+
+
+
+
+IGNORED NOTES:
+
+
+
+DDX:
+
+
+ORDERS:
+
+
+VERBAL INSTRUCTION REMINDERS:
+"Start assessment dictation"
+
+"""
+
 
 "/newctd" = """
 They present for CTD evaluation
@@ -400,3 +438,1916 @@ NEURO: Gait normal. Orientation to person/time/place intact.
 """
 
 "/pefms" = "-diffuse tender points bilateral upper back, mid back, low back; diffusely tender to palpation of upper arms, forearms, thighs, calves"
+
+"/stopbang" = """
+Snoring ?
+Tired/fatigued/sleepy in daytime?
+Observed apnea or choking/gasping?
+HTN?
+Body Mass Index more than 35 kg/m2?
+Age older than 50? 
+Neck size (Measured around cricoid or shirt collar > 16 inches/40cm)?
+Male?
+
+TOTAL: 
+OSA - Low Risk : Yes to 0 - 2 questions
+OSA - Intermediate Risk : Yes to 3 - 4 questions
+OSA - High Risk : Yes to 5 - 8 questions
+or Yes to 2 or more of 4 STOP questions + male gender
+or Yes to 2 or more of 4 STOP questions + BMI > 35kg/m2
+or Yes to 2 or more of 4 STOP questions + neck circumference 16 inches / 40cm
+"""
+
+"/hcqnote" = """
+hydroxychloroquine use (<5mg/kg/day)
+start date:
+ophtho:
+last eye exam:
+next due:
+"""
+
+# Decision making/DDXs
+# ===============================================================================================
+"/ddxia" = "rheumatoid arthritis, spondyloarthropathies (PsA, ReA, post-strep, AS, enteropathic), crystalline, viral infections (incl HBV/HCV/HIV, parvo), septic joint, gonococcal, CTD (SLE, SS, SSc, MCTD), vasculitis, celiac."
+"/ddxnia" = "osteoarthritis, hypermobility syndrome (EDS), fibromyalgia, CRPS, SpA (mimic), D deficiency, severe hypothyroidism, diabetic amyotrophy"
+"/ddxneckp" = "cervical facet arthropathy, spinal stenosis, myelopathy, inflammatory causes including CPPD/RA, muscle spasm/strain, and uncommonly malignancy or bony lesions"
+"/ddxlbp" = "facet arthropathy, spinal stenosis, muscle strain/spasm, radiculopathy, and uncommonly malignancy or bony lesions"
+"/ddxmono" = "septic joint, crystalline arthritis (gout/CPPD), early inflammatory arthritis, Lyme"
+"/ddxmigrating" = "palindromic rheumatism, crystalline (gout/CPPD), rheumatic fever, viral infection, early inflammatory arthritis"
+"/ddxoligo" = "early inflammatory arthritis, gonococcal infection, spondyloarthropathies (ReA, AS, enteropathic)"
+"/ddxpare" = "B12 deficiency, hypo/hyperthyroidism, alcoholism, DM, local entrapment, and small fiber neuropathy (including secondary to CTD)"
+"/ddxulcers" = "medication, SLE, MCTD, SS, SSc, and Behcet's"
+"/ddxraynaud" = "primary Raynaud's phenomena, CTD (SSc, SLE, others), thromboangiitis obliterans, prior cold injury, cryoglobulinemia, cold agglutinins"
+"/ddxpericard" = "CTD including SLE, SS, SSc, MCTD, RF; consider thyroid disorders, uremia, viral, atypical infections, and other causes"
+"/ddxesr" = "with high values, consider infection, systemic vasculitis, malignancy; more moderate values tend to be nonspecific but can be increased by active infections, CTD-related activity, trauma, obesity, CKD/esp ESRD"
+"/ddxcrp" = "with high values, consider infection, systemic vasculitis, malignancy; more moderate values tend to be nonspecific but can be increased by active infections, CTD-related activity, trauma, obesity, CKD/esp ESRD"
+"/ddxaortitis" = "chronic periaortitis in the thoracic area in isolation includes giant cell aortitis, IgG4-RD, syphilis, while the same in the abdominal area includes idiopathic RPF, inflammatory AAA; idiopathic RPF has a broad consideration of secondary causes including Erdheim-Chester disease, malignancy (lymphoma, sarcoma), IgG4-RD, infections (TB, histoplasma, actinomyces), drugs (ergots, beta blockers, TNFi, methyldopa, hydralazine) while a significant proportion that remains will be primary idiopathic RPF with no clear etiology. Secondary causes should always be excluded since immunosuppression may not be optimal in those patients."
+"/ddxpericardialeff" = "primary CTDs (particularly SLE, SSc, SS, MCTD), RA, drug-induced LE, sarcoidosis, Behcet's, rheumatic fever, IgG4-RD; autoinflammatory diseases and vasculitides (incl GPA, PAN, GCA) are rare causes; much more common are non rheumatic causes including uremia, hypothyroidism, Crohn's/UC, Whipple's, malignancy, trauma, radiation, or infectious (incl viral, bacterial, fungal, and parasitic causes)"
+"/ddxrf" = "rheumatoid arthritis, Sjogren's syndrome, ANCA-associated vasculitis, MCTD, cryoglobulin, SLE, PM/DM, and sarcoidosis, at far as rheumatologic etiologies; there are a number of nonrheumatic causes including chronic infections (namely HCV, HBV, HIV, TB, syphilis), subacute bacterial endocarditis, malignancy (particularly B-cell neoplasms), and primary biliary cirrhosis. However, RF is very nonspecific and can be clinically meaningless: RF can be positive in 4% of young, healthy individuals but as high as 25% of older, healthy individuals with no underlying disease."
+"/ddxild" = "RA, Sjogren's syndrome, SLE, sarcoidosis, MCTD, PM/DM, SSc, rarely AS, Behcet's, or vasculitis (GPA, PAN)"
+"/ddxildcop" = "RA, Sjogren's syndrome, SLE, and PM/DM tend to be most commonly associated, however organizing pneumonia can be seen with other CTDs as well."
+"/ddxsmallvasc" = "ANCA, immune-complex (IgA, Goodpasture's, cryoglobulinemic vasculitis, hypocomplementemic urticarial vasc), Buerger's, hypersensitivity (medications, illicit/levamisole), secondary CTD, vessel-variable causes (Behcets, Cogan, RPC), other single-organ-limited disease, or vasculitis mimics"
+"/ddxvascmimics" = " RPR, TB, IgG4 (large vessel); small/medium vessel include radiation, heme malignancy, sarcoid, vasospastic disorder, hypercoagulable state (APS), thromboembolic, infectious (HIV/HBV/HCV), scurvy, cholesterol emboli, septic emboli, FMD, Susac, platelet dysfunction, systemic amyloidosis, purpura fulminans, or calcipylaxis"
+"/ddxmediumvasc" = "PAN (HBV inclusive), Kawasaki's, vessel-variable causes (Behcets, Cogan, RPC), or vasculitis mimics (ie FMD)"
+"/ddxlargevasc" = "GCA, Takayasu's, vessel-variable causes (Behcets [Hughes-Stovin syndrome if pulmonary artery in isolation], Cogan, RPC), or vasculitis mimics (particularly RPR, TB, IgG4, inflammatory AAA, Erdheim-Chester, lymphoma, Actinomyces if IUD use, or idiopathic RP fibrosis)"
+"/ddxcnsvasc" = "vascular (RCVS, atherosclerosis), infectious (eg, bacterial: syphilis, Lyme; viral: VZV, CMV, HIV, HBV, HCV; fungal: Aspergillus, Coccidiodes, & Histoplasmosis), autoimmune/inflammatory (eg, SLE, RA, Sjogren, Behcet, PAN, ANCA vasculitis, cryoglobulinemic vasculitis, APS, sarcoidosis, PACNS), and neoplastic (eg, intravascular lymphoma)"
+"/ddxrhabdo" = "viral infections (COVID included in this, but more typically adenovirus/influenza), nutritional deficiencies including vitamin-D, vitamin-D, electrolyte abnormalities particularly magnesium/phosphorus, drug use, parasites, bacteria, intake of statins and associated products including red yeast rice, workout supplements, mushrooms, oysters, and lastly, autoimmune diseases including the myopathies."
+"/ddxuveitis" = "arthritis-associated: drug-induced (TNF, Reclast, checkpoint inhib), SpA, Behcet's, Blau, Crohn's/UC, JIA, rarely vasculitis (PAN, GPA, GCA), Lyme, RPC, rheumatic fever, sarcoidosis, Sweet's, SLE, Whipple's, TB. others: viral (HSV), RPR, toxo, B-cell lymphoma/leukemia, birdhost, pars planitis, MS, TIN w/ uveitis, VKH, trauma (cataract), idiopathic"
+"/ddxscleritis" = "RA, ReA, SLE, RPC, vasculitis (GPA, MPA, EGPA, PAN, Cogan syndrome), Behcet syndrome, urticarial vasculitis, syphilis, tuberculosis, Lyme disease, herpes zoster, aspergillus, sarcoidosis, inflammatory bowel disease."
+
+
+#MDM
+
+"//0" = "moderate complexity: 1 progressive chronic problem"
+"//1" = "moderate complexity: 1 unknown/new problem"
+"//2" = "moderate complexity: 2 chronic, stable problems addressed"
+"//3" = "high complexity: chronic illness w/ severe exacerbation"
+"//4" = "high complexity: acute/chronic illness posing threat to life or bodily function"
+"//rx" = "moderate risk: rx given"
+"//dmard" = "high risk: DMARD given requiring intensive monitoring for toxicity -"
+"//bio" = "high risk: biologic therapy rx - "
+"//45" = "45 minutes spent on day of this encounter including time to review records, time for interview/examination/counseling with the patient, and documentation."
+"//60" = "60 minutes spent on day of this encounter including time to review records, time for interview/examination/counseling with the patient, and documentation."
+
+"/tele" = "Patient authorized audio/AV visit and is aware that the visit will be billed and any co-pays and deductibles will also be applied. After initiation of visit, patient's identity and ability to speak confidentially confirmed.  I also confirmed that the patient is currently in California."
+
+#Labs/Imaging/Other objective
+#===========================================================================
+
+#//Patient information for plan
+"/ptcts" = """
+CARPAL TUNNEL SYNDROME: this is a local nerve compression that occurs in our wrists and is worsened by repetitive activity or bending the wrist.
+--Splinting the wrists at night is the first step to manage this since it allows the nerve inside the tunnel to relax into the day time - it can take up to 30 days for this to work!
+--If this fails, we inject steroid (cortisone) into the carpal tunnel directly to relieve swelling at the nerve, although this tends to be temporary.
+--Look at your work situation or home office/desk situation - you should be able to draw a STRAIGHT line from the tip of the elbow to tip of your middle finger when stretched out. Adjust your desk/chair/wrist support to improve this angle.
+--Surgery can be a permanent fix for this - you should be referred if splinting and 1-2 injections fail to give you lasting relief.
+"""
+
+"/pthcq" = """
+HYDROXYCHLOROQUINE INFORMATION:
+Hydroxychloroquine (HCQ) is drug that helps reduce inflammation in a way does not reduce how well your immune system functions, provoke stomach ulcers, cause kidney issues, or other harmful effects seen with traditional antiinflammatories or steroids. We use this extensively in patients with rheumatoid arthritis, calcium arthritis (CPPD), lupus, and some of our other diseases. In some individuals when they first start taking this, they'll experience stomach discomfort, nausea, rarely diarrhea - this almost always goes away after the first 1-2 weeks, but if it's causing enough trouble and not getting better, let me know. In those who take HCQ for years, there is a very small risk of a deposit that accumulates in the back of the eye - the risk is a few percent chance after 20 years of taking the medicine, and never occurs sooner than 7 years of continuous, daily use. The risk is likely even smaller than that because we now dose this medication by weight for each individual. We ask all of our patients who are taking this medicine have a baseline eye exam (*with specific testing for HCQ*) in the first year they're taking the medicine, and then begin having annual eye exams after 5 years of treatment. If this deposit is ever detected, we stop the medicine and it goes away completely. If this deposit goes undetected for years and you continue taking the medicine through that period, it can cause permanent vision damage. Therefore with regular eye exams, this side effect is not a concern. This medicine can prolong a cardiac interval called the QT interval, and can lead to fatal arrhythmias if you have a history of prolonged QTC or if taken with other medications without appropriate testing ahead of time, like an EKG (certain medications include anti-nausea medications like Zofran, Phenergan, Compazine, macrolide antibiotics like azithromycin (Z-pack) or fluoroquinolones (Cipro, Levaquin) - ask your prescribing physician if you're not sure)."
+"""
+
+"/ptmtx" = """
+METHOTREXATE: You'll be starting methotrexate (ie MTX) to help control your body's inflammation.
+-This is a *set* of tablets you'll be taking only ONCE weekly: you never take MTX more than once a week, so it's best to choose a convenient day for you to make this your 'methotrexate day'. Every week on that day, take the prescribed amount of tablets within that day. You should take these all at once unless I ask you to split it in a different way.
+-We require you to take folic acid (folate) on a daily basis that I'll prescribe for you as well. The required dose is 1mg but on occasion I'll ask you to take more than that. Do NOT take more than this without instruction to do so. Daily folic acid will prevent a large number of side effects one would otherwise expect to experience with MTX use. With folic acid taken daily, side effects with methotrexate are very uncommon.
+-We also require you to complete labs on a regular basis. There are *reversible* changes that only happen to a few individuals taking MTX that can occur to the liver and blood counts. You won't notice these since they're usually very mild and only noticed on lab tests. If we notice a change to these numbers, we'll typically reduce the dose or skip a few doses and retest - I'll direct you on this. Unless I mention otherwise, you should expect to do labs at least 1 day before every appointment you have with me (I'll give you a new lab order after every visit).
+-Side effects are ultimately uncommon while you're taking folic acid but can include mild nausea, rash, sores like canker sores in the mouth, cloudy thinking, the blood test changes as above, and a few rare others. Most of these are limited to the 1-2 days after each dose if you experience them at all. You should let me know if you think you're experiencing a side effect. When in doubt, stop taking it until we connect with each other for additional instructions.
+"""
+
+"/ptssz" = """
+"SULFASALAZINE: You'll be starting sulfasalazine (ie SSZ) to help control your body's inflammation.
+-Sulfasalazine is taken as a combination of tablets in the morning and evening with a usual starting dose of 2 in the morning, 2 in the evening.
+-This medication requires you to complete labs on a regular basis. There are *reversible* changes that only happen to a few individuals taking SSZ that can occur to the liver and blood counts. You won't notice these since they're usually very mild and only noticed on lab tests. If we notice a change to these numbers, we'll typically reduce the dose or skip a few doses and retest - I'll direct you on this. Unless I mention otherwise, you should expect to do labs at least 1 day before every appointment you have with me (I'll give you a new lab order after every visit).
+-Side effects are ultimately uncommon but can include nausea, rash, headache, the blood test changes as above, and a few rare others. You should let me know if you think you're experiencing a side effect. When in doubt, stop taking it until we connect with each other for additional instructions.
+-For the nausea: most who get the nausea will get it when you first start taking the medication, therefore we like to start sulfasalazine slowly and work our way to the goal dose over a couple weeks. This way, if you get nauseous, you're dealing with the effect of only 1-2 pills instead of all 4 per day to start.
+---THEREFORE: start sulfasalazine one tablet in the morning for 3 days, then one tablet twice daily for 3 days, then one tablet in the morning/two tablets in the evening for 3 days, then finally two tablets twice daily. If you have nausea or other abdominal symptoms during this ramp up, decrease the dose one tablet and let me know. If the symptoms were mild, I'll usually ask you to try one more time but otherwise we'll try a different medication.
+"""
+
+"/ptlef" = """
+LEFLUNOMIDE: You'll be starting leflunomide (ie LEF) to help control your body's inflammation.
+-Leflunomide is taken as a daily tablet, usually but not necessarily in the morning, and not required to take with food.
+-This medication requires you to complete labs on a regular basis. There are *reversible* changes that only happen to a few individuals taking LEF that can occur to the liver and blood counts. You won't notice these since they're usually very mild and only noticed on lab tests. If we notice a change to these numbers, we'll typically reduce the dose or skip a few doses and retest - I'll direct you on this. Unless I mention otherwise, you should expect to do labs at least 1 day before every appointment you have with me (I'll give you a new lab order after every visit).
+-Side effects are ultimately uncommon but can include nausea, rash, diarrhea, tingling in your toes or fingertips, the blood test changes as above, and a few rare others. You should let me know if you think you're experiencing a side effect.`r-Side effects are ultimately uncommon but can include nausea, rash, headache, the blood test changes as above, and a few others. You should let me know if you think you're experiencing a side effect. When in doubt, stop taking it until we connect with each other for additional instructions.
+"""
+
+"/ptpmr" = """
+"POLYMYALGIA RHEUMATICA/PMR
+As we discussed - we'll plan on treating you along the lines of polymyalgia rheumatica, aka PMR. This is an inflammatory disorder that causes pain/stiffness in your joints and muscles, more often felt in the shoulders/hips but can be felt everywhere.
+
+Prednisone is the only effective treatment we're aware of. We treat with a dose that suppresses the inflammation (and thus pain) and then slowly wean you off that medicine usually over the course of 1 year. If you flare, ie you have pain that breaks through your current prednisone dose, you should go back up 1 mg daily for another week then go back down to the dose that gave you trouble. If you have trouble doing this OR this strategy isn't effective, contact us for addtl instructions.
+
+Your tentative tapering schedule will be as follows:
+Prednisone 15mg daily for 2 weeks  (ie take 3x 5mg tablets daily)
+Prednisone 12.5mg daily for 2 weeks  (ie take 2 and 1/2 5mg tablets daily)
+10mg daily for 2 weeks  (ie take 2x 5mg tablets daily)
+9mg daily for 2 weeks   (ie take 1x 5mg tablet + 4x 1mg tablets daily)
+8mg daily for 2 weeks
+7mg daily for 2 weeks
+6mg daily for 2 weeks
+5mg daily for 2 weeks
+4mg daily for 2 weeks   (ie take 4x 1mg tablets daily)
+3mg daily for 2 weeks
+2mg daily for 2 weeks
+1mg daily for 2 weeks
+then off.
+
+Keep in mind the above schedule may change if you're needing to increase dose temporarily or stay at a regular dose for longer (if instructed to do so), so keep track of any changes and your schedule on this letter, a calendar, or your phone.
+
+Call us ASAP if you develop jaw pain, new headaches, or sudden vision changes; these can be symptoms of giant cell arteritis (GCA), a cousin of PMR that can appear in 10-15% of PMR patients at ANY time during or after the course of prednisone and can threaten your vision if untreated. You should keep in mind prednisone has side effects including hyperglycemia (high blood sugar), avascular necrosis of the hip and other joints, weight gain/water retention, loss of bone density, insomnia, steroid myopathy (weakness), can promote glaucoma/cataracts, and infection risk especially when using doses above 20mg/daily. HOWEVER - your risk of these is relatively LOW since we generally use lower doses of prednisone.
+"""
+
+"/ptpmrkevzara" = """
+POLYMYALGIA RHEUMATICA/PMR (WITH KEVZARA)
+As we discussed - we'll plan on treating you along the lines of polymyalgia rheumatica, aka PMR. This is an inflammatory disorder that causes pain/stiffness in your joints and muscles, more often felt in the shoulders/hips but can be felt everywhere.
+
+Prednisone is the mainstay of treatment until Kevzara achieves therapeutic levels, roughly 2-3 weeks worth of injections. We treat with a prednisone dose thereafter that suppresses the inflammation (and thus pain) and then wean you off that medicine usually over the course of 2-4 months. If you flare, ie you have pain that breaks through your current prednisone dose, you should go back up 1 mg daily for another week then go back down to the dose that gave you trouble. If you have trouble doing this OR this strategy isn't effective, contact us for addtl instructions.
+
+****
+Your tentative PREDNISONE tapering schedule will be as follows:
+Prednisone 15mg daily for 2 weeks  (ie take 3x 5mg tablets daily)
+Prednisone 12.5mg daily for 1 week  (ie take 2 and 1/2 5mg tablets daily)
+10mg daily for 1 week  (ie take 2x 5mg tablets daily)
+9mg daily for 1 week    (ie take 1x 5mg tablet + 4x 1mg tablets daily)
+8mg daily for 1 week
+7mg daily for 1 week
+6mg daily for 1 week
+5mg daily for 1 week
+4mg daily for 1 week    (ie take 4x 1mg tablets daily)
+3mg daily for 1 week
+2mg daily for 1 week
+1mg daily for 1 week
+then off.
+
+Your tentative KEVZARA (SARILUMAB) schedule will be as follows:
+Kevzara injection under the skin (belly or top of thigh) once every two weeks (total duration will be determined; average is one year)
+
+****
+
+Keep in mind the above schedule may change if you're needing to increase dose temporarily or stay at a regular dose for longer (if instructed to do so), so keep track of any changes and your schedule on this letter, a calendar, or your phone.
+
+Call us ASAP if you develop jaw pain, new headaches, or sudden vision changes; these can be symptoms of giant cell arteritis (GCA), a cousin of PMR that can appear in 10-15% of PMR patients at ANY time during or after the course of prednisone and can threaten your vision if untreated.
+
+Prednisone has side effects including hyperglycemia (high blood sugar), avascular necrosis of the hip and other joints, weight gain/water retention, loss of bone density, insomnia, steroid myopathy (weakness), can promote glaucoma/cataracts, and infection risk especially when using doses above 20mg/daily. HOWEVER - your risk of these is relatively LOW since we generally use lower doses of prednisone when treating this problem.
+
+Kevzara (sarilumab) is an interleukin-6 (IL-6) blocker that is injected under the skin of the belly (on either side) or the top of the thigh. This blocks a potent inflammatory signal that helps shut off the process causing PMR and subsequently wipes symptoms out. There is a risk of two issues that we detect with blood tests: low white blood cell count and/or elevated liver function tests. These are reversible and improve once we stop the medication, if needed. We'll check labs on you after 4 weeks and then at least every 3 months while you continue Kevzara. You should NOT get a LIVE vaccine while taking Kevzara: these are uncommon and mostly relevant for international travelers (i.e. yellow fever, some typhoid vaccines, etc) - this does not include seasonal vaccines like flu/COVID, pneumonia vaccines, or Shingrix for shingles, for example. These are safe to receive while taking Kevzara.
+
+"""
+
+"/ptgca" = """
+GIANT CELL ARTERITIS (GCA)
+As we discussed - we'll plan on treating you along the lines of giant cell arteritis, aka GCA or temporal arteritis. This is a highly inflammatory disorder of which we don't know the cause; the result is inflammation in your blood vessels often manifesting as headaches along your temples, pain in your jaw, fevers, sweats, fatigue, and occasionally other symptoms.
+
+Prednisone is the only effective treatment we're aware of although sometimes we'll add other medications to help you use less prednisone. We treat with a dose that suppresses the inflammation (and thus pain) and then slowly wean you off that medicine usually over the course of 1 year and sometimes longer. If you flare, ie you have pain that breaks through your current prednisone dose, you should go back up to the next highest dose of prednisone you were taking for another week then go back down to the dose that gave you trouble. If you have trouble doing this OR this strategy isn't effective, contact us for addtl instructions.
+
+You should keep in mind prednisone has side effects including hyperglycemia (high blood sugar), avascular necrosis of hip and other joints, weight gain/water retention, loss of bone density, insomnia, steroid myopathy (weakness), can promote glaucoma/cataracts, and infection risk especially when using doses above 20mg/daily.
+
+Your prednisone plan will be as follows:
+Start prednisone 60mg daily for 2 weeks (ie take 3x 20mg tablets daily), then..
+50mg daily for 2 weeks      (ie take 2x 20mg tablets + 1x 10mg tablet daily)
+40mg daily for 2 weeks      (ie take 2x 20mg tablets daily)
+35mg daily for 2 weeks      (ie take 1x 20mg tablet + 1 and 1/2 10mg tablets daily)
+30mg daily for 2 weeks
+25mg daily for 2 weeks
+20mg daily for 2 weeks
+17.5mg daily for 2 weeks - you will also STOP taking the Bactrim antibiotic when you start this dose.  (ie take 1x 10mg tablet + 1x 5mg tablet + 1/2 5mg tablet daily)
+15mg daily for 2 weeks
+12.5mg daily for 2 weeks    (ie take 1x 10mg tablet + 1/2 5mg tablet daily)
+10mg daily for 2 weeks
+9mg daily for 2 weeks       (ie take 1x 5mg tablet + 4x 1mg tablets daily)
+8mg daily for 2 weeks
+7mg daily for 2 weeks
+6mg daily for 2 weeks
+5mg daily for 2 weeks
+4mg daily for 2 weeks       (ie take 4x 1mg tablets daily)
+3mg daily for 2 weeks
+2mg daily for 2 weeks
+1mg daily for 2 weeks
+then off.
+
+You need to take an antibiotic when on prednisone doses greater than 20mg/day since this increases your risk of infection significantly: this may be either Bactrim DS (1 tab daily but only take on Mondays, Wednesdays, and Fridays), atovaquone solution (drink this daily), or another compound if necessary.
+
+I'd like you have labs done every month (or on another schedule I'll instruct you to do) that you're on treatment until we've proven the inflammation has calmed down considerably - you will have to do a lab draw BEFORE every visit with me unless I've told you otherwise. Call at any point/time if you have questions.
+"""
+
+"/ptnoia" = """
+I'm not suspicious you have an underlying inflammatory arthritis based on my evaluation today; this includes diseases like rheumatoid arthritis, psoriatic arthritis, and others. This is good news! Pain arising from non-inflammatory causes, like 'wear/tear' arthritis, nerve compression, muscle strain, etc, are all uncomfortable but often treatable.
+"""
+
+"/ptia" = """
+INFLAMMATORY ARTHRITIS
+I'm suspicious you have an inflammatory arthritis, that is, I suspect you have a type of disorder that produces inflammation that manifests in joints (and often other locations) to produce pain/stiffness. The possibilities here include rheumatoid arthritis, psoriatic arthritis, crystal diseases like gout, muscle diseases, autoimmune connective tissue diesease (like lupus, Sjogren's), and others. We typically treat these with medications that lower inflammation - this results in less discomfort and usually more functionality. Some of these diseases cause permanent damage to the joints if left untreated; try not to avoid ''toughing it out'' and let me know if the plan we decided on isn't controlling your discomfort well.
+
+In most cases these inflammatory diseases can't be cured and they're with you for the rest of your life. Typically speaking, we aim to get you to a point with medications that your joint inflammation is controlled and minimal (or absent entirely), make sure you're stable on that regimen (some of our experts advocate for at least a year of good stability), and then if you wanted to try, we can try pulling back slightly on your medication to minimize how much you need to take while still keeping inflammation to a minimum. You'll generally always want to be on something, however, since the inflammation with these diseases can be causing damage even if you're not feeling it, and that damage eventually can lead to permanent deformities and other issues.
+
+When you feel like these symptoms aren't in good control, please let me know. We can always try to adjust your medications or add new ones to help you feel better. If you're not feeling better after a few weeks, we can always try a different medication or a different approach. We'll work together to find a plan that works for you.
+"""
+
+"/ptctd" = "I'm suspicious you may have an autoimmune disease; these are diseases caused by the body's responses to viruses/bacteria that are turned inward on its own tissues. The result can be a variety of different symptoms across nearly every organ system. We diagnose this on the basis of history, exam, and additional, directed testing if necessary. Medications directed at suppressing some of these immune responses can be helpful to reduce symptoms and in some cases limit long-term damage to these organ systems, in some cases."
+
+"/ptfeet" = """
+FOOT PAIN
+If you suffer from osteoarthritis of the foot, you know how important it is to wear the right shoes. The right footwear can help reduce pain, improve mobility, and make your daily activities more comfortable. Here are some recommendations for footwear that can help you manage your symptoms:
+
+1. Wear shoes with good arch support: Look for shoes with a contoured footbed and good arch support. This can help distribute weight more evenly across your foot and reduce pressure on the affected joints.
+
+2. Look for shoes with a wide toe box: Shoes with a wide toe box can help reduce pressure on your toes and forefoot. This can be especially important if you have arthritis in the big toe joint (hallux rigidus).
+
+3. Avoid shoes with high heels: High heels can put extra pressure on your toes and forefoot, which can exacerbate arthritis pain. Stick to low-heeled shoes with a maximum height of 1 inch.
+
+4. Try Brooks or Hokas shoes: Some people with osteoarthritis of the foot find that Brooks or Hokas shoes are particularly comfortable. These shoes are designed with cushioned soles and good arch support, which can help reduce pain and improve mobility.
+
+5. Avoid walking barefoot: Walking barefoot can put extra stress on your feet and exacerbate arthritis pain. Wear supportive shoes or slippers at home to reduce pressure on your feet.
+
+6. Consider custom orthotics: If you have severe arthritis pain, custom orthotics can help support your feet and reduce pressure on your joints. Talk to me or a podiatrist about whether custom orthotics may be right for you.
+"""
+
+"/ptfoot" = """
+FOOT PAIN
+If you suffer from osteoarthritis of the foot, you know how important it is to wear the right shoes. The right footwear can help reduce pain, improve mobility, and make your daily activities more comfortable. Here are some recommendations for footwear that can help you manage your symptoms:
+
+1. Wear shoes with good arch support: Look for shoes with a contoured footbed and good arch support. This can help distribute weight more evenly across your foot and reduce pressure on the affected joints.
+
+2. Look for shoes with a wide toe box: Shoes with a wide toe box can help reduce pressure on your toes and forefoot. This can be especially important if you have arthritis in the big toe joint (hallux rigidus).
+
+3. Avoid shoes with high heels: High heels can put extra pressure on your toes and forefoot, which can exacerbate arthritis pain. Stick to low-heeled shoes with a maximum height of 1 inch.
+
+4. Try Brooks or Hokas shoes: Some people with osteoarthritis of the foot find that Brooks or Hokas shoes are particularly comfortable. These shoes are designed with cushioned soles and good arch support, which can help reduce pain and improve mobility.
+
+5. Avoid walking barefoot: Walking barefoot can put extra stress on your feet and exacerbate arthritis pain. Wear supportive shoes or slippers at home to reduce pressure on your feet.
+
+6. Consider custom orthotics: If you have severe arthritis pain, custom orthotics can help support your feet and reduce pressure on your joints. Talk to me or a podiatrist about whether custom orthotics may be right for you.
+"""
+
+
+
+
+"/berberine" = """
+BERBERINE SUPPLEMENT
+Berberine is a herbal supplement derived from certain species of plants, including barberry, goldenseal, and Oregon grape. It has been used in traditional Chinese medicine for centuries and has recently gained popularity as a natural remedy for diabetes and high cholesterol.
+
+Berberine has been found to help regulate blood sugar levels by increasing insulin sensitivity, reducing the production of glucose in the liver, and improving the functioning of the pancreas. It also helps lower cholesterol by reducing the production of LDL (“bad”) cholesterol and increasing the production of HDL (“good”) cholesterol.
+
+Dosage varies depending on the individual: I'd suggest starting at 500mg taking this with breakfast and dinner - it should be taken with or prior to food, not more than a few minutes after eating otherwise the effect does less for you. Common side effects of berberine may include nausea, vomiting, and diarrhea, so it is important to be aware of any potential reactions and contact your doctor if they occur.
+"""
+
+"/ptsleep" = """
+SLEEP RECOMMENDATIONS
+1. Stick to a regular sleep schedule: Try to go to bed and wake up at the same time every day, even on weekends. This helps regulate your body's sleep-wake cycle.
+2. Create a relaxing bedtime routine: Develop a relaxing routine to help you wind down before bedtime. This may include taking a warm bath, reading a book, or practicing relaxation techniques such as deep breathing or meditation.
+3. Make your bedroom conducive to sleep: Create a comfortable sleep environment by keeping your bedroom cool, quiet, and dark. Remove any distractions such as TV, computers, or smartphones.
+4. Limit caffeine and alcohol: Avoid consuming caffeine or alcohol in the hours leading up to bedtime. Both can interfere with sleep quality and disrupt your sleep-wake cycle.
+5. Exercise regularly: Exercise regularly, but avoid doing so too close to bedtime. Exercise can help you sleep better, but working out too late in the day can make it harder to fall asleep at night.
+6. Avoid napping during the day: Try to avoid napping during the day, as this can interfere with your ability to fall asleep at night.
+7. Avoid large meals before bedtime: Avoid eating large meals or heavy snacks in the hours leading up to bedtime. A light snack, such as a piece of fruit or a small bowl of cereal, may be helpful.
+8. Consider cognitive behavioral therapy: If you are experiencing persistent insomnia, cognitive behavioral therapy (CBT) may be helpful. CBT is a type of talk therapy that helps you identify and change negative thought patterns and behaviors that can interfere with sleep.
+
+SLEEP MEDICATION OPTIONS
+Medications may be employed depending on your preference and how severe your insomnia is. Options are reviewed below but may not be suited for all individuals:
+1. Low-Dose Doxepin (3mg, 6mg, 10mg)
+Usage: Take one tablet of the prescribed dose (3mg, 6mg, or 10mg) by mouth, once daily, about 30 minutes before bedtime. Do not take more than the recommended dose.
+Expected Side Effects: Common side effects include drowsiness, dizziness, and dry mouth. Less frequent side effects are blurred vision, constipation, and weight gain.
+
+2. Ambien (Zolpidem), Lunesta (Eszopiclone), and Sonata (Zaleplon)  --  UNDER 65 YEARS OLD ONLY
+Usage: These are all sedative-hypnotic medications used for short-term treatment of insomnia. Take the prescribed dose of the specific medication by mouth, once daily, immediately before bedtime. Do not take more than the recommended dose.
+Expected Side Effects: Common side effects include drowsiness, dizziness, and headache. Less frequent side effects are lightheadedness, memory loss, and complex sleep-related disorders (e.g., sleepwalking, sleep-driving, sleep-eating).
+
+3. Suvorexant
+Usage: Take one tablet of the prescribed dose by mouth, once daily, about 30 minutes before bedtime. Do not take more than the recommended dose.
+Expected Side Effects: Common side effects include drowsiness, dizziness, and headache. Less frequent side effects are abnormal dreams and dry mouth.
+
+4. Trazodone
+Usage: Take one tablet of the prescribed dose by mouth, once daily, about 30 minutes before bedtime. Do not take more than the recommended dose.
+Expected Side Effects: Common side effects include drowsiness, dizziness, and headache. Less frequent side effects are dry mouth, constipation, and possible low blood pressure upon standing. Men can also experience priapism (prolonged erection > 4 hours) with this medication but is rare.
+
+5. Hydroxyzine
+Usage: Take one tablet of the prescribed dose by mouth, once daily, about 30 minutes before bedtime. Do not take more than the recommended dose.
+Expected Side Effects: Common side effects include drowsiness, dizziness, and dry mouth. Less frequent side effects are headache and rarely blurred vision.
+"""
+
+"/bb" = """
+HOME/SELF-GUIDED PHYSICAL THERAPY
+I suggest you look at a Youtube channel by 'Bob and Brad' for home physical therapy exercises. This is a pair of certified physical therapists from Minnesota that have multiple videos of home exercises targeting nearly anywhere you may have pain.
+https://www.youtube.com/c/BobBrad
+You can search their channel for any pain or body area, ie:
+''
+Other common examples include:
+'back pain'
+'tennis elbow'
+'knee pain'
+'shoulders'
+etc.
+If these fail, let me know and we can get you setup with a physical therapist locally who can teach you one-on-one.
+"""
+
+"/yoga" = """
+YOGA RECOMMENDATION
+I recommend watching Youtube videos by 'Yoga by Adriene' for simple, introductory yoga exercises.
+https://www.youtube.com/c/yogawithadriene
+She has short, free videos helpful for a number of specific anatomic areas including upper back, shoulder pain, low back pain, and more in addition to more general mindfulness, chronic pain, stress-relief, etc routines.
+"""
+
+"/ptnsaid" = """
+NSAID USE (NON-STEROIDAL ANTI-INFLAMMATORY DRUGS)
+NSAIDs are a class of medications that are used to treat pain and inflammation. They include medications such as ibuprofen (Advil, Motrin), naproxen (Aleve), aspirin, meloxicam, diclofenac, celecoxib, nabumetone, etodolac, etc. Some are available over-the-counter (OTC) and others by prescription.
+They are generally safe when used as directed, but they can cause side effects you need to be aware of - any one of these and you should stop taking these until you discuss the symptoms over with me another physician: new/worsened abdominal pain, dark/black/bloody stools, nausea/vomiting, new rash, chest pain, or dark urine.
+You should not take these if you have a history of stomach ulcers, bleeding disorders, or kidney disease (stage 3 or worse). You should also not take these if you are pregnant or breastfeeding.
+You cannot take one type of NSAID along with another type on any given day, ie you cannot take ibuprofen and naproxen or ibuprofen and meloxicam on the same day. Keep in mind Tylenol (acetaminophen) is not an NSAID and can be taken with NSAIDs perfectly safely (and often will need to be for more serious pain issues).
+"""
+
+"/pttennis" = """
+TENNIS ELBOW
+Tennis elbow (lateral epicondylitis) is generally an overuse injury to the tendon group on the outside of your elbow. This tendon attachment to the elbow will get irritated and inflamed if overused. The muscles and tendons further down your arm that move your wrist upwards (extend your wrist) all come from this one spot on your elbow. If those get overused, you'll start to feel it at your elbow.
+We treat this by strengthening this tendon near the elbow with exercises.
+
+I suggest looking at Youtube and searching 'Bob and Brad tennis elbow' - this should include a series of videos by two physical therapists that offer ways to do this at home.
+
+Alternatively, having a physical therapist work with you one-on-one to help you with this injury can be helpful.
+
+It's important to limit injury to this area: this includes heavy lifting with this arm, forceful 'backhand' type movements (like a tennis player swinging a backhand hit).
+Keyboard/mouse setup at home/work, if you use a computer, is a VERY COMMON means of causing this overtime. Make sure when you're sitting at your computer that your elbows are supported on an armrest ideally with a 90' angle at the elbow, and make sure you're not having to actively hold your arm up to reach your mouse or keyboard (ie it should be supported firmly on the armrest and desk).
+
+Look for a 'tennis elbow brace' or 'counterforce brace'; this is a small brace you apply about inch in front of the soreest spot on the outside of your elbow. Do NOT place this directly over the sore area, it sits directly in front of it (ie toward your hand). Wearing this in the daytime will help offload the pressure on that tendon as it attaches to bone and can help recovery time. These are available for about $10 or less at any pharmacy, Wal-Mart, Target, Amazon, etc.
+"""
+
+"/ptgolf" = """
+GOLFER's ELBOW
+Here are comprehensive instructions for treating golfer's elbow, a condition that causes pain and inflammation on the inner side of the elbow. These instructions include self-care measures and exercises that can help alleviate symptoms and promote healing. However, please note that it's important to consult with a healthcare professional for an accurate diagnosis and personalized treatment plan.
+
+Give your elbow adequate rest by avoiding activities that worsen the pain or put strain on the affected area, especially repetitive gripping or twisting motions.
+Consider using a brace or splint to provide support and protect the elbow during daily activities or sports.
+
+Apply ice to the affected area for 15-20 minutes, three to four times a day, especially after activities or exercises.
+Wrap an ice pack or a bag of frozen peas in a thin towel and gently press it against the inner side of the elbow to reduce pain and inflammation.
+
+Over-the-counter nonsteroidal anti-inflammatory drugs (NSAIDs), such as ibuprofen or naproxen, can help reduce pain and inflammation. Follow the recommended dosage instructions and consult your healthcare provider if you have any concerns or contraindications.
+
+Gentle Stretching and Strengthening Exercises:
+Once the acute pain and inflammation subside, it's important to gradually introduce gentle stretching and strengthening exercises to promote healing and improve elbow function.
+Wrist Extension Stretch: Extend your affected arm straight out in front of you with your palm facing down. Use your other hand to gently bend your wrist, pointing your hand toward the floor. Hold for 30 seconds and repeat three times on each side.
+Wrist Flexion Stretch: Extend your affected arm straight out in front of you with your palm facing up. Use your other hand to gently bend your wrist, pointing your hand toward the ceiling. Hold for 30 seconds and repeat three times on each side.
+Eccentric Wrist Flexion Exercise: Hold a light dumbbell or a resistance band in your affected hand with your palm facing up. Rest your forearm on a table with your wrist hanging off the edge. Slowly lower the weight or pull the resistance band down using your wrist muscles only. Return to the starting position and repeat 10-15 times for two to three sets.
+Forearm Pronation and Supination: Hold a light dumbbell or a hammer in your affected hand with your elbow bent at 90 degrees and your forearm resting on a table or your thigh. Slowly rotate your forearm to bring your palm down (pronation) and then rotate it back up to bring your palm up (supination). Repeat 10-15 times for two to three sets.
+
+Gradual Return to Activity:
+As your symptoms improve and with guidance from your healthcare provider or a physical therapist, gradually reintroduce activities and sports that involve your elbow.
+Start with low-impact exercises and gradually increase the intensity and duration over time to avoid re-injury.
+
+Follow-up with Your Healthcare Provider:
+Keep your healthcare provider informed about your progress and follow any additional recommendations they provide.
+If symptoms persist or worsen despite conservative measures, consult your healthcare provider for further evaluation and treatment options.
+"""
+
+"/ptdq" = "DeQuervain's"
+"/ptlabs" = "I've ordered labs for you today; complete these when you are able to. These are non-fasting meaning you can go at any time."
+"/ptlabs3" = "I've ordered a standing 3 month lab order for monitoring your medication. These are required for refills to ensure we're not causing you any harm! Do this at least 24 hours before our appointment together to ensure we can review the results at the appointment"
+"/ptrads" = "I've ordered imaging for you; you can complete these when you are able to."
+"/ptana" = """
+ANTINUCLEAR ANTIBODY (ANA) TEST
+You have a positive ANA test; this is a screening test for antibodies that are present in your body that are directed at your body's own tissues. These are common; up to 25% of adults with no problems at all will have a positive test - this doesn't necessarily mean anything! This is because the test looks for antibodies to more than 150 targets but we know only about 10 to 15 of these actually cause disease in certain situations - the rest don't cause problems.
+In some cases, if our suspicion is high enough, I'll send you for clarifying labwork to look for some of the few antibodies that can be associated with disease if this hasn't been done already. I may also send you for markers that help identify immune system activation or damage to any organs.
+"""
+
+"/ptnoctd" = "After our evaluation today and review of your data, at this time, I'm not suspicious for an underlying autoimmune/connective tissue disease, at least one that is expected to benefit from medications that target your immune system. This doesn't at all mean that there isn't a problem - we may just need to approach it and your symptoms a different way."
+
+"/ptnitro" = """
+FOR NITROGLYCERIN PASTE:
+
+1. Wash your hands and dry them thoroughly.
+2. Apply a thin layer of nitroglycerin paste to the affected webs between fingers.
+3. Massage the paste into the skin for about 30 seconds
+4. Allow the paste to remain on your skin for about 30 minutes.
+5. Rinse the paste off with lukewarm water.
+6. Repeat the process as often as needed, but no more than 3 times a day.
+7. If you experience any adverse effects, such as burning, irritation or numbness, discontinue use and contact me.
+"""
+
+"/ptldnmix" = """
+LOW-DOSE NALTREXONE HOME COMPOUNDING
+Low-dose naltrexone has been used as an adjunct to usual therapies for fibromyalgia/centralized pain, chronic fatigue syndrome, and, with less data supporting its use, autoimmune conditions.
+In usual uses for centralized pain/fibromyalgia and chronic fatigue syndrome, expected potential benefits include improved sleep, energy levels, and pain without a significant downside other than inconvenience: the low doses used to achieve these purposes are NOT commercially sold, only 50mg tablets are, and thus smaller doses need to be compounded either at a pharmacy (typically $60-100/mo) or at home.
+Follow the instructions below to compound your own low-dose naltrexone at home in a liquid form, ie water or orange juice. This is a very safe and effective way to take naltrexone and is much cheaper than buying it from a compounding pharmacy.
+You will need:
+- 50mg naltrexone tablets (I'll send to a pharmacy of your choice)
+- Orange juice OR water bottle, 12oz size bottle ie ~350ml (for OJ, Tropicana, Minute Maid, or Simply Orange are all good brands - Simply Orange is 11.5oz but that's fine). Some like orange juice with pulp to balance out the texture of the naltrexone and mask the flavor - water will work equally well. Be aware the orange juice may expire soon after opening whereas water will not! Note: do NOT use a different size bottle or amount of liquid, always use 11.5oz or 12oz!
+- A plain syringe with at least 5ml capacity - CVS sells these in 10ml size for $3.99, other pharmacies will sell similar. A measuring cup for liquids to measure 5ml will also work.
+- A means to grind tablets into powder (ie a kitchen mortar/pestle or similar)`r
+
+STEP 1: Grind SEVEN naltrexone tablets into a fine powder with the mortar/pestle.
+STEP 2: Pour the powder into the juice or water bottle. Shake well.
+STEP 3: Keep refrigerated until ready to use if using orange juice; water is OK to be kept at room temperature but make sure the naltrexone has mixed in as much as possible. I suggest carefully dating and labeling this bottle clearly so it's not confused for usual orange juice/water. Always keep strictly out of the reach of children.
+
+Each 1 ml of this mixed solution will contain 1 mg of naltrexone. When ready to take, measure out 1-5ml (ie 1-5mg) of the juice/water into your syringe or measuring cup and drink BEFORE BEDTIME.
+As above, pulped orange juice might be a bit easier to swallow since the naltrexone may not easily dissolve into the juice and may give it a slightly chalky texture (this is normal)
+Each 12oz bottle of orange juice or water will last approximately 70 days at 5mg/day; the solution itself will be effective to consume for 90 days after mixing (and will lose efficacy after 90 days). After 90 days, you should throw any remaining mixture away and mix a new bottle.
+
+
+DOSING:
+When first starting, I suggest starting at 2mg (ie 2ml) at bedtime for 7 days and then increasing by 1mg (ie 1ml) every 7 days until at a dose of 5mg per day everyday. Doses beyond 5mg are unlikely to offer any additional benefit. If you have any side effects at any dose, you can reduce the dose by 1mg per day until you're at a dose that is well-tolerated.
+
+EXAMPLE:
+Day 1: Take 2ml (ie 2mg) of the orange juice in the evening before bedtime.
+Day 2: Take 2ml (ie 2mg) of the orange juice in the evening before bedtime.
+...
+Day 7: Take 2ml (ie 2mg) of the orange juice in the evening before bedtime.
+Day 8: Take 3ml (ie 3mg) of the orange juice in the evening before bedtime.
+Day 9: Take 3ml (ie 3mg) of the orange juice in the evening before bedtime.
+...
+and so on until taking 5ml of the juice everyday.
+
+SIDE EFFECTS:
+Naltrexone is generally well-tolerated and has few side effects. The most common side effects are nausea, headache, and dizziness. These are usually mild and transient and can be reduced by taking the naltrexone with food. If you have any side effects, you can reduce the dose by 1mg per day until you're at a dose that is well-tolerated.
+Rarely, others can occur including fatigue, insomnia, depression and anxiety. Serious side effects that should be reported right away to a healthcare provider include confusion, hallucinations, blurred vision and severe vomiting or diarrhea.
+Be aware naltrexone BLOCKS the effect of opioid therapies - therefore any opioid like Norco, Vicodin, Percocet, tramadol, etc will be severely reduced in effectiveness if taken at the same time as naltrexone. If you need opioids for acute/severe pain or hospitalization, you should STOP naltrexone.
+"""
+
+"/pthairloss" = """
+HAIR LOSS
+Hair loss is common both in our rheumatologic diseases and as part of normal living.
+Be specifically aware of a major cause called telogen effluvium: this is a remarkably common type of hair loss largely effects everyone and can happen when your body goes through a stressful event or a big change. It's like your hair is taking a break and not growing as it normally would. Usually, most of your hair is growing while a small portion is resting. But, with telogen effluvium, more of your hair goes into the resting phase which means you'll see more hair falling out than usual. This can be caused by things like illness, giving birth, chronic disease, physiologic or psychologic stress, or losing a lot of weight. The good news is that telogen effluvium is usually temporary and your hair will likely start growing back once your body recovers from the stress or change.
+The hair loss associated w/ telogen effluvium often occurs *MONTHS* following the insult, ie 3-6 months which is the typical life cycle of our hair cells. It will often take at least this long, once the insult is removed or managed, for the hair to start growing back.
+
+HAIR LOSS TREATMENTS
+I'd recommend taking a biotin supplement (available at any drug store or online) at a dose of 5000mcg daily regardless of the underlying cause; in some, this helps regenerate the hair (and fingernails) more quickly. It takes up to 6 months of daily use to see an effect!
+Other prescription options are explained below including typical side effects:
+
+Topical Minoxidil 5% Foam:
+Usage: Apply the foam directly to the scalp, specifically to the area with thinning hair, 2 hours before bedtime daily to allow for drying. Use the recommended amount (usually half a capful) and gently massage it into the scalp. Wash your hands thoroughly after application. Avoid contact with eyes and other sensitive areas.
+Expected Side Effects: Common side effects include scalp irritation, itching, dryness, and scaling. Rare side effects may include increased heart rate, chest pain, dizziness, or swelling in the hands or feet.
+Expected Response Time: It usually takes 2-4 months of consistent use to see initial results. However, it may take up to a year to see significant improvement.
+
+Oral Finasteride (Men):
+Usage: Take one 1mg tablet daily, with or without food. Try to take it at the same time each day for better consistency. Note for men with prostate enlargement the dose is 5mg daily.
+Expected Side Effects: Common side effects may include decreased libido, erectile dysfunction, and ejaculation disorders. Rare side effects include breast tenderness, swelling, or pain. In some cases, these side effects may persist after discontinuing the medication.
+Expected Response Time: It usually takes 3-6 months to see initial results. Significant improvement can be expected after 6-12 months of consistent use.
+
+Oral Finasteride (Post-menopausal Women):
+Usage: Take one 2.5-5mg tablet daily, with or without food. Try to take it at the same time each day for better consistency. This medication is prescribed only to post-menopausal women, as it can cause birth defects in pregnant women.
+Expected Side Effects: Common side effects may include decreased libido, headache, and dizziness. In rare cases, these side effects may persist after discontinuing the medication. Breast tenderness or swelling may also occur.
+Expected Response Time: It usually takes 3-6 months to see initial results. Significant improvement can be expected after 6-12 months of consistent use.
+
+Spironolactone (Women):
+Usage: Take the prescribed dose (usually 50-100 mg daily) orally, with or without food. Follow your doctor's instructions and maintain regular check-ups to monitor your response to the medication.
+Expected Side Effects: Common side effects include breast tenderness, menstrual irregularities, dizziness, headache, and increased potassium levels. In rare cases, it may cause kidney problems or an allergic reaction.
+Expected Response Time: It usually takes 3-6 months to see initial results. Significant improvement can be expected after 6-12 months of consistent use.
+
+Oral Minoxidil:
+Usage: Take the prescribed dose (usually 1-5 mg daily) orally, with or without food. Follow your doctor's instructions and maintain regular check-ups to monitor your response to the medication.
+Expected Side Effects: Common side effects include dizziness, lightheadedness, increased heart rate, and fluid retention (edema). Rare side effects may include chest pain, rapid weight gain, or difficulty breathing.
+Expected Response Time: It usually takes 2-4 months to see initial results. Significant improvement can be expected after 6-12 months of consistent use.
+"""
+
+"/eds" = """
+The diagnostic criteria for hEDS were updated in 2017 by the International EDS Consortium, and they involve a combination of clinical signs and family history. The criteria are divided into three parts of which all three are required for diagnosis:
+
+Criterion 1: Generalized Joint Hypermobility (GJH)
+GJH is often assessed using the Beighton score, a 9-point scoring system that evaluates joint mobility. A positive Beighton score (≥5/9 for pre-pubertal children and adolescents, ≥6/9 for pubertal men and women up to age 50, and ≥4/9 for those >50 years of age) is required for this criterion.
+
+Criterion 2: Two or more of the following features (A, B, or C) must be present:
+
+A. Systemic manifestations of a more generalized connective tissue disorder; >=5 of 12 required
+(Fascial features)
+-Unusually soft or velvety skin
+-Mild skin hyperextensibility
+-Unexplained striae (ie, excluding striae distensae or rubrae)
+-Bilateral piezogenic papules of the heel
+-Recurrent or multiple abdominal hernia(s) (2 points)
+-Atrophic scarring involving at least two sites and without the formation of truly papyraceous and/or hemosiderotic scars as seen in classical EDS
+-Pelvic floor and/or rectal prolapse in children, men, or nulliparous women without predisposing medical condition; uterine prolapse in children or nulliparous women without predisposing medical condition
+(Marfanoid features)
+-Dental crowding and high-arched or narrow palate
+-Mitral valve prolapse (MVP) mild or greater based on strict echocardiographic criteria
+-Arm span-to-height ≥1.05
+-Arachnodactyly, as defined in one or more of the following: (i) positive wrist sign (Steinberg sign) on both sides; (ii) positive thumb sign (Walker sign) on both sides
+-Aortic root dilatation with Z-score >+2
+
+B. Positive family history: One or more first-degree relatives (parent, sibling, or offspring) independently meeting the current diagnostic criteria for hEDS.
+
+C. Musculoskeletal complications: The presence of one or more of the following musculoskeletal complications, which may not be present at the time of evaluation, but have a history of occurrence:
+-Musculoskeletal pain in 2 or more limbs, recurring daily for at least 3 months
+-Widespread pain for ≥3 months
+-Recurrent joint dislocations or frank joint instability, in the absence of trauma
+---3 or more atraumatic dislocations in the same joint or 2 or more atraumatic dislocations in 2 different joints occurring at different times
+---Medical confirmation of joint instability at 2 or more sites not related to trauma
+
+Criterion 3: Exclusion of other heritable and acquired connective tissue disorders, including autoimmune rheumatologic conditions, which may cause similar features. Genetic testing may be necessary to exclude other types of EDS or connective tissue disorders.
+"""
+
+"/ptfms" = """
+FIBROMYALGIA/CENTRALIZED PAIN
+Fibromyalgia is a pain-sensory disorder where your brain is perceiving normal, everyday sensation as painful and can perceive mild pain as debilitating. If the brain is exposed to excessive pressures over time (ie chronic sleep issues, long-standing depression/anxiety or other mental health issues, surviving trauma/violence/abuse, or even just 'burning the candle at both ends' for too long), the brain begins to adapt to protect itself and by doing so will augment neurons (brain cells) involved with pain and sensation. The augmented neurons lead to alterations in neurotransmitters (signals the brain uses to communicate with itself), building either too many or not enough of certain types (ie too much glutamate and natural opioids, not enough serotonin and norepinephrine). When far enough along, we can have pain where there should be none and we'll have MUCH more pain from something that should be painful. The same signals being out of balance ultimately leads to abnormal nerve sensations (burning sensations, electrical sensations, feeling of water running down your leg, etc), overwhelming fatigue, brain fog (trouble with concentration). You'll often develop an invisible threshold of activity that when you do much and cross that line, you'll feel terrible and spend days recovering back to your normal.
+
+The fix for this, when possible, is to correct some of the pressures pushing against your brain - we can't always make dramatic changes to our life and circumstances, but we can usually make some improvements with sleep if this is a problem for you (65% of fibromyalgia patients have insomnia), mood, and activity - all three of these will slowly correct your symptoms over time (but it won't be fast). We use medications as a stepping stone of sorts to help temporarily boost or reduce those abnormal neurotransmitter levels so you feel well enough to make some of these long-term changes.
+
+The following is adapted from the European League Against Rheumatism (EULAR) 2017 fibromyalgia guidelines which are free and publicly-available if interested in reading.
+
+-Daily exercise can reduce overall pain by reminding your brain that normal activity is NOT a damaging or painful process; this can be as little as 5 minutes daily but the best result is to add to this small amount daily until you're at approximately 30-45min/day of at least light exercise, however moderate-intensity exercise (ie you cannot carry on a conversation easily while exercising) is preferred. Most will have this invisible threshold mentioned above - if you cross this point, you've pushed yourself too hard and you should reduce the amount of exercise quantity a little bit when you resume it again.
+
+-Optimize sleep; either you can work with me or work with your primary doctor on strategies to do this; sleeping through the night is KEY, and not having adequate/restful sleeps makes all painful sensations worse even without fibromyalgia. In some situations I'll refer you to a sleep doctor for additional testing.
+
+-Cognitive behavioral therapy is an excellent option that has shown benefit; this is therapy one-on-one or group with a trained provider. These are NOT easy to find: your primary doctor may be able to refer to one, but I also encourage you to look online outside of your insurance since many of these therapists have transitioned to cash pay or membership programs. If you're open-minded to therapy, it is a VERY healthy option to look into; it's not for everyone, however.
+
+-Medications, as mentioned above, are stepping stones to helping you feel a bit better so that you can make bigger changes. They don't fix the problem and unfortunately there won't be a single medicine that corrects the adaptations your brain has made over time. They can help with sleep, pain directly, and fatigue. These alter the levels of the brain's neurotransmitters in most cases to help you feel more like yourself, examples include nortriptyline, cyclobenzaprine, duloxetine, gabapentin, pregabalin (Lyrica), trazodone, low-dose naltrexone, and modafinil. Opioids are not recommended (a fibromyalgia brain actually has too much opioid production!) and thus these can actually WORSEN pain over time. ONLY 1 out of 3 medications that we try will be effective AND not have side effects; if that's the case that happens, we stop it and move on to another until we find your right medication combination.
+
+-Supplements exist that have some small benefit and limited data on their effectiveness but may work for you. I've included a list of some of the most common ones that I've found to help you decide which ones to try. Amazon, natural food stores, or pharmacies would be the best places to obtain these.
+1. CoQ10 (also known as ubiquinol-10) is an antioxidant that helps with pain and fatigue in some. There are at least 2 studies showing effectiveness in fibromyalgia at doses of 300mg per day.
+2. PEA or palmitoylethanolamide is a natural substance similar to gabapentin that may block glutamate receptors in the brain and may help with pain. Usual dose is 400mg per day.
+3. Magnesium supplementation may be helpful by partially blocking receptors that lead to centralization and may directly reduce muscle pain. Usual dose depends on the type of magnesium you buy since it's sold in various combinations, I'd suggest magnesium glycinate (best: start at 100mg nightly and can increase to 400mg nightly maximum), magnesium oxide (250-400mg nightly) or magnesium malate (1000mg nightly). During flares, you may find it helpful to take an extra 50% of your usual daily dose along with usual means of treating flares.
+Note these can be taken with usual medications and should not interact with other supplements or medications to any degree. Those with chronic kidney disease stage 4 or 5 should not supplement magnesium!
+
+-If you're interested in podcasts, I highly recommend 'Mind your Fibro' by Dr. Olga - this is an excellent, patient-directed podcast that has education about fibromyalgia and strategies to improve symptoms. I particularly suggest listening to her episodes on mind/body.
+"""
+
+"/fflare" = """
+FIBROMYALGIA FLARES
+Flares of fibromyalgia are periods of time when symptoms become worse. Flares can be unpredictable and debilitating, lasting anywhere from a few days to weeks, rarely longer at a time. They can be triggered by a variety of factors, including stress, poor sleep, overexertion, issues at home or work, or even changes in the weather.
+Managing a flare of fibromyalgia pain requires a multi-faceted approach that addresses both physical and emotional aspects. Here are comprehensive instructions to help you cope with and reduce the pain during a fibromyalgia flare:
+
+Rest and Pace Yourself:
+    Listen to your body and rest when you feel fatigued or in pain.
+    Avoid overexertion and learn to pace yourself throughout the day. Break tasks into smaller, manageable segments.
+
+Gentle Exercise:
+    Engage in low-impact exercises like walking, swimming, or yoga to improve circulation, flexibility, and overall well-being.
+    Start slowly and gradually increase the intensity of exercise, as tolerated.
+
+Heat and Cold Therapy:
+    Apply a warm compress or take a warm bath to relax tense muscles and ease pain.
+    For inflammation or acute pain, use cold packs or ice wrapped in a cloth to reduce swelling and numb the area.
+
+Medications/Supplements:
+    Follow your doctor's prescribed medications for fibromyalgia management. These may include pain relievers, muscle relaxants, or certain antidepressants that help manage pain.
+    Magnesium supplementation, if not already taking, may benefit some of us when taken at night: I'd suggest magnesium oxide or magnesium malate. You can take this at bedtime - if already taking, try temporarily doubling the dose until the flare settles.
+
+Mind-Body Techniques:
+    Practice relaxation techniques like deep breathing, meditation, or guided imagery to reduce stress and improve coping skills.
+    Consider mindfulness-based stress reduction or cognitive-behavioral therapy to address emotional well-being.
+
+Sleep Hygiene:
+    Continue working with Dr. Fellows if your sleep isn't optimized - we *require* restorative sleep or else we experience every negative impulse, including pain, *more*.
+    Maintain a consistent sleep schedule, create a calming bedtime routine, and make your sleep environment as comfortable as possible.
+
+Nutrition:
+    Eat a well-balanced diet with plenty of fruits, vegetables, lean proteins, and whole grains.
+    Limit or avoid caffeine, alcohol, and processed foods, as they may exacerbate symptoms.
+    Some find dairy, gluten, or other foods to worsen symptoms; if you're interested in this, I'd suggest a 2-week trial of a gluten-free diet to see if it helps.
+
+Support System:
+    Connect with friends, family, or support groups to share experiences and find understanding.
+    Seek professional counseling if you're feeling overwhelmed or struggling emotionally.
+
+Identify Triggers:
+    Keep a journal to track your symptoms and identify triggers that may worsen your fibromyalgia flare.
+    Common triggers include stress, weather changes, certain foods, or specific physical activities.
+
+Modify Activities:
+    During a flare, avoid or modify activities that aggravate your symptoms.
+    Use assistive devices or ergonomic tools to reduce strain on your body.
+
+Remember that fibromyalgia symptoms can vary from person to person, and managing flares may require a personalized approach. Don't hesitate to seek support and guidance from Dr. Fellows to develop an effective pain management strategy for the long-term.
+
+"""
+
+"/fex" = """
+I've recommended a so-called graded exercise program for you starting at 5 minutes of dedicated, outdoors walking a day if safe to do so. This is meant to be a daily, consistent, and at first low-intensity exercise. Exercise has the ability to naturally move the brain back on the spectrum of fibromyalgia to reduce centralized pain. Our fibromyalgia pain is less and we generally feel mentally better when our body is moving, even just a small amount. Consistency, not intensity, matters more, meaning you'll get more out of a daily, low-intensity dedicated outdoor walk for 5 minutes than you would running 20 minutes one day a week. We start low to avoid the post-exertion muscle pains and misery (PEMs) that we'll experience with exercise that's too intense or too long. Once we're comfortable with 5 minutes a day for a week, we ramp up slowly ie generally weekly, to 7 minutes, then 10 minutes, then 12 minutes, and so on.
+"""
+
+"/fdiet" = """
+Diet matters! Food affects our whole bodies, influences are mood, our pain, our whole health. Generally, I recommend trying to avoid excessive dairy products (this includes cheese, milk), nightshades (these are certain vegetables/fruits including tomatoes, bell peppers, spicy peppers like jalapenos, and eggplant), alcohol, and carbohydrates, particularly highly-processed carbs like crackers, chips, candies - while this won't be true for 100% of us, in most of us these foods tend to promote inflammation which can make us feel more poorly and can increase our pain
+"""
+
+"/protein" = """
+PROTEIN SUPPLEMENTATION
+Keeping up with a high-protein diet can be challenging, especially for those with dietary restrictions or busy schedules. Protein supplements can be a convenient and effective way to increase your protein intake and support your overall health and wellness.
+The benefits of protein supplementation are mainly seen in maintaining muscle mass (strength!) and reducing appetite by keeping us full for a reasonably long time. The amount that best supports our body depends on our size, gender, and whether we're trying to maintain a certain weight, trying to lose weight, or trying to gain muscle mass.
+These goal amount of protein intake per day are as follows:
+
+For men AND women trying to maintain healthy muscle mass: aim for 0.8g/kg of body weight. A "close-enough" estimate for men would be 100 grams of protein per day and for women 75 grams of protein per day.
+If you're trying to lose weight OR gain muscle, aim for 1.0g/kg of body weight. For men, this can be estimated around 125 grams per day, and women at 100 grams per day.
+
+I recommend using a high-quality protein supplement that has no added sugars and either NO artificial sweetener OR uses Stevia (monk fruit) for sweetening (other sweeteners have all been linked to insulin resistance).
+If you have no allergies or intolerances to dairy, whey protein is an excellent choice. I recommend Levels-branded powders for this.
+If you have a milk allergy, want to avoid dairy, or prefer plant-based, pea protein powder is an excellent choice. I recommend Orgain-branded powders for this.
+Both of these I see on Amazon regularly and are available in a variety of flavors. I suggest mixing these with water or unsweetened almond milk to avoid added sugars and calories - do NOT mix with other fruits or juices as this will add unnecessary sugars and calories.
+
+I recommend an easy mixing bottle (my favorite is the simple BlendingBottle Classic V2) to mix these powders with water or almond milk, shake up, and drink without much effort. This and other options are available on Amazon for $10-15.
+"""
+
+"/ptlbp" = """
+Low back pain is typically caused by muscular tightness, strain, and spasm often but not always associated with degeneration of the low back. This degeneration occurs both in the discs that separate the back bones and in the individual joints between the back bones (one on each side). This is not something we can stop or significantly delay, much less prevent, but there are strategies to reduce pain with the goal not to be pain free (this unfortunately may not be possible), but to reduce pain enough that you can function daily.`n-Abdominal core and low back exercises - the vast majority of pain you can work out at home. Either use the exercises I gave you, use what you've learned before elsewhere, or reference the internet - I suggest looking at Youtube and finding a series by "Bob and Brad", two physical therapists that have videos teaching ways to relieve pain of all types including back pain. These are FREE. `n-I'll refer to physical therapy if this fails or occasionally right away. This is guided, hands-on exercise to strengthen the core/back and is the best route to improve pain; this improves pain in 95% of patients even with advanced degenerative disease or spinal stenosis. You should take what you learned in PT and continue doing those stretches/exercises regularly to prevent future back pain. `n-When this fails, we can use medications such as Tylenol (up to 3000mg/day - take scheduled three times a day w/ 1000mg doses). We then proceed to antiinflammatories in some cases, like naproxen, meloxicam, or celecoxib. `n-Medications such as gabapentin or nortriptyline can be helpful to limit any shooting pain (ie sciatica) that may occur`n-Duloxetine (Cymbalta) is a drug for mood that has a helpful side effect of significantly reducing pain when taken over time; it is non-addicting and can often be taken with other medications.`n-When all this fails, it may be reasonable to obtain an MRI of your back and have it reviewed by an orthopedist or pain specialist to discuss whether steroid injections either around the spine or into the joints between your back bones may help reduce pain. This won't fix the problem, but may provide relief for up to months.
+Ultimately, it's important to understand there is no cure or 'easy' fix for this, and improving your symptoms will almost always require daily stretching, activity, and exercise to be at your best.
+
+LOW BACK PAIN - CORE EXERCISES
+Exercising the core muscles can be beneficial in relieving low back pain caused by degenerative diseases or muscle spasms. Strengthening the core muscles provides support to the spine and helps improve stability and posture. Here are some general core exercises that may help relieve low back pain:
+
+Pelvic Tilt:
+Lie on your back with your knees bent and feet flat on the floor.
+Engage your abdominal muscles and gently press your lower back into the floor, tilting your pelvis upward.
+Hold for 5-10 seconds and release - this is 1 rep.
+Repeat for 10-15 repetitions per set.
+Aim for 3 sets.
+
+Bridge:
+Lie on your back with your knees bent and feet flat on the floor, hip-width apart.
+Engage your core muscles and lift your hips off the floor, creating a straight line from your shoulders to your knees.
+Hold this position for a few seconds, then lower your hips back down - this is 1 rep.
+Repeat for 10-15 repetitions per set.
+Aim for 3 sets.
+
+Cat-Cow Stretch:
+Start on your hands and knees in a tabletop position, with your wrists directly under your shoulders and knees under your hips.
+Inhale and arch your back, lifting your head and tailbone towards the ceiling (Cow Pose).
+Exhale and round your back, tucking your chin and tailbone (Cat Pose).
+Flow between these two positions for 1-2 minutes, focusing on controlled movements and gentle stretches.
+
+Bird-Dog:
+Start on your hands and knees in a tabletop position.
+Engage your core and extend your right arm forward while simultaneously extending your left leg straight back.
+Hold this position for a few seconds, then return to the starting position - this is 1 rep.
+Repeat on the other side, extending your left arm and right leg.
+Perform 10-15 repetitions on each side per set.
+Start with 3 sets.
+
+Plank:
+Start in a push-up position, with your hands directly under your shoulders and your toes on the floor. If you have wrist issues, starting on your elbows can be much more comfortable.
+Engage your core muscles and hold your body in a straight line from head to heels.
+Keep your abdominal muscles tight and avoid arching or sagging your back. Squeeze your butt muscles to engage these during your plank for extra stability.
+Hold the plank initially for up to 10 seconds (1 rep), gradually increasing the duration.
+Aim to complete 3 reps per set.
+
+Side Plank:
+Lie on your side with your elbow directly under your shoulder and your legs stacked on top of each other.
+Lift your hips off the floor, creating a straight line from your head to your feet.
+Engage your core and hold this position for as long as you can but aim for 10 seconds to start - this is 1 rep.
+Switch to the other side and repeat.
+Aim to complete 3 reps per set.
+
+Remember to perform these exercises with control and avoid any movements or positions that cause pain or discomfort. It's essential to start slowly and gradually increase the intensity and duration of the exercises as your strength improves. If you experience increased pain or any new symptoms during the exercises, stop immediately and consult Dr. Fellows.
+
+Start with a rotation of these exercises, completing a set of each exercise then repeating for total of 2 to 3 sets.
+The total workout will take approximately 10 minutes - set aside 10 minutes/day to do this. In as little as 2 days, back pain can start to lessen. Make the routine part of your daily schedule. If you can't make time for 10 minutes of this, that's OK! Do what you can whenever you can - results are similar if you do 5 minutes here and 5 minutes there versus 10 minutes at once.
+"""
+
+
+"/ptsicca" = """
+DRY EYES/MOUTH ('sicca' symptoms)
+Sicca symptoms are caused by a lack of moisture in the eyes and mouth. This can be caused by a variety of things, including medications, autoimmune diseases, and aging.
+
+Eye drops can and should be used as needed for eye dryness, I suggest either Refresh or Systane brands.  There are preservative-free, single use vials you can use that tend to work a little bit better/last a bit longer if the regular drops don't work well.  For dryness at night or early in the AM, you should consider using either a Refresh or Systane ointment - this is applied just inside the lower eyelid right before bed and gives relief all night and often into the morning (this may make your vision a bit blurry so it isn't recommended to use in the daytime).  All of these drops/ointments can be obtained cheaply through a subscription service called 'My Dry Eye Box' located here: https://www.mydryeyebox.com/
+
+If you feel like you have dry mouth, biotene mouth rinse can be effective up to twice a day, drink water regularly, have a glass of water next to your bed at night time in case you wake up dry, and make sure you see a dentist regularly (we see higher rates of cavities with dry mouth because saliva helps protects our teeth). I also recommend avoiding toothpastes that contain sodium lauryl sulfate (SLS) - this is what makes your toothpaste 'foamy' but can irritate the mouth tissue and promote a feeling of dry mouth. I suggest Sensidyne, Tom's, or Biotene toothpastes.  Look for other artificial saliva substitutes that you can take in the daytime; Xylamelts is a common and helpful example that you can put in your mouth or adhere to gums either day or night to help relieve dryness.
+When particularly dry, holding water in your mouth for a short period/ie 5-10 seconds before swallowing. You can try adding a tiny amount of olive oil to your water; this can coat your mouth to help the dry mouth sensation.
+
+For both eye and mouth dryness at night, placing a portable/small humidifer next to your bed and running nightly can help symptoms! Remember: these are small and don't work to meaningfully humidify a large space - place the machine next to your bed on a nightstand preferably for best result. Make sure to maintain the humidifier with routine cleaning as per its instructions (these can harbor mold if not cleaned).
+"""
+
+"/pttrap" = """
+Patient Instructions: Exercises for Trapezius Spasm
+
+Trapezius spasms can cause discomfort and stiffness in the neck, shoulders, and upper back. Regular exercises and stretches can help reduce the tension in these muscles and alleviate pain. Here are some simple exercises that you can do at home.
+
+Remember: Always consult with your healthcare provider before starting a new exercise routine, especially if you're experiencing severe or chronic pain.
+
+1. Shoulder Rolls:
+Stand or sit up straight.
+Slowly roll your shoulders up, then backward, down, and forward in a circle.
+Do this 10 times, then reverse the direction and repeat.
+
+2. Neck Tilts:
+Stand or sit up straight.
+Slowly tilt your head to one side, trying to touch your ear to your shoulder until you feel a gentle stretch.
+Hold the stretch for 15-30 seconds.
+Repeat on the other side.
+Do this exercise 3-5 times on each side.
+
+3. Neck Turns:
+Stand or sit up straight.
+Slowly turn your head to one side until you feel a gentle stretch.
+Hold for 15-30 seconds.
+Repeat on the other side.
+Do this exercise 3-5 times on each side.
+
+4. Wall Stretch:
+Stand facing a wall at arm's length.
+Reach your arm out to the wall and turn your body away from the wall until you feel a stretch in your shoulder.
+Hold for 15-30 seconds.
+Repeat on the other side.
+Do this exercise 3-5 times on each side.
+
+5. Resistance Band Pull:
+Hold a resistance band in front of you with both hands.
+Keep your arms straight and pull the band apart and slightly backward.
+Hold the position for a few seconds, then slowly return to the starting position.
+Repeat 10-15 times.
+
+6. Scalene Stretch:
+Stand or sit up straight.
+Place one hand on your chest.
+Tilt your head away from the hand on your chest and slightly look up until you feel a stretch on the side of your neck.
+Hold for 15-30 seconds.
+Repeat on the other side.
+Do this exercise 3-5 times on each side.
+
+Tips:
+Relax and breathe normally while you stretch. Do not hold your breath.
+Always do these exercises slowly and gently. Quick, forceful movements can cause injury.
+Stop any exercise that causes pain. A mild stretching sensation is normal, but pain is a sign that the stretch is too intense.
+Regular breaks from prolonged sitting or standing can also help to relieve tension in the trapezius muscle. Try to take a 1-2 minute break every hour to stretch or move around.
+If you do not notice improvement after a few weeks of regular stretching, or if your pain worsens, be sure to consult with your healthcare provider. They may recommend physical therapy or other treatments.
+"""
+
+"/ptexlower" = """
+General Exercise Instructions for Individuals with Limited Use of Lower Extremities
+
+Regular exercise is essential for maintaining overall health and wellness. Even if you have limited use of your lower extremities, there are many ways to engage in both aerobic and resistance exercises. Here are some suggestions:
+
+Aerobic Exercise:
+Aerobic exercise enhances cardiovascular health, aids weight control, and increases overall endurance. It involves activities that raise your heart rate and keep it elevated for a certain period of time. For those with limited lower extremity function, consider:
+
+-Upper Body Ergometer (Arm Bike): This machine provides a good cardiovascular workout using only the upper body.
+-Wheelchair Sprints/Rolls: If you are a wheelchair user, try doing sprints or long-distance rolls. These can provide a good aerobic workout.
+-Seated Aerobic Classes or Videos: There are many fitness classes and workout videos designed specifically for seated exercises. These often include a combination of aerobic and resistance training.
+
+Resistance Exercise:
+Resistance exercises are designed to improve muscular strength and endurance. For individuals with limited use of their lower extremities, focus on exercises that work the upper body and core:
+
+-Resistance Bands or Weights: Use these for bicep curls, tricep extensions, shoulder presses, and rowing exercises to build upper body strength.
+-Wheelchair Push-ups: If you are a wheelchair user, wheelchair push-ups can be an excellent exercise to build strength in your arms, shoulders, and chest.
+-Core Exercises: Exercises such as seated twists, seated punches, or other seated balance activities can help to strengthen the core.
+
+Guidelines and Considerations:
+-Warm Up and Cool Down: Always start your exercise session with a 5-10 minute warm-up, like gentle stretching. Similarly, cool down after your exercise session to help your body recover.
+-Consistency: Aim for at least 150 minutes of moderate aerobic activity or 75 minutes of vigorous activity each week, and do strength training exercises at least two days a week.
+-Listen to Your Body: If you experience any unusual pain or discomfort while exercising, stop the activity and consult with your healthcare provider or a physical therapist.
+-Personalize Your Workout: Consider working with a physical therapist or a trainer with experience in adaptive fitness to create a personalized exercise routine that fits your abilities and goals.
+"""
+
+"/ptexupper" = """
+General Exercise Instructions for Individuals with Limited Use of Upper Extremities
+
+Exercise is an important component of maintaining overall health. Even if you have limited use of your upper extremities, there are plenty of ways to engage in both aerobic and resistance exercise. Here are some suggestions:
+
+Aerobic Exercise:
+Aerobic exercise helps improve cardiovascular health, control weight, and increase stamina. It involves activities that raise your heart rate and keep it elevated for a certain amount of time. For those with limited upper extremity function, consider:
+
+-Walking or Hiking: Walking is an excellent low-impact aerobic exercise. Try to aim for at least 30 minutes of brisk walking most days of the week. If you're up for a challenge, try hiking on uneven terrain or gentle hills to increase intensity.
+-Cycling: Stationary bikes or outdoor cycling can provide a great workout. Make sure the bike is set up properly to minimize strain on your upper body.
+-Seated Aerobic Classes or Videos: There are fitness classes and workout videos designed for people who need to exercise while seated. These can be a good option if standing for long periods is challenging.
+
+Resistance Exercise:
+Resistance exercises strengthen your muscles and can help maintain bone health. For individuals with limited use of their upper extremities, lower-body and core exercises will be a focus:
+
+-Leg Presses: If you have access to a gym, the leg press machine can be used to strengthen your thighs and glutes.
+-Seated Leg Extensions and Curls: These can also be done on gym machines or at home with resistance bands.
+-Core Exercises: Workouts like seated twists, seated leg lifts, and other core stabilizing exercises can help to strengthen the core even if upper body mobility is limited.
+
+Guidelines and Considerations:
+-Warm Up and Cool Down: Always start your exercise session with a 5-10 minute warm-up, like gentle stretching or walking. Similarly, cool down after your exercise session to help your body recover.
+-Consistency: Aim to get at least 150 minutes of moderate aerobic activity or 75 minutes of vigorous activity each week, and do strength training exercises at least two days a week.
+-Listen to Your Body: If you feel any unusual pain or discomfort while exercising, stop and consult your healthcare provider or a physical therapist. Never push through pain.
+-Personalize Your Workout: Work with a physical therapist or a trainer with experience in adaptive fitness to create a workout routine tailored to your abilities and goals.
+"""
+
+"/proclarge" = """
+PROCEDURE NOTE
+
+PRE-PROCEDURE DIAGNOSIS: xxx
+POST-PROCEDURE DIAGNOSIS: Same
+PROCEDURE: large joint injection w/ arthrocentesis:
+Performing Physician: Zachary Fellows, MD
+
+Medication:
+Triamcinolone acetonide 40mg/mL 1mL
+Lidocaine 1% 2mL
+
+Verbal informed consent was obtained: discussed potentials risks including but not limited to infection, bleeding, nerve injury, and no improvement in symptoms. The patient understood the risks and benefits of the procedure and agreed to proceed.
+
+Procedure: The area was prepped in the usual sterile manner. Using direct ultrasound guidance for the entirety of the procedure (Clarius HD3 L15 probe), the needle was inserted into the affected area and the steroid was injected. There were no complications during this procedure. Images were captured and saved locally.
+
+Follow-up: The patient tolerated the procedure well without complications. Standard post-procedure care was explained and return precautions given, particularly in the event of possible infection.
+"""
+
+"/procsmall" = """
+PROCEDURE NOTE
+
+PRE-PROCEDURE DIAGNOSIS: xxx
+POST-PROCEDURE DIAGNOSIS: Same
+PROCEDURE: small joint injection w/ arthrocentesis:
+Performing Physician: Zachary Fellows, MD
+
+Medication:
+Triamcinolone acetonide 40mg/mL 0.25mL
+Lidocaine 1% 0.25mL
+
+Verbal informed consent was obtained: discussed potentials risks including but not limited to infection, bleeding, nerve injury, and no improvement in symptoms. The patient understood the risks and benefits of the procedure and agreed to proceed.
+
+Procedure: The area was prepped in the usual sterile manner. Using direct ultrasound guidance for the entirety of the procedure (Clarius HD3 L15 probe), the needle was inserted into the affected area and the steroid was injected. There were no complications during this procedure. Images were captured and saved locally.
+
+Follow-up: The patient tolerated the procedure well without complications. Standard post-procedure care was explained and return precautions given, particularly in the event of possible infection.
+"""
+
+"/procmed" = """
+PROCEDURE NOTE
+
+PRE-PROCEDURE DIAGNOSIS: xxx
+POST-PROCEDURE DIAGNOSIS: Same
+PROCEDURE: medium joint injection w/ arthrocentesis:
+Performing Physician: Zachary Fellows, MD
+
+Medication:
+Triamcinolone acetonide 40mg/mL 0.25mL
+Lidocaine 1% 0.25mL
+
+Verbal informed consent was obtained: discussed potentials risks including but not limited to infection, bleeding, nerve injury, and no improvement in symptoms. The patient understood the risks and benefits of the procedure and agreed to proceed.
+
+Procedure: The area was prepped in the usual sterile manner. Using direct ultrasound guidance for the entirety of the procedure (Clarius HD3 L15 probe), the needle was inserted into the affected area and the steroid was injected. There were no complications during this procedure. Images were captured and saved locally.
+
+Follow-up: The patient tolerated the procedure well without complications. Standard post-procedure care was explained and return precautions given, particularly in the event of possible infection.
+"""
+
+"/proccts" = """
+PROCEDURE NOTE
+
+PRE-PROCEDURE DIAGNOSIS: carpal tunnel syndrome, right/left
+POST-PROCEDURE DIAGNOSIS: Same
+PROCEDURE: carpal tunnel injection w/ direct ultrasound guidance
+Performing Physician: Zachary Fellows, MD
+
+Medication:
+Triamcinolone acetonide 40mg/mL 0.25mL
+Lidocaine 1% 0.50mL
+
+Verbal informed consent was obtained: discussed potentials risks including but not limited to infection, bleeding, median nerve injury, and no improvement in symptoms. The patient understood the risks and benefits of the procedure and agreed to proceed.
+
+Procedure: The area was prepped in the usual sterile manner. Using direct ultrasound guidance for the entirety of the procedure (Clarius HD3 L15 probe), the needle was inserted within the flexor retinaculum and adjacent to the median nerve. The solution was then injected. There were no complications during this procedure. Images were captured and saved locally.
+
+Follow-up: The patient tolerated the procedure well without complications. Standard post-procedure care was explained and return precautions given, particularly in the event of possible infection or median nerve injury.
+"""
+
+"/proctrigger" = """
+PROCEDURE NOTE
+
+PRE-PROCEDURE DIAGNOSIS: trigger finger, right/left
+POST-PROCEDURE DIAGNOSIS: Same
+PROCEDURE: tendon sheath injection w/ direct ultrasound guidance
+Performing Physician: Zachary Fellows, MD
+
+Medication:
+Triamcinolone acetonide 40mg/mL 0.5mL
+Lidocaine 1% 0.5mL
+
+Verbal informed consent was obtained: discussed potentials risks including but not limited to infection, bleeding, nerve injury, tendon rupture and no improvement in symptoms. The patient understood the risks and benefits of the procedure and agreed to proceed.
+
+Procedure: The area was prepped in the usual sterile manner. Using direct ultrasound guidance for the entirety of the procedure (Clarius HD3 L15 probe), the needle was inserted just superficial to the flexor tendon sheath at the level of the A1 pulley. The solution was then injected. There were no complications during this procedure. Images were captured and saved locally.
+
+Follow-up: The patient tolerated the procedure well without complications. Standard post-procedure care was explained and return precautions given, particularly in the event of possible infection or tendon rupture. They were instructed to minimize use for 48 hours of the affected hand and digit particularly.
+"""
+
+"/proctendon" = """
+PROCEDURE NOTE
+
+PRE-PROCEDURE DIAGNOSIS: xxxxxx
+POST-PROCEDURE DIAGNOSIS: Same
+PROCEDURE: tendon injection w/ direct ultrasound guidance
+Performing Physician: Zachary Fellows, MD
+
+Medication:
+Triamcinolone acetonide 40mg/mL 0.5mL
+Lidocaine 1% 0.5mL
+
+Verbal informed consent was obtained: discussed potentials risks including but not limited to infection, bleeding, nerve injury, tendon rupture and no improvement in symptoms. The patient understood the risks and benefits of the procedure and agreed to proceed.
+
+Procedure: The area was prepped in the usual sterile manner. Using direct ultrasound guidance for the entirety of the procedure (Clarius HD3 L15 probe), the needle was inserted adjacent to the tendon structure. The solution was then injected. There were no complications during this procedure. Images were captured and saved locally.
+
+Follow-up: The patient tolerated the procedure well without complications. Standard post-procedure care was explained and return precautions given, particularly in the event of possible infection or tendon rupture. They were instructed to minimize use of the affected area for 48 hours.
+"""
+
+"/proctriggerpoint" = """
+PROCEDURE NOTE
+
+PRE-PROCEDURE DIAGNOSIS: myalgia
+POST-PROCEDURE DIAGNOSIS: Same
+PROCEDURE: Trigger Point Injection w/o guidance
+Performing Physician: Zachary Fellows, MD
+
+Medication:
+
+Triamcinolone acetonide 40mg/mL 1mL
+Lidocaine 1% 10mL
+Verbal informed consent was obtained: discussed potential risks including but not limited to infection, bleeding, nerve injury, and no improvement in symptoms. The patient understood the risks and benefits of the procedure and agreed to proceed.
+
+Procedure: The area was prepped in the usual sterile manner. Using anatomical landmarks, the needle was inserted into the identified trigger point, and the steroid and local anesthetic were injected. There were no complications during this procedure.
+
+Follow-up: The patient tolerated the procedure well without complications. Standard post-procedure care was explained, and return precautions were given, particularly in the event of possible infection.
+"""
+
+
+"/ptneat" = """
+NONEXERCISE ACTIVITY THERMOGENESIS (NEAT)
+NEAT, or nonexercise activity thermogenesis, is the energy you expend from any movement your body makes that is not considered exercise. This includes activities like walking, standing, fidgeting, and even chewing gum. NEAT can account for up to 50% of your total daily energy expenditure and it can vary greatly from person to person. For example, a person with a desk job may have a NEAT of 300 calories per day, while a person with a more active job may have a NEAT of 1,000 calories per day.
+Consider NEAT "free" calories burned: you don't have to dedicate anything extra to burn these calories, they're just burned as you go about your day. Increasing your NEAT can be a great way to burn more calories without having to do any formal exercise. 
+Here are some tips to increase your NEAT:
+
+1. Walk short distances instead of taking a car or bus. Park your car in the back of the lot when you go to the store.
+2. Take stairs instead of elevators 
+3. Carry overnight travel bags instead of using rollers (i.e., akin to a farmer’s walk exercise) 
+4. Utilize an active work environment (i.e., standing desks, walking desks) 
+5. Avoid prolonged inactivity/take breaks from inactivity 
+6. Walk, stand, and complete incidental movements throughout the day
+7. Fidget! Or more accurately, don't try to stop yourself from fidgeting. Fidgeting can burn up to 350 calories per day.
+8. Chew gum; this can burn up to 11 calories per hour.
+9. Pace while talking on the phone
+10. Do household chores like vacuuming, sweeping, or mopping
+11. Play with your kids or pets
+12. Dance while cooking or cleaning
+13. Walk around the house while brushing your teeth
+
+"""
+
+"/pthandoa" = """
+HAND OSTEOARTHRITIS
+1. If you're not already, start using diclofenac 1% or greater gel (available OTC) to your painful hand joints up to three times a day - you can do this in addition to Tylenol
+2. I always suggest adding extra-strength Tylenol 500mg two tabs up to three times a day (maximum 3000mg/day) to your regimen - this is safe to take with the diclofenac gel. Some of us can obtain reasonable relief with as-needed use, others may need to take this on a regular schedule to get the most benefit (ie schedule a dose in the morning, at lunch, and at bedtime).
+3. Try using paraffin wax baths when pain is particularly severe or after 'overdoing it' - kits are available in drug stores, Amazon, etc. Try this once a day as needed to relax hands. These are portable kits that you can use at home, work, etc.
+4. If your thumb particularly bothers you, thumb spica splints can be helpful to immobilize at least at night, better if possible to wear during the day too.  Amazon sells these for roughly $9-$10
+5. Targeted joint injections can be helpful for individual joints (particularly the base of your thumb). These help relieve symptoms on average 3-6 months at a time, but don't ultimately change the course of the disease.
+6. When pain becomes so severe that you can't function, surgery has a role to artificially fuse a joint - you ultimately lose some function doing this but pain is often improved.
+
+Supplements:
+1. Glucosamine/chondroitin supplements (look for doses of 1200/1500mg respectively, when taken daily (and every single day consistently) can help reduce pain associated with hand arthritis. Do NOT waste your money on expensive brand options - these are no better than the store brand offerings from CVS, Walgreens, Target, Wal-Mart, etc.
+2. Curcumin either 500mg 3x a day or 1500mg once a day - this is the active ingredient in tumeric. When compared to an oral antiinflammatory for knee arthritis, curcumin was equally as effective for pain relief.
+3. Fish oil or algae oil (a vegetarian/vegan alternative) as a supplement: goal dose should be 500mg of DHA per day (look at the labels closely). Higher intake of omega-3 fatty acids, as in the type rich in fatty fish or in fish oil/algae oil, has been shown to reduce inflammation associated with some types of arthritis and might provide some benefit. I suggest Nature's Made brand, but any widely-available brand containing EHA and DHA (target goal for DHA of 500mg/day is ideal!). There's some data fish oil may lower risk of heart disease as well, so another good reason to take it!
+"""
+
+"/ptsupp" = """
+SUPPLEMENTS THAT MAY HELP INFLAMMATION/PAIN
+This list is not exhaustive, but these are the most common supplements I recommend to patients with inflammatory arthritis or osteoarthritis. These aren't typically a substitute for medications, but can be used in conjunction with them to help reduce pain and inflammation.
+
+For most cases (with these and other vitamins), I'd suggest either Nature's Made or NOW Foods - most brands available are "white-labeled" meaning the vitamins are manufactured elsewhere and then packaged/labeled by the ultimate seller - Nature's Made and NOW Foods DO make their own, are widely available, and affordable.
+1. Glucosamine/chondroitin supplements (look for doses of 1200/1500mg respectively, when taken daily (and every single day consistently) can help reduce pain associated with hand arthritis. Do NOT waste your money on expensive brand options - these are no better than the store brand offerings from CVS, Walgreens, Target, Wal-Mart, etc.
+2. Curcumin either 500mg 3x a day or 1500mg once a day - this is the active ingredient in tumeric. When compared to an oral antiinflammatory for knee arthritis, curcumin was equally as effective for pain relief.
+3. Fish oil or algae oil (a vegetarian/vegan alternative) as a supplement: goal dose should be 500mg of DHA per day (look at the labels closely). Higher intake of omega-3 fatty acids, as in the type rich in fatty fish or in fish oil/algae oil, has been shown to reduce inflammation associated with some types of arthritis and might provide some benefit. I suggest Nature's Made brand, but any widely-available brand containing EHA and DHA (target goal for DHA of 500mg/day is ideal!). There's some data fish oil may lower risk of heart disease as well, so another good reason to take it!
+
+"""
+
+"/ptkneeoa" = """
+KNEE OSTEOARTHRITIS
+1. Stay active - if going for longer walks/jogs/hikes becomes too uncomfortable, look into biking. Both upright and recumbent biking shaves a consider amount of pressure off the knees and allows you to maintain strength in your legs while being less uncomfortable. Activity helps prolong the progression of pain you experience.
+2. If overweight, losing just 10% of your body weight on average drops your knee pain in half with knee osteoarthritis. Diet is 80% of this, exercise is important but roughly only 20% of weight loss efforts.
+3. Obtain a neoprene knee brace/support. This should wrap around the knee (often w/ the knee cap exposed) and helps line up your knee properly. Wearing one when going out on a walk or similar can reduce pain slightly. Do NOT get a hinged knee brace unless recommended to.
+4. I can inject your knee with either corticosteroid ('cortisone'; we believe cuts down on painful inflammation occurring within the joint) or a viscosupplementation product (ie 'Synvisc', 'Supartz', etc) that help support the joint. The latter requires insurance approval and sometimes is not an option for you (particularly if a steroid shot isn't completed first). On average, each can provide relief for 3-6mo on average, sometimes much longer.
+5. When injections fail, we can look into a procedure called a genicular knee block. This is a 2-step procedure that deadens the pain nerves to the knee for up to 6 months.
+6. If symptoms progress to the point you're still functionally limited or in significant pain despite everything above, I'll refer you to an orthopedic surgeon to discuss surgical options. This can sometimes include an arthroscopic 'clean-up' of the joint, partial replacement of your knee, or a total knee replacement with artificial components - the choice depends on your circumstances and what you're looking for.
+"""
+
+"/ptoa" = """
+GENERAL OSTEOARTHRITIS TIPS:
+1. Diclofenac gel 1% (common brand name is Voltaren) is available on the shelf now without a prescription - this is a topical antiinflammatory that can be applied to any joint up to 3 times a day AND can be useful for muscle aches/pains, even those involving your low back and neck. It's safe to use with underlying kidney disease, and can be taken along with oral antiinflammatories when applicable. Voltaren is the common brand, but numerous other product lines are now starting to include this ingredient. Costco is a good place to get this (about $30 for 3 tubes). I can also prescribe this for you; your drug plan may cover this at a lower co-pay than the usual price of roughly $10-15 per tube.
+2. Tylenol should be the foundation of any drug therapy you embark on - we start with this and add to it as necessary. I advise everyone with symptomatic arthritis that limits them in any way to take Tylenol daily. You can start with as-needed use, but when pain becomes persistent and/or begins limiting your function, you should take it on a scheduled basis like any other medication. I suggest working to a maximum of 3000mg per day - this is most easily hit with Extra Strength tablets (these are 500mg) where you can take 2 in the morning, afternoon, and evening. This is a safe upper limit for Tylenol that you can take everyday for the rest of your life without risking any harm to your liver. Tylenol is safe to take with stomach issues, kidney disease, and even liver disease (with exceptions we'll talk about if applicable). You should be aware opioids often contain Tylenol (acetaminophen) - it will be clearly visible on the label of your prescription. Keep in mind these can add up to your 3000mg/day limit and need to be accounted for, if you're taking them.
+3. Antiinflammatories (ie ibuprofen/Motrin/Advil or naproxen/Aleve, other prescriptions) might be useful for you but these are only after you've maxed out your Tylenol. Long-term use of these can promote stomach ulcers, risk kidney damage, or even provoke certain heart disease. They should only be used long-term if another physician or I recommend them to you.
+4. There is an occasional use for a type of antidepressant that's FDA-approved for osteoarthritis pain called Cymbalta (duloxetine). This is not a pain medicine, but it's a medication that acts over time to reduce how strongly you perceive pain - it is a daily medication and not something you can take 'as needed'. This is something we add once you've maxed out Tylenol and, if applicable, NSAID antiinflammatories.
+5. Physical activity doesn't delay the progression of osteoarthritis (very little can), but physical activity in general has benefits that you need to be tapping into: it reduces pain, it improves your mobility/maintains flexibility, reduces likelihood of falls when you're older, and reduces likelihood of heart disease/stroke.
+6. Overall principle of osteoarthritis treatment is that we can't eliminate your pain entirely - that's not practical in modern medicine - but we can significantly reduce it and keep you functioning the way you want to, doing the things you want to do.
+"""
+
+"/ptdiet" = """
+PRO-INFLAMMATORY FOODS
+Certain foods may be pro-inflammatory meaning they can increase inflammation in the body. This can worsen symptoms of inflammatory conditions like rheumatoid arthritis, psoriatic arthritis, and ankylosing spondylitis, although sometimes we even notice worse symptoms with usual wear/tear osteoarthritis. 
+This is NOT universally true since all of our guts process nutrients differently, so some may notice no difference in symptoms with/without these foods. However, if you notice worsening symptoms after eating these foods, you may want to limit or avoid them.
+Here are some foods to consider limiting or avoiding:
+-Processed carbohydrates like white bread, white rice, and sugary cereals
+-Fried foods like french fries, fried chicken, and fried fish
+-Nightshades: tomatoes, bell peppers, eggplant, and capsaicin-containing spicy peppers (ie jalapenos)
+-Dairy products: milk, cheese, yogurt, ice cream, etc.
+-Alcohol - likely all forms of it!
+"""
+
+"/ptgoodrx" = """
+***GOODRX INFORMATION***
+GoodRx is a savings program that is free to use, no registration or personal information necessary. Normally, when you pay for a medication, you are paying for a copay that is dictated by your insurance which in some cases exceeds (sometimes greatly exceeds) the price the pharmacy pays the pharmaceutical company for the medication. GoodRx bypasses your insurance and allows you to pay a reduced cash price through an agreement between Goodrx, the pharmacy, and you so the price you pay is often just slightly higher than the price the pharmacy obtained it for. Your insurance is not involved here.
+
+The savings depends on the medication (older) and which pharmacy you go to since not all pharmacies have the same agreements with GoodRx (this is usually the larger corporate chains who do not participate such as CVS, Walgreens, and to a lesser degree Rite-Aid).
+
+I encourage you to look at www.goodrx.com, search for a medication with the correct dose and quantity that you usually receive or are planning to get dispensed, and then look at the prices at local pharmacies. The listed price on GoodRx is the final price that you will pay at that pharmacy - *this may be lower than your insurance copay,  especially for Medicare plans*.
+
+To use GoodRx, you either use show your pharmacist the GoodRx card that we have available in our office or show the pharmacist a coupon that you can generate online or on your phone by typing in the name of your drug, quantity, and then selecting that pharmacy on GoodRx. Again, there's no cost to use this. GoodRx offers a gold service which I don't find necessary and does cost a monthly fee. I suggest you avoid giving them any personal information and I suggest avoiding signing up for this unless you find the benefits helpful to you. I've not found an instance where the benefits are helpful, however.
+Two caveats with GoodRx:
+1. They have been reported to aggregate data to sell to other companies like type of medication, pharmacy sold, and potentially name/address.
+2. In recent years, they have endeavored to expand their services to include on-demand primary care telehealth visits and other services. They have become more aggressive at encouraging you to sign-up for their premium services which offer dubious benefit.
+For these reasons, I recommend considering GoodRx only if cost is prohibitive and your medication is not available elsewhere, like via CostPlusDrugs. Even then, I'd recommend against giving them any personal information or signing-up for their premium services. Sign-up is never necessary to access their rates.
+"""
+
+"/ptcpd" = """
+*************************
+CostPlusDrugs (Mark Cuban's pharmacy)
+https://costplusdrugs.com/
+
+CostPlusDrugs is a mail-order pharmacy with a simple goal of offering transparent, affordable prescription medications. They provide a number of different medications at wholesale cost + small markup and shipping - the overall price paid is often lower than insurance copays and often dramatically lower than paying the cash price at a big-brand pharmacy like CVS or Walgreens (CVS, Walgreens, others notorious for 500-1000% markups over wholesale price). I strongly recommend them for your medications if your insurance cannot provide your medications affordably as they should. I strongly recommend them (and use them for my own medications!).
+
+Steps to enroll with them for medications:
+
+1. Search their medication list to ensure they stock your medication and have an acceptable price (They do NOT accept most insurance plans, they are cash-only).
+2. Click sign-up on the upper right of the main page.
+3. Follow instructions to complete sign-up.
+4. Once completed, let me know which medications you'd like to send, and I'll send in electronic prescriptions to them. Once they receive a prescription, you'll receive an email to complete payment, and then it gets shipped to your home.
+"""
+
+"/ptbio" = """
+SPECIALTY PHARMACIES AND MEDICATIONS
+As we discussed during your visit, I have prescribed a specialty rheumatic medication for you, such as a biologic like Humira or Enbrel. To ensure a smooth process, please follow these instructions regarding the prescription and delivery of your medication:
+
+1. Prescription: I'll send a prescription for your medication to an intermediate specialty pharmacy called Senderra. Specialty pharmacies are (almost always) the only pharmacies that dispense these medications and they are not the same as your usual CVS, Safeway, etc local pharmacies.
+2. Senderra introduction: If I sent your medication to Senderra, they will contact you by phone to introduce themselves and assist you in enrolling with the drug company's co-pay saving's card/plan. Please note that enrollment is essentially mandatory but is very, very helpful; these programs importantly provide a benefit for free to you called a 'co-pay card' or 'co-pay assistance' that reduces your monthly co-pay to usually $5 or less. Otherwise, your co-pay will be unsustainably/unreasonably high ($500-2000/mo).
+3. Hand-off to final specialty pharmacy: Your insurance often requires Senderra to hand off your prescription to another specialty pharmacy. This final pharmacy is typically owned or contracted by your insurance provider and may include OptumRx, CVS Caremark, Express Scripts, Accredo, Elixir, or CarelonRX. Be aware that these insurance-mandated specialty pharmacies can sometimes be difficult to work with, hard to reach, and may provide conflicting information.
+4. Shipping: The final specialty pharmacy will contact you by phone to arrange for the shipment of your medication which will then get shipped to your home.
+5. Receiving Shipment: Your medication will be shipped in a refrigerated container. It is important to keep the container refrigerated until you are ready to use the medication. When ready for use, remove the medication from the container and allow it to come to room temperature (approximately 30 minutes) before injecting.
+
+-Troubleshooting: If you experience any difficulties or hassles with the specialty pharmacy, or if you are told your co-pay will be more than $10, please call my office for assistance. Do NOT troubleshoot with the specialty pharmacy directly. If you ever receive conflicting information from the pharmacy, call me to discuss what to do.
+-Credit Card Caution: To avoid inappropriate charges, I recommend not leaving your credit card information on file with the specialty pharmacy, as some of my patients have been inappropriately charged in excess in the past by these pharmacies.
+
+Do NOT hesitate to reach out to my office if you have any questions or concerns during this process. I'm here to support you and ensure that you receive the best possible care. Keep in mind the drug company (ie Abbvie, Amgen, Janssen, etc) are working on your side to get you the medication and it's in their interest to make sure you do well on their medication, so consider availing yourself to some of their support services: depending on the manufacturer, they may offer a nursing support for medication questions, they can handle defective injections and handle replacements, can help arrange/coordinate extended travel with the medications, etc in many cases.
+"""
+
+"/ptgel" = """
+DICLOFENAC/VOLTAREN GEL
+Diclofenac gel 1% (common brand name is Voltaren) is available on the shelf now without a prescription - this is a topical antiinflammatory that can be applied to any joint up to 3 times a day AND can be useful for muscle aches/pains, even those involving your low back and neck. It's safe to use with underlying kidney disease, and can be taken along with oral antiinflammatories when applicable. Voltaren is the common brand, but numerous other product lines are now starting to include this ingredient. Costco is a good place to get this (about $30 for 3 tubes). I can also prescribe this for you; your drug plan may cover this at a lower co-pay than the usual price of roughly $10-15 per tube.
+"""
+
+"/ptpt" = """
+PHYSICAL THERAPY
+I'd like you to start PT - I've printed a physical therapy order for you. Find a therapist near you (Google Maps is best to find one) then call and arrange your first appointment. You NEED to do the exercises/stretches they teach you at home between sessions (sessions are usually 1-2x a week at first).
+"""
+
+"/ptala" = """
+ALPHA LIPOIC ACID FOR NEUROPATHY
+Alpha lipoic acid is typically dosed at 600mg daily, taken in divided doses of 300mg twice daily. It is important to take alpha lipoic acid with meals and to drink plenty of water while taking the supplement. Alpha lipoic acid should be taken for at least three months to notice any effects. If you experience any adverse side effects, stop taking the supplement and contact your doctor.
+"""
+
+"/ptldn" = """
+LOW DOSE NALTREXONE
+Look into 'low-dose naltrexone' - has to be compounded (commercially only avail in 50mg tablets) into a 1-5mg dose (and can be compounded into liquid in some cases).This is a medical journal article that summarizes its use for various applications - helpful information.https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6313374/
+"""
+
+"/ptwrist" = "I suggest obtaining a wrist splint (NOT wrist support - should contain either metal/plastic within to prevent you from moving your wrist) and wearing this while using your computer or any other activity where you might be putting prolonged pressure on your wrist."
+
+"/ptpea" = "Look into palmitoylethanolamide (PEA) - this is a supplement that helps control centralized pain. Aim for 400-600mg taken daily. You can get this from Amazon; occasionally local pharmacies may have this too."
+
+"/rnp" = """
+RNP ANTIBODIES
+Low titer RNP antibodies in absence of clear disease are a dilemma that appear actually fairly commonly.  I prefer to watch these patients for about 2 years, whereas after that mark statistically any chance of evolving into a distinct rheumatic disorder becomes highly unlikely.
+"""
+
+"/nsaid" = "patient advised risks of NSAID/COX-2 inhibs including but not limited to ulceration/bleeding, renal injury, and MI; instructed to stop all other NSAID/COX-2s"
+
+"/newpt" = """
+Reminders for your first appointment:
+
+Insurance/ID: If you have insurance, please make sure to bring a copy of your insurance cards to your appointment. Please bring a copy of identification, i.e. Driver's License or State ID card.
+
+Attire: Please wear loose-fitting clothes for easy examination/ultrasound of your joints. Gowns are available if needed.
+
+Medical Records: Bring any relevant medical records you'd like me to review, or, if easier, arrange for them to be faxed to us by your primary doctor or referring office.
+
+Arrival: Synergy Rheumatology has no formal check-in, in contrast to most offices. If I'm not there to greet you, please make yourself comfortable in the waiting area and feel free to enjoy a refreshment, either a bottle of water or our Nespresso machine. I'll come and meet you in the waiting room as soon as I'm available.
+
+Appointment Duration: Please allow 75 minutes for your appointment time and please aim to arrive around 10 minutes early to your appointment time to allow for traffic slowdowns, parking, etc.
+
+Directions: Office is located at 6120 Paseo Del Norte, Suite C-1 in Carlsbad, CA. When exiting I-5 at Palomar Airport Rd, turn east on Palomar Airport Rd then turn right at the first traffic light. You'll see our large building on the left just after Tip Top Meats. Park in the rear parking lot near Carlsbad Ranch Market, enter the building through the double doors, and our office will be on the right.
+"""
+
+"/vitamins" = """
+GENERAL VITAMIN/SUPPLEMENT INFORMATION
+Vitamins and supplements can be beneficial for some patients, but they are not always necessary or beneficial for everyone. In some cases, excessive intake of certain vitamins and supplements can lead to adverse effects or even toxicity.
+
+Many vitamin brands sold are often white-labeled, that is they're manufactured by a different company and then sold under a different brand. Often, you truly end up paying for the label with no additional quality or safety. When recommending vitamins and supplements, I generally suggest Nature's Made brand. This is because they produce their own products, they're widely available, and they're very affordable without the fancy labeling and claims.
+"""
+
+
+
+
+"/labcorp" = """
+I've sent a lab order (blood and/or urine test) to Labcorp. This should be done at a date instructed during our appointment together (i.e. soon as possible OR often before next appointment), ask me/the office for clarification when to do these if you forget.
+
+LabCorp has limited many of their locations to an appointment-only model and won't accept walk-ins: you'll have to make an appointment through their website (strongly suggested) or by calling them. Having an appointment helps with your ultimate wait time. LabCorp has an occasional tendency of not having electronic orders available. I suggest having a hard copy of your order on-hand as a backup just in case - I'll provide this during or after our visit together, or else the order can be viewed directly from our patient portal (https://app.elationpassport.com/passport/login/).
+
+To make an appointment:
+
+Method 1: Online (strongly recommended)
+1. Go to: https://www.labcorp.com/labs-and-appointments
+2. Type in your preferred zip code into the search window and click "Go"
+3. Scroll down to the nearest location you'd like to go to and click "Make Appointment"
+
+Method 2: Phone
+1. Find your nearest LabCorp location on Google Maps or otherwise and call directly
+** Staffing at most LabCorp locations is tight and phone wait times can be long!
+
+Take a copy of your insurance card and ID to your appointment and call the office if
+"""
+
+"/quest" = """
+I've sent a lab order (blood and/or urine test) to Quest. This should be done at a date instructed during our appointment together (i.e. soon as possible OR often before next appointment), ask me/the office for clarification when to do these if you forget.
+
+Quest has limited many of their locations to an appointment-only model and won't accept walk-ins: you'll have to make an appointment through their website (strongly suggested) or by calling them. Having an appointment helps with your ultimate wait time. I suggest having a hard copy of your order on-hand as a backup just in case there's an issue with the electronic order on their side - I'll provide this during or after our visit together, or else the order can be viewed directly from our patient portal (https://app.elationpassport.com/passport/login/).
+
+To make an appointment:
+
+Method 1: Online (strongly recommended)
+1. Go to: https://appointment.questdiagnostics.com/as-home
+2. Click "Schedule Appointment"
+3. Click "All Other Tests"
+4. Enter zip code nearest you
+5. Scroll down past the "In-Home Collection" upsell (unless you want to pay them to come to your home) and select a time slot from one of the locations nearest you.
+
+Method 2: Phone
+1. Find your nearest Quest location on Google Maps or otherwise and call directly
+** Staffing at most Quest locations is tight and phone wait times can be long!
+"""
+
+"/glp1" = """counseled re: GLP1a usage and adverse effects including but limited to risk of MTC, pancreatitis, nausea, constipation, gallstones, NAION"""
+
+
+
+"/phone" = """
+This is a virtual visit by phone call only - no video or travel to the office necessary!
+
+Expect a call to the primary number on-file at the scheduled appointment time. If you haven't been called within 5 minutes of the appointment time, please call the office at 760-891-4687 to check the status of your appointment (in rare circumstances, the doctor may be behind or the appointment otherwise changed).
+"""
+
+# REFERRALS
+# ==========
+
+"/refpain" = """
+I've referred you to Pain Medicine Consultants; they have offices in two locations. I particularly recommend Dr. Richard Shinaman but both of his two partners are also excellent
+You'll need to call for an appointment:
+Pleasant Hill location: 925-293-8929  2250 Morello Ave, Pleasant Hill, CA 94523
+Pleasanton location: 925-293-8933  2324 Santa Rita Rd., Suite 6, Pleasanton, CA 94566
+Please give 24 hours for us to send referral to their location and then call them for your appointment.
+(fax: 925-287-0913)
+"""
+
+"/refallergy" = """
+I've referred you to Modena Allergy & Asthma in the La Jolla/UTC area.
+Please give 24 hours for us to send referral to their location and then call them for your appointment.
+Address: 9850 Genesee Ave #710, La Jolla, CA 92037
+Phone: 858-260-2977
+Fax: 858-260-2978
+"""
+
+"/refent" = """
+I've referred you to an ENT (ear, nose, throat) specialist at North County Ear, Nose, and Throat.
+Please give 24 hours for us to send referral to their location and then call them for your appointment.
+Address: 3909 Waring Rd, Ste A, Oceanside, CA 92056
+Phone: 760-726-2440
+Fax: 760-726-0644
+"""
+
+"/refneuro" = """
+I've referred you to a neurologist, a nerve/brain specialist, at Neurology Center.
+You'll need to call for an appointment:
+Phone: 760-631-3000
+6010 Hidden Valley Rd STE 200, Carlsbad, CA 92011
+"""
+
+"/refortho" = """
+I've referred you to an orthopedic surgeon at Orthopaedic Specialists of North County.
+You'll need to call for an appointment:
+Phone: (760) 724-9000
+Fax: (760) 724-3686
+6121 Paseo Del Norte, Carlsbad, CA 92011 (locations in Oceanside and Encinitas also)
+"""
+
+"/refpcp" = """
+I'd recommend Dr. Stewart Wilkey or Dr. Linda Falconio as excellent primary care physicians in the Tri-City area.
+You can call their office to schedule an appointment:
+- Dr. Stewart Wilkey: 760-941-4498
+- Dr. Linda Falconio: 760-631-4000
+"""
+
+"/refderm" = """
+I've referred you to dermatology: I'd recommend either Dr. Jessica Riley, DO or Allison Smith, PA-C at West Dermatology in Carlsbad.
+I've sent a referral to their office for you. You can call them to schedule an appointment:
+Phone: 760-884-5990
+Fax: 760-448-4404
+6010 Hidden Valley Rd Suite 120, Carlsbad, CA 92011
+"""
+
+"/refophtho" = """
+I've referred you to an ophthalmologist at Morris Eye Group.
+I've sent a referral to their office for you. You can call them to schedule an appointment:
+Phone: 760-631-3500
+Fas: 760-753-5150
+Two locations:
+- 1930 Via Centre, Vista, CA 92081
+- 477 N El Camino Real, Encinitas, CA 92024
+"""
+
+"/refendo" = """
+I've referred you to an endocrinologist, Dr. Jamil Alkhaddo.
+I've sent a referral to their office for you. You can call them to schedule an appointment:
+Phone: 760-536-8397
+Fax: 760-940-0042
+6185 Paseo Del Norte Ste 100, Carlsbad, CA 92011
+"""
+
+
+
+"/ptmoisturizer" = """
+SKIN MOISTURIZER/EMOLLIENT RECOMMENDATIONS
+1. CeraVe Moisturizing Cream: CeraVe Moisturizing Cream is a widely used and highly recommended moisturizer. It is suitable for both the face and body and is known for its non-greasy formula. It contains ceramides, which help restore and maintain the skin's natural protective barrier. Apply it liberally to clean, dry skin as needed, especially after bathing or showering.
+2. Cetaphil Moisturizing Cream: Cetaphil Moisturizing Cream is another popular choice that is gentle and suitable for all skin types, including sensitive skin. It provides long-lasting hydration and helps soothe dry, irritated skin. Apply it to clean skin and gently massage until absorbed. Use it as often as needed, particularly after bathing or showering.
+3. Aquaphor Healing Ointment: Aquaphor Healing Ointment is a multipurpose ointment that can be used as a moisturizer and for various skin concerns. It forms a protective barrier on the skin and helps lock in moisture. It is particularly beneficial for dry, cracked, or irritated skin. Apply a thin layer to clean, dry skin and massage it in gently. Use it as needed throughout the day.
+
+When using any moisturizer:
+- Use gentle, upward strokes: Apply the moisturizer using gentle, upward strokes to avoid pulling or stretching the skin.
+- Apply generously: Use enough moisturizer to fully cover the desired area without overapplying.
+- Customize usage: Adjust the frequency of application based on your skin's needs. Some people may require moisturizer multiple times a day, while others may only need it once a day. I'd suggest twice daily.
+- Sun protection: If using a moisturizer during the day, consider choosing one with broad-spectrum SPF to provide sun protection. However, if your moisturizer does not contain SPF, apply sunscreen separately to protect your skin from harmful UV rays.
+
+It's important to note that everyone's skin is unique, and what works for one person may not work the same for another. If you have specific skin concerns or sensitivities, it's always a good idea to consult with a dermatologist or healthcare professional for personalized recommendations.
+"""
+
+
+# WEIGHT LOSS TOPICS
+# ==================
+
+"/wtfiber" = """
+FIBER RECOMMENDATIONS
+Fiber plays a crucial role in weight loss by promoting feelings of fullness, which can help reduce overall calorie intake. Foods high in fiber slow down digestion and stabilize blood sugar levels, preventing spikes and crashes that often lead to cravings. Soluble fiber, in particular, forms a gel-like substance in the digestive tract, which not only aids satiety but also helps regulate cholesterol levels. Additionally, high-fiber foods are typically less calorie-dense, allowing patients to eat satisfying portions without over-consuming calories. Regular fiber intake supports a healthy gut microbiome, which is increasingly linked to improved metabolism and weight management.
+
+High-Fiber Foods:
+Vegetables (Fiber per cup, cooked): Broccoli - 5g, Brussels Sprouts - 4g, Carrots - 4g, Spinach - 4g, Sweet Potato (with skin) - 4g, Butternut Squash - 6g.
+
+Fruits (Fiber per cup, with skin where applicable): Raspberries - 8g, Blackberries - 8g, Apples - 4g, Pears - 6g, Bananas - 3g, Oranges - 4g.
+
+Grains and Legumes (Fiber per serving): Oats (1 cup cooked) - 4g, Quinoa (1 cup cooked) - 5g, Brown Rice (1 cup cooked) - 4g, Lentils (1 cup cooked) - 15g, Chickpeas (1 cup cooked) - 12g, Black Beans (1 cup cooked) - 15g.
+
+Nuts and Seeds (Fiber per ounce): Chia Seeds - 10g, Flaxseeds - 8g, Almonds - 4g, Pistachios - 3g.
+
+Whole-Grain Options (Fiber per slice or serving): Whole-Wheat Bread (1 slice) - 3g, Whole-Grain Pasta (1 cup cooked) - 6g, Popcorn (3 cups, air-popped) - 4g, Barley (1 cup cooked) - 6g.
+
+Fiber Supplements (if additional fiber is needed): Psyllium Husk (e.g., Metamucil) - 5g per tablespoon; Methylcellulose (e.g., Citrucel) - 2g per rounded tablespoon; Inulin Fiber (e.g., Benefiber) - 3g per 2 teaspoons; Acacia Fiber - 5g per tablespoon.
+
+Recommended Daily Fiber Intake Target: Females - Aim for 30g per day. Males - Aim for 35g per day.
+
+
+Fiber Supplements (if additional fiber is needed):
+For anyone struggling to meet fiber goals through diet alone, consider these supplement options:
+
+Psyllium Husk (e.g., Metamucil) – 5g of fiber per tablespoon; helpful for both soluble and insoluble fiber needs.
+Methylcellulose (e.g., Citrucel) – 2g per rounded tablespoon; less gas-producing than other fiber supplements.
+Inulin Fiber (e.g., Benefiber) – Typically provides 3g per 2 teaspoons; dissolves easily in liquids.
+Acacia Fiber – Available as a powder, it provides about 5g per tablespoon; it’s a gentle option for sensitive digestive systems.
+
+Encouraging gradual increases in fiber intake with adequate hydration can also help minimize GI discomfort - going to the full 30g per day is a lot - it's a good idea to start with 15g per day and work your way up.
+
+"""
+
+"/wtlabel" = """
+How to Decipher Nutrition Facts Labels: A Comprehensive Guide
+
+Introduction
+
+The nutrition facts labels on food packaging might appear complex, but they are a fundamental tool for making informed and healthier food choices. Here's an in-depth guide on what you need to pay attention to:
+
+1. Serving Size
+This is where your assessment of the label should begin. All the subsequent nutritional data is calculated based on this quantity. Don't be fooled - often, a single package of food contains multiple servings.
+
+2. Calories
+The calorie count specifies the amount of energy you derive from a single serving of the food. If you are trying to lose weight or maintain it, this is an important detail to monitor. Remember, it's not only about the quantity of calories but also the quality or source of these calories.
+
+3. Nutrients Breakdown
+This section provides you with a detailed list of nutrients and their respective amounts present in a serving of the food. This includes:
+
+Total Fat: This value represents the sum of unhealthy saturated and trans fats, as well as healthier mono and polyunsaturated fats. It's crucial to limit your intake of saturated and trans fats for overall heart health.
+Cholesterol: High intake of cholesterol can contribute to heart disease.
+Sodium: This term refers to the salt content. Excessive sodium consumption can lead to high blood pressure.
+Total Carbohydrate: This encompasses dietary fiber, sugars, and complex carbs. Those following a low-carb diet should pay close attention to this number.
+Protein: Proteins are vital macronutrients for the growth, repair, and maintenance of your body tissues.
+
+4. % Daily Value
+The % Daily Value (%DV) signifies the percentage of each nutrient in a single serving, relative to the daily recommended amount. For nutrients you'd want to limit (like saturated fat or sodium), look for foods with a lower % DV — 5 percent or less is low. For nutrients you'd want to increase (like dietary fiber), look for foods with a higher % DV — 20 percent or more is high.
+
+5. Ingredients
+Ingredients are listed in descending order by weight, meaning the primary ingredients are mentioned first. If sugar, salt, or unhealthy fats are listed among the first few ingredients, it may be beneficial to opt for a healthier alternative.
+
+Conclusion
+Understanding nutrition facts labels can significantly enhance your ability to make healthier food choices and reach your weight management goals. It's all about moderation and balance. Not every food you consume has to be optimal, but being able to interpret labels will help ensure most of your choices are beneficial to your health.
+
+Note: If you have any doubts about your personal dietary needs, don't hesitate to consult your doctor or a dietitian. They can provide further insights into understanding nutrition labels in the context of your overall diet.
+"""
+
+"/wtif" = """
+The Intermittent Fasting Primer: Understanding the 16/8 Method for Weight Loss and Metabolism Benefits
+
+Introduction
+
+Intermittent fasting (IF) is a unique dietary approach that is gaining popularity for its potential benefits in weight loss and metabolic health. Instead of dictating what foods to eat, IF focuses on when to eat. This guide explores the benefits and procedure of one popular IF method: the 16/8 method.
+
+Understanding the 16/8 Method in Intermittent Fasting
+
+The 16/8 method involves fasting every day for 14-16 hours and restricting your daily eating window to 8-10 hours. Within the eating window, you can fit in two, three, or more meals. This method is also known as the "Leangains protocol" popularized by fitness expert Martin Berkhan.
+
+Here's how you do it:
+
+Choose an 8-hour window for eating. For many people, this is usually between noon and 8 p.m. This means you'll be fasting for the other 16 hours, including the time you spend sleeping.
+During your fasting window, avoid eating any meals or snacks. You can drink water, coffee, and other zero-calorie drinks to help suppress hunger.
+In your 8-hour eating window, aim to eat a balanced diet that includes protein, fruits, vegetables, grains, and healthy fats.
+
+Benefits of the 16/8 Intermittent Fasting
+
+1. Weight Loss and Body Composition
+
+Calorie Restriction is STILL required for weight loss: those who restrict eating to an 8-10 hour window will still need to restrict calories to lose weight BUT we find individuals lose approximately 30% more weight than those who restrict calories without fasting.
+
+Fat Loss and Muscle Preservation: Fasting periods stimulate the body to burn fat for energy and potentially preserve lean muscle mass, improving overall body composition.
+
+2. Metabolic Improvements
+
+Insulin Sensitivity: The 16/8 method can help improve insulin sensitivity, making the body more efficient at processing sugars, which could reduce the risk of type 2 diabetes.
+
+Metabolic Rate: Despite the common misconception, short-term fasting can boost your metabolic rate, helping to increase calorie burn.
+
+Autophagy Activation: Autophagy is a process in which the body breaks down and recycles old, damaged cells. This process is stimulated during fasting periods and may help protect against inflammatory or degenerative diseases to some degree.
+
+Considerations and Precautions
+
+Intermittent fasting isn't for everyone. Some people might experience side effects like hunger, fatigue, or headaches, especially when starting. This method may not be suitable for people with certain health conditions, like diabetes, or for pregnant or breastfeeding women.
+
+Before starting an IF regimen, it's crucial to consult with a healthcare provider. During eating periods, it's also vital to eat balanced, nutritious meals and avoid overeating.
+
+Conclusion
+
+The 16/8 intermittent fasting method can be a beneficial tool for promoting weight loss and improving metabolic health when practiced sensibly and responsibly. The key is to view it as part of a long-term lifestyle shift rather than a quick fix. Combined with a balanced diet and regular physical activity, it can contribute to overall well-being.
+
+Note: It's essential to consult with your doctor or a dietitian before starting an intermittent fasting regimen to ensure it aligns with your individual health needs.
+
+Remember, the right dietary practices can guide you on the path to a healthier life.
+
+"""
+
+"/wtrebound" = """
+Metabolic Adaptation and Rebound: Understanding and Combatting Weight Loss Challenges
+
+Understanding Metabolic Adaptation and Rebound
+Weight loss is not always a straightforward process. One challenge faced by many individuals in their weight loss journey is 'metabolic adaptation' or 'adaptive thermogenesis', and its aftermath, known as the 'metabolic rebound'.
+
+Metabolic adaptation refers to how your body adjusts to weight loss. When you lose weight, especially quickly or dramatically, your body compensates by slowing down your resting metabolic rate (RMR) - the number of calories your body burns at rest. This is a survival mechanism designed to prevent starvation.
+
+The 'metabolic rebound' occurs when an individual, after losing weight and experiencing a slowed metabolism, returns to their previous eating habits. Because the body is now burning fewer calories at rest, this can lead to rapid weight regain, often exceeding the weight originally lost.
+
+Strategies to Combat Metabolic Rebound
+Gradual and Consistent Weight Loss: Losing weight slowly (about 1-2 pounds per week) can help prevent significant drops in metabolic rate.
+
+Regular Physical Activity: Exercise, particularly resistance and high-intensity interval training (HIIT), can help increase your metabolic rate and offset some of the decrease caused by weight loss. Regular physical activity helps build muscle, and muscle burns more calories than fat, even at rest.
+
+Adequate Protein Intake: Consuming enough protein can help maintain muscle mass during weight loss, promote feelings of fullness, and increase the number of calories burned through digestion (the thermic effect of food). Aim for 1.2-1.6 grams of protein per kilogram of body weight per day of high-quality protein sources (meats, fish, eggs, dairy, legumes, nuts, seeds, whey supplements, etc.)
+
+Refeed Days: Occasionally increasing your calorie intake for a short period (a day or two), focusing on high-quality, nutrient-dense foods can potentially prevent your metabolism from slowing down. This should be done carefully and not as an excuse to binge on unhealthy foods.
+
+Regular Rest and Recovery: Lack of sleep or high-stress levels can impact hunger hormones like ghrelin and leptin, leading to increased appetite and potential weight gain. Prioritizing good sleep hygiene and stress management techniques is crucial.
+
+Conclusion
+Metabolic adaptation and rebound can pose significant challenges in the weight loss journey, but they are not insurmountable. By understanding these processes and employing strategies such as gradual weight loss, regular exercise, adequate protein intake, strategic refeed days, and stress management, you can help mitigate these effects and make lasting changes towards improved health.
+Remember, a balanced approach to weight loss is a sustainable one. Take it one step at a time and celebrate your progress along the way.
+
+"""
+
+"/wthunger" = """
+Outsmarting Hunger: Effective Strategies to Keep Hunger at Bay
+
+Introduction
+
+Experiencing hunger while trying to lose weight or maintain a healthy diet is common but can sometimes lead to overeating. Fortunately, there are several strategies to help manage your hunger, keep you satisfied, and ensure your nutritional needs are met.
+
+1. Chia Seeds
+Chia seeds are an excellent source of fiber, with nearly 5 grams in each tablespoon. They can absorb up to 10-12 times their weight in water, forming a gel-like substance that promotes a feeling of fullness, slows food absorption, and helps keep hunger at bay. You can incorporate them into your diet by adding them to smoothies, oatmeal, yogurt, or even making chia seed pudding.
+
+2. Regular Physical Activity
+Exercise can help control your appetite by reducing hunger hormones (like ghrelin) and increasing satiety hormones (like peptide YY and GLP-1). Regular physical activity, including both aerobic and resistance training, can help manage hunger and aid in weight control.
+
+3. Drink More Water
+Drinking water can help fill your stomach, reducing feelings of hunger. It's also beneficial to drink water before meals. One study showed that drinking 500ml of water half an hour before meals helped dieters eat fewer calories and lose more weight. Aim for total of 3L-4L of water per day!
+
+4. High-Protein Foods
+Protein can increase feelings of fullness more than carbs or fats, reducing overall hunger and helping you eat fewer calories. Incorporating more high-protein foods like lean meats, eggs, fish, and legumes into your meals and snacks can help stave off hunger.
+
+5. Eat More Fiber
+Fiber-rich foods like fruits, vegetables, whole grains, and legumes can help keep you feeling full longer. Fiber adds bulk to your diet and slows digestion, which can help control your appetite.
+
+6. Mindful Eating
+Pay attention to what and when you're eating. Eat slowly, savor your food, and listen to your body's hunger and fullness cues. This mindful eating approach can help prevent overeating and make you feel more satisfied with your meals.
+
+7. Avoid Sugary Drinks and Excess Alcohol
+These beverages can lead to increased hunger and cravings. Swap them out for water, herbal teas, or other low-sugar drinks.
+
+8. Ensure Adequate Sleep
+Poor sleep or lack of sleep can disrupt your body's hunger hormones, increasing appetite and cravings. Make sure you're getting enough quality sleep each night.
+
+Conclusion
+
+While feelings of hunger are normal, they don't have to derail your dietary goals. By incorporating these strategies, you can effectively manage hunger, maintain a healthy diet, and support your overall well-being.
+
+Remember, a balanced approach to managing hunger is the most sustainable and beneficial for your health in the long term.
+"""
+
+
+"/wtdiary" = """
+********************
+**Keeping a Food Diary: Your Step-by-Step Guide**
+
+**Introduction**
+Keeping a food diary is an effective way to gain insight into your eating habits. It can help you understand your dietary patterns, identify triggers for overeating, and can be a powerful tool for achieving your nutrition goals. Here is a step-by-step guide to creating and maintaining a food diary.
+
+**Step 1: Choose Your Method**
+You can keep a food diary in a notebook, on a computer, or use a smartphone app. Choose the method that is most convenient for you and that you're most likely to stick with.
+
+Two newer AI calorie logging apps I'd suggest taking a look at:
+1. SnapCalorie
+2. Calorie Mama
+
+I can recommend three of the older, reliable apps for you to consider as well, but these have premium tiers that have increased in price over the last few years. They have more features than the simple logging above that might make sense for you if you want more data.
+1. LoseIt - simplest, most user-friendly **I recommend this one for most!**
+2. MyFitnessPal - most popular, tons of features
+3. MyNetDiary - similar to MyFitnessPal
+
+**Step 2: Decide on the Details**
+In your food diary, you'll want to capture several key pieces of information:
+
+1. **What did you eat?** Write down everything you consume, including meals, snacks, beverages, and any extras like sauces or dressings. Be as specific as possible. For example, instead of writing "sandwich," you might write, "turkey and cheese sandwich on whole wheat bread with mayo and lettuce."
+2. **How much did you eat?** Try to quantify the amount of food you eat. This could be the number of items (1 apple, 2 eggs), volume measurements (1 cup of rice), weight (4 ounces of chicken), or everyday comparisons (a piece of meat the size of a deck of cards).
+3. **When did you eat?** Include the time of day for each entry. This can help you spot patterns, like late-night snacking.
+4. **How were you feeling?** Writing down your mood or feelings before, during, and after eating can help you identify emotional eating.
+
+**Step 3: Record Your Food Intake**
+Now that you've set up your food diary and decided what to track, start recording. To ensure accuracy, try to record your food intake as soon as possible after eating.
+I HIGHLY recommend obtaining a cheap kitchen scale for your own cooking - this not only helps with baking and cooking accurately, but also helps you measure your food intake more accurately. You can find one on Amazon for $10-15.
+
+**Step 4: Review Your Diary Regularly**
+After a few days or a week, take some time to look over your entries. You might start to notice patterns, like eating out of boredom or overeating at certain times of the day.
+
+**Step 5: Make Changes Based on Your Observations**
+Use the insights from your food diary to make gradual changes in your eating habits. Maybe you need to add more fruits and vegetables, reduce portion sizes, or manage emotional eating.
+Bring your food diary to appointments with Dr. Fellows so we can help find identify areas for improvement and develop a plan to meet your nutrition goals.
+
+A food diary can be a powerful tool for understanding your eating habits and making healthy changes. It may take a little effort to get into the habit of recording, but the insights you'll gain are worth it.
+
+**Note:** Always remember that the goal of keeping a food diary isn't to judge yourself but to learn more about your eating patterns.
+
+Remember, the path to a healthier lifestyle is a journey. A food diary is one tool to guide your way.
+
+"""
+
+"/wtplate" = """
+**The Plate Method: A Simple Way to Plan Your Meals**
+
+**Introduction**
+
+The plate method is a simple, visual way to plan your meals. It can help you control portion sizes and ensure you're getting a balanced diet. Here's how it works.
+
+**Step 1: Draw an Imaginary Line Down the Middle of Your Plate**
+
+This line divides your plate into two halves. One half will be for non-starchy vegetables, and the other half will be for protein and starches.
+
+**Step 2: Fill Half of Your Plate with Non-Starchy Vegetables**
+
+Non-starchy vegetables are low in calories and high in fiber, vitamins, and minerals. They should make up half of your plate at each meal. Examples include:
+
+* Broccoli
+* Cauliflower
+* Cucumber
+* Green beans
+* Lettuce
+* Mushrooms
+* Peppers
+* Spinach
+* Tomatoes
+* Zucchini
+
+**Step 3: Fill One-Quarter of Your Plate with Protein**
+
+Protein is an essential nutrient that helps build and repair tissues, make enzymes and hormones, and support a healthy immune system. Examples of protein-rich foods include:
+
+* Chicken
+* Eggs
+* Fish
+* Lean beef
+* Legumes
+* Pork
+* Tofu
+* Turkey
+
+**Step 4: Fill One-Quarter of Your Plate with Starches**
+
+Starchy foods are high in carbohydrates, which provide energy for your body. Examples of starchy foods include:
+
+* Bread
+* Cereal
+* Corn
+* Oats
+* Pasta
+* Potatoes
+* Rice
+* Tortillas
+
+**Step 5: Add a Serving of Fruit and a Serving of Dairy**
+
+In addition to your plate, you can add a serving of fruit and a serving of dairy to your meal. Examples include:
+
+* Apple
+* Banana
+* Berries
+* Cheese
+* Milk
+* Yogurt
+
+**Conclusion**
+
+The plate method is a simple, visual way to plan your meals. It can help you control portion sizes and ensure you're getting a balanced diet. Try it out at your next meal!
+
+**Note:** The plate method is a great tool for planning healthy meals, but it's not a one-size-fits-all approach. If you have specific dietary needs, talk to Dr. Fellows about how to adapt the plate method to meet your needs.
+
+Remember, the path to a healthier lifestyle is a journey. The plate method is one tool to guide your way.
+"""
+
+"/wt30d" = """
+Patient has been adherent to a 30 day diet plan and lifestyle program and has not obtained meaningful weight loss > 3% of body weight. Complementary anti-obesity medications are the standard of care and are indicated here.
+"""
+
+"/wtproteinsnacks" = """
+PROTEIN-RICH SNACKS
+Here is a list of protein-rich snacks that can serve as great alternatives to carb-heavy foods. Consider these as alternatives to chips, crackers, cookies, and other high-carb snacks - the protein will help you feel full longer and keep your blood sugar much more stable than a carb-heavy snack.
+
+Greek Yogurt: This is a great source of protein and can be combined with fruits or nuts for added nutrition.
+Cottage Cheese: Like Greek yogurt, cottage cheese is high in protein and pairs well with many foods.
+Hard-Boiled Eggs: Each egg contains about 6 grams of protein, making this an easy and portable snack option.
+String Cheese: Convenient and portable, these are a great on-the-go snack.
+Jerky: Whether it's beef, turkey, or another variety, jerky can be a high-protein, low-carb snack, but be sure to check for added sugars or preservatives.
+Tuna Pouches: Portable and filled with lean protein, these are an easy, on-the-go snack.
+Roasted Chickpeas: These are high in protein and fiber, and they can be seasoned in a variety of ways.
+Edamame: A great vegetarian source of protein, you can buy them pre-cooked for convenience.
+Almonds: Almonds and other nuts can be a good source of protein, just be sure to watch the portion size because they're also high in calories.
+Turkey Roll-ups: Roll a slice of turkey around a slice of cheese or avocado for a quick, high-protein snack.
+Protein Shake: A quick protein shake with some fruits and a scoop of protein powder can provide a solid protein punch.
+Peanut Butter Celery Sticks: Just smear some peanut butter on celery sticks. It's a snack that's high in protein and has the crunch of a carb-heavy snack.
+
+Remember to keep portion sizes in check even with high-protein snacks, as calories can still add up quickly!
+"""
+
+"/wtgettingstarted" = """
+Introduction:
+Embarking on a weight loss journey can feel overwhelming, but taking the first step is crucial. This guide provides practical advice for beginning and maintaining your journey.
+
+1. Understand Your 'Why':
+Your motivation is the driving force behind sustainable weight loss. Common reasons include:
+
+Improving overall health
+Boosting self-confidence
+Reducing the risk of chronic diseases
+Alleviating joint pain
+Being active with family or friends
+
+2. Set Realistic Goals:
+Short-Term Goals: Aim for 5% weight loss in 3 months. This tangible milestone has proven benefits like reducing osteoarthritis pain, improving metabolic parameters, and lowering risks for diabetes, hypertension, cholesterol, and heart disease.
+Long-Term Goals: Weight loss is a journey. Establish where you'd like to be in six months, a year, or further, and remember to celebrate each success along the way.
+
+3. Golden Rules of Food:
+Whole Foods First: Emphasize vegetables, lean proteins, whole grains, and fruits while minimizing simple carbohydrates.
+Recognize Processed Foods: These are typically packaged and contain ingredients unfamiliar to the average person, often with added sugars and unhealthy fats.
+Hydration: Women should aim for 3-4L of water daily, while men should target 4-5L.
+Prioritize Protein: Strive for 1.0-1.3g/kg (ie 0.4-0.6g/lb) of protein intake daily. Protein promotes feelings of fullness, reducing the likelihood of overeating, whereas carbs can lead to rebound hunger.
+
+4. Modify your Diet!
+Choose a Diet That Makes Sense to You: Talk to Dr. Fellows specifically about which diet would be the best fit for you. There are a number of diets that can help weight loss including low fat, low carbohydrate, very-low carbohydrate (ie "Keto"), Mediterranean, vegetarian, and others.
+Changes Start SMALL: Don't throw out your existing diet with the favorite foods and treats. Big change is hard to stick to; we love what we love - don't throw it all out! SMALL changes (ie a bit less of that, a bit more of this) become habits over time.
+
+5. Know the Importance of Exercise:
+Why exercise? Building muscle through exercise increases your basal metabolic rate, making it easier to maintain weight loss. We have a tendency to lose weight then gain it right back - this is called metabolic adaptation, your body's efforts to try and fight the weight loss (it WANTS to gain weight). Exercise battles this and helps you keep off every pound you worked to lose.
+Consistent Movement: Begin with 150 minutes of moderate-intensity exercise a week, progressively working towards 300 minutes.
+
+6. Monitor Your Progress:
+Journaling: Keeping a record of food intake, exercise, and weight can provide insight into patterns and habits.
+Mobile Apps: Many apps can help track food intake, exercise, and progress, making monitoring more accessible and interactive.
+
+7. Seek Support:
+Connect with Others: ASK your family, particularly your partner, to join you in the effort. It makes meaningful change so much harder if you're the only one in a family making changes to your diet! Joining a support group can provide encouragement and shared experiences.
+Professional Guidance: Regularly consulting with experts like physicians, nutritionists, or personal trainers ensures you're on the right path.
+
+8. Prioritize Sleep and Mental Health:
+Rest Well: Aim for 7-9 hours of sleep to ensure optimal functioning and hunger regulation.
+Manage Stress: Chronic stress releases cortisol, a hormone that can promote fat storage, especially around the midsection. Techniques like meditation, deep breathing, and hobbies can help manage and reduce stress.
+
+In Conclusion:
+Your weight loss journey is personal and unique. By understanding your motivations, setting realistic goals, making informed food choices, staying active, and seeking support, you're on the path to a healthier you.
+
+Always consult with your healthcare provider before making significant changes to your diet or exercise routine.
+"""
+
+"/wtprotein" = """
+PROTEIN INTAKE FOR WEIGHT LOSS/MAINTENANCE
+I recommend increasing your total protein per day towards a goal of 1.3
+"""
+
+"/newwt" = """
+New Weight Mgmt Patient
+
+
+**reason for visit & goals**
+- primary reason for seeking weight management:
+- specific weight goal (lbs/kg or other metric):
+- other health/lifestyle goals (e.g., energy, mobility, reduce meds):
+- what has prompted seeking help now?:
+
+**body weight history**
+- current weight (pt reported or measured today):
+- current height:
+- bmi: (note if calculated or to be calculated)
+- age of obesity onset:
+- pattern of weight gain/loss (slow, rapid, stable, fluctuating):
+- specific life events linked to weight changes (e.g., pregnancy, stress, job, meds, smoking cessation):
+- highest adult weight (and age/context):
+- lowest adult weight (and age/context, how achieved):
+- prior weight loss attempts (what, when, duration, success, why stopped):
+
+**dietary history & habits**
+- prior formal diet trials (name, duration, outcome, why stopped, e.g., keto, ww, paleo):
+- current diet plan/pattern, if any (describe typical day - breakfast, lunch, dinner, snacks):
+- calorie tracking history (apps used, duration, experience):
+- estimated current daily calorie intake (if known):
+- protein goal and current estimated intake (g/day):
+- typical daily fluid intake (water, sugary drinks, juice, coffee/tea w/ additions, alcohol type/freq):
+- frequency of eating out/takeaway (meals/wk):
+- who primarily shops for groceries?:
+- who primarily prepares meals?:
+- specific food cravings or triggers (type, frequency, context - emotional, situational):
+- awareness of hunger/satiety cues?:
+- any known food intolerances/allergies (beyond major ones):
+- fiber intake (estimate, sources):
+
+**physical activity & sedentary behavior**
+- current exercise routine (type, duration/session, freq/wk, perceived intensity - light/mod/vig):
+- past exercise routines enjoyed/disliked:
+- perceived barriers to physical activity:
+- types of activities enjoyed or interested in trying:
+- estimated hours spent sitting daily (work, leisure):
+
+**medication history**
+- current prescription medications (name, dose, freq, indication, duration - esp. any known to affect weight):
+- current otc medications/supplements (name, dose, freq):
+- prior medication trials for weight loss (name, dose, duration, effect, side effects, why stopped):
+
+**bariatric surgery history**
+- type of surgery, if any:
+- date of surgery:
+- complications, if any:
+- current status/follow-up:
+- (if none, can state "n/a" or leave blank)
+
+**sleep patterns & concerns**
+- typical hours of sleep per night:
+- perceived sleep quality (rested upon waking?):
+- difficulty falling/staying asleep?:
+- use of sleep aids (meds, supplements):
+- snoring (loud, frequent?), witnessed apneas?:
+- daytime sleepiness level:
+
+**psychosocial & behavioral factors**
+- mental health hx (depression, anxiety, adhd, bipolar, eating disorders - binge eating, night eating, bulimia, anorexia):
+- current mood/stress levels (scale 1-10?):
+- coping mechanisms for stress:
+- body image concerns:
+- prior drug/alcohol use/abuse (incl stimulants, cannabis - type, freq, duration, last use):
+- current alcohol intake (type, freq, amount):
+- current tobacco use (type, amount, pack-years, quit attempts):
+- partner's interest/investment in health changes?:
+- support system (family, friends):
+- living situation (who lives at home?):
+- cultural influences on diet/lifestyle?:
+- perceived barriers to weight management (e.g., overeating, cravings, compulsions, large appetite, time, cost, knowledge):
+- motivation for change (scale 1-10):
+- confidence in ability to make changes (scale 1-10):
+
+**review of systems (weight-related, if not covered elsewhere)**
+- general: fatigue, changes in energy
+- cardiac: chest pain, palpitations, dyspnea on exertion, orthopnea, edema
+- respiratory: osa symptoms (snoring, apneas - if not detailed in sleep), daytime somnolence
+- gi: gerd, constipation, abdominal pain, changes in bowel habits
+- endocrine: polyuria, polydipsia, heat/cold intolerance
+- msk: joint pain (esp. weight-bearing joints), back pain, limited mobility
+- gu (female): irregular menses, hirsutism, infertility (pcos sx)
+- skin: acanthosis nigricans, skin tags, intertrigo
+
+**relevant past medical history (incl. weight-related complications)**
+- hypertension (htn):
+- hyperlipidemia (hld):
+- type 2 diabetes (dm2) or prediabetes:
+- coronary artery disease (cad)/mi:
+- stroke/tia:
+- obstructive sleep apnea (osa) - (diagnosed? cpap use?):
+- non-alcoholic fatty liver disease (nafld/nash):
+- gastroesophageal reflux disease (gerd):
+- polycystic ovary syndrome (pcos):
+- osteoarthritis (oa) - (esp. knees, hips):
+- depression/anxiety (diagnosed):
+- other:
+
+**family history**
+- fh of obesity (mother, father, siblings, children):
+- fh of dm2:
+- fh of htn:
+- fh of hld:
+- fh of early cad (<55m, <65f):
+- fh of thyroid disease/cancer:
+
+**contraindication screening (for potential therapies)**
+- personal/fam hx of medullary thyroid ca or men2: (default no)
+- hx of pancreatitis:
+- gastroparesis symptoms/dx: (default no)
+- dysphagia: (default no)
+- h/o seizures (uncontrolled): (default no)
+- h/o kidney stones (recurrent/active): (default no)
+- gallbladder issues (active cholecystitis/cholelithiasis): (default no)
+- severe renal impairment (ckd stage 4/5 or dialysis):
+- uncontrolled psychiatric disorder (e.g., active psychosis, severe depression with suicidality):
+- current pregnancy or breastfeeding / planning pregnancy:
+
+**workup completed/available**
+- recent labs (a1c, fasting glucose, lipid panel, cmp, lfts, tsh, vit d): (note dates if known)
+- prior imaging relevant to weight (e.g., liver u/s):
+- ekg (if relevant):
+
+**summary for payer requirements (if conditions present)**
+- summary of key comorbidities: (e.g., pt presents with class [x] obesity complicated by htn, dm2, and osa)
+
+"""
+
+"/rtcwt" = """
+interval events:
+
+current weight
+weighing daily
+calories tracked?
+calories/day goal?
+calories/day actual?
+protein actual?
+fiber actual?
+
+exercise amount:
+
+meds:
+
+"""
+
+"/asswt" = """
+curr:
+lab workup and contributing factors like sleep
+no c/f aberrant behavior or eating d/o; barriers: overeating, craving, large appetite
+well educated/education needed re: nutrition; calories 1500/day. fiber 30g/day. protein 90g.
+exercise: 200min/wk
+meds list
+
+prior meds:
+
+"""
+
+"/roswt" = """
+Const: -fevers, -chills, -night sweats. -abrupt/recent weight changes.
+Eyes: -glaucoma, -vision changes
+ENMT: -dental issues w/ chewing, -dry mouth, -dysphagia
+GI: -bloating after eating, -chronic diarrhea, -constipation, -early satiety, -GERD, -nausea, -vomiting, -panc history
+GU: -nephrolith history
+MSK: -swollen joints, -arthralgias
+Skin: -rashes
+Neuro: -headaches, -paresthesias, -seizures
+Psych: -depression, -anxiety, -eating disorder history
+"""
+
+"/ptwtoverview" = """
+It was a pleasure meeting you today! Please see and reference below for the general overview of how we'll be approaching weight loss and how we'll be looking at the next few months together:
+
+******
+Starting weight: xxx
+Goal weight xxx (xxlb loss)
+Estimated starting total energy expenditure (TEE): xxxx Calories/day
+
+******
+
+I help you with nutrition education, exercise guidance, and medical monitoring which can include medications.
+
+We progressively build on what starts as a simple strategy based on what you're already doing and what you already know.
+
+1. We generally want to start simple and start learning about collecting data like how many calories we're eating and what we need to be aiming for
+a. What's our baseline metabolic rate?
+b. How many Calories should I be targeting per day?
+
+2. We'll work toward making some subtle changes based on that data and tweak as we go
+a. Diet choices and amount
+b. Exercise intensity and amount
+
+3. We'll consider using medications to help fight our own biology into getting us where we want and deserve to be
+
+Along the way, send messages with questions or updates whenever they come.
+
+
+
+Tracking: calories and weight
+* I recommend getting the free app "LoseIt" for your Android or Apple device - paid features aren't necessary to get started
+* Play with the app and learn how to use it
+* Use this to track your calories on a regular basis
+* Advanced tip: get a small kitchen scale (useful for cooking too!) to weigh your portions so you can more accurately log your intake
+* Weigh yourself daily! More data = more information for us to act on. Don't be afraid of the scale or high numbers on it: those numbers are just where we're starting, not where we're ending.
+
+Calorie goals
+* Calories IN (food intake) must be less than Calories OUT (energy burned) to lose weight
+* Each pound of fat stores about 3,500 calories: reducing your intake below the energy burned (IN below OUT) by 350 calories nets you about 1lb of fat loss every 10 days. This will take time but that's OK!
+* Types of calories matter but not when you're first getting started: focus on total number of calories per day vs. type of calorie (carb, fat, protein) and the quality/source of those calories
+* Average goal should be personalized to you, but average goal for men: 1500-1800 Calories/day. For women: 1200-1500 Calories/day.
+https://www.calculator.net/calorie-calculator.html - use this to estimate your Calorie goal per day, then we want to drop that by 100-300 Calories/day to start.
+* Protein goal: Aim for 1g/kg of body weight (i.e. 0.5g per lb) to help maintain muscle mass and keep full
+Too much protein can work against us: each gram of protein amounts to 9 Calories - these add up! Too much protein has been associated with insulin resistance, i.e. the metabolic process resulting in diabetes mellitus
+* Fiber goal: Aim for 30g/day for women, 40g/day for men to help smooth out blood sugar and keep full
+* Exercise goal: 150-300 minutes of moderate intensity exercise a week
+* Moderate intensity means different things for everyone: it's the intensity you can't have a full, easy conversation with someone next to you while you're exercising. If you have to take a breath mid-sentence, it's at least moderate and that's perfect!
+Exercise helps burn calories (small effect, believe it or not!) but more importantly maintains muscle mass to help keep calorie burning high even when not exercising
+
+Contributing factors - address these when you can
+* Sleep - 7-8 hours a night; outside of that, weight loss is harder.
+* Sleep apnea - not treating this when you've been diagnosed makes weight loss harder
+* Eating out per week - try to minimize this to 1-2x per week. Restaurants/fast food are incredibly sneaky at stacking tons of calories into a meal
+
+Cheat sheet for key weight loss barriers: overeating, craving, and large appetites.
+* Overeating: identify why it happens. Often, it's not just about hunger—it could be boredom, stress, or habit. Start by implementing structured meal times and plan your meals in advance to include a balance of nutrients that keep you fuller longer, such as proteins, fiber-rich vegetables, and whole grains. Using smaller plates can help control portion sizes visually. Also, make it a habit to eat without distractions (like TV or smartphones) so you can listen to your body’s cues to stop eating when you're full. If emotional eating is a concern, consider activities like walking, journaling, or talking to a friend to manage stress instead of turning to food.
+* Craving: understand what triggers cravings; often they can be linked to specific emotions or situations. Substitute unhealthy snacks with healthier alternatives that satisfy you without derailing your diet. For example, if you crave something crunchy, opt for carrots or a small handful of nuts instead of chips. Keeping a food diary can also help you identify patterns and develop strategies to deal with cravings. Regular meals and planned snacks can reduce the intensity of cravings by stabilizing blood sugar levels.
+* Large appetites: consider foods that can help you feel full without a lot of calories. High-fiber foods like fruits, vegetables, and whole grains take longer to digest, helping you feel full longer. Including a source of protein in every meal and snack can also aid in satiety. Additionally, drinking water before meals can help fill your stomach and make you feel fuller sooner. Mindful eating practices, such as eating slowly and pausing between bites, give your body time to recognize when it is no longer hungry, helping you reduce your overall food intake.
+Helpful tricks for large appetites:
+1. Take 1 teaspoon of Chia seeds w/ a glass of water before a meal can be a means of "pre-filling" your stomach and help get you full sooner.
+2. Hitting your protein and fiber goals per day help keep you feeling full - make sure you're hitting these to help block the appetite.
+
+Medications
+* Medications are adjuncts to what you do, they help amplify the effort you're putting into losing weight. Most work to combat our own biology that's working to keep us continuing to gain weight, but without making permanent changes.
+
+* Injectables (GLP-1/GIP medications)
+i.e. semaglutide (Ozempic, Wegovy), tirzepatide (Mounjaro, Zepbound), and liraglutide (Saxenda)
+** Ozempic/Mounjaro are FDA-approved for diabetes only and can only be covered by insurance for that purpose
+* 12 month weight loss up to 10% with liraglutide, 15% with semaglutide, 20% with tirzepatide
+* Insurance coverage and supply restraints are two KEY struggles with these
+
+Oral
+* Phentermine, phentermine/topiramate (Qsymia) - helps stimulate metabolism directly + reduces cravings
+* Bupropion/naltrexone (Contrave) - reduces appetite
+* Rybelsus (semaglutide) - oral GLP-1 medication but only covered for diabetes
+* Metformin - older diabetic medication helpful for 2-3% loss at one year even in non-diabetics (and cheap!)
+* 12 month weight loss up to 9-10% with orals other than Metformin
+"""
+
+"/wtindirect" = """
+It was nice to meet you today. I attached information for Dan Shamburg who runs the metabolic testing. He has a website setup where you can pay and coordinate an appointment, however he's told me the website is inaccurate and thus prefers a direct call. What you're looking for is "resting metabolic rate" testing, not the VO2max testing.
+
+Website: https://www.theenduranceathlete.net/metabolic-welcome
+Email: daniel@shift-fitness.com
+Phone: 858-210-5975
+"""
+
+
+# NON-CLINICAL TEs
+# ================
+".ph" = "760-891-4687"
+
+# Fax 1 = Elation, 2 = Spruce
+".fax" = "760-914-9990"
+".fax2" = "760-684-8715"
+
+".email" = "info@synergyrheum.com"
+".add" = """
+6120 Paseo Del Norte, Ste C-1
+Carlsbad, CA 92011
+"""
+".ein" = "93-2822752"
+
+"***" = "****************************************************************"
+
+"/lvn" = """
+<LAST VISIT NOTE>
+
+</LAST VISIT NOTE>
+"""

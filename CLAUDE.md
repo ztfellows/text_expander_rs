@@ -24,9 +24,12 @@ cargo run                # Run debug
 cargo run --release      # Run release
 ```
 
+**Build order**: Always build debug first, then release. Debug compiles faster, so errors surface sooner.
+
 From WSL, you can invoke the Windows toolchain:
 ```bash
-powershell.exe -Command "cd C:\Projects\text_expander; cargo build --release"
+powershell.exe -Command "cd C:\Projects\text_expander; cargo build"            # Debug first
+powershell.exe -Command "cd C:\Projects\text_expander; cargo build --release"  # Then release
 ```
 
 No tests exist yet. The project targets Windows 11 only.
@@ -62,6 +65,7 @@ No tests exist yet. The project targets Windows 11 only.
 | `nn` | Insert current date as `M/D/YY: ` |
 | `/wksN` | Date N weeks from now |
 | `/daysN` | Date N days from now |
+| `/moN` | Date N months from now |
 
 ## Important Patterns
 

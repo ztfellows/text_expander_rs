@@ -1,3 +1,5 @@
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::mpsc::Receiver;
 use std::sync::Arc;
@@ -406,7 +408,7 @@ fn drain_pending_events(receiver: &Receiver<HookMessage>) {
     while receiver.try_recv().is_ok() {}
 }
 
-/// Checks for date expansion triggers like "/days40" or "/wks8".
+/// Checks for date expansion triggers like "/days40", "/wks8", or "/mo3".
 fn handle_date_expansion(buffer: &str) -> Option<String> {
     debug_println!("doing the date expansion thing!");
 
@@ -414,6 +416,8 @@ fn handle_date_expansion(buffer: &str) -> Option<String> {
         ("/days", &buffer[5..])
     } else if buffer.starts_with("/wks") {
         ("/wks", &buffer[4..])
+    } else if buffer.starts_with("/mo") {
+        ("/mo", &buffer[3..])
     } else {
         return None;
     };
@@ -423,7 +427,13 @@ fn handle_date_expansion(buffer: &str) -> Option<String> {
     if let Ok(num) = num_str.parse::<i64>() {
         let current_date = Local::now();
 
-        let future_date = if prefix == "/days" {
+        let future_date = if prefix == "/mo" {
+            if num >= 0 {
+                current_date.checked_add_months(chrono::Months::new(num as u32))
+            } else {
+                current_date.checked_sub_months(chrono::Months::new((-num) as u32))
+            }
+        } else if prefix == "/days" {
             current_date.checked_add_signed(chrono::Duration::days(num))
         } else {
             current_date.checked_add_signed(chrono::Duration::weeks(num))

@@ -9,17 +9,33 @@ use std::sync::OnceLock;
 use std::{mem, ptr};
 
 use winapi::shared::minwindef::{LPARAM, LRESULT, WPARAM};
-use winapi::shared::windef::HHOOK;
+use winapi::shared::windef::{HHOOK, HWND, POINT};
 use winapi::um::libloaderapi::GetModuleHandleW;
+use winapi::um::shellapi::{Shell_NotifyIconW, NOTIFYICONDATAW, NIF_ICON, NIF_MESSAGE, NIF_TIP, NIM_ADD, NIM_DELETE};
 use winapi::um::winuser::{
-    CallNextHookEx, DispatchMessageW, GetAsyncKeyState, GetKeyState, GetMessageW,
-    SetWindowsHookExW, ToUnicode, TranslateMessage, UnhookWindowsHookEx, HC_ACTION,
-    KBDLLHOOKSTRUCT, MSG, VK_CAPITAL, VK_CONTROL, VK_MENU, VK_SHIFT, WH_KEYBOARD_LL,
-    WH_MOUSE_LL, WM_KEYDOWN, WM_LBUTTONDOWN, WM_MBUTTONDOWN, WM_RBUTTONDOWN, WM_SYSKEYDOWN,
+    AppendMenuW, CallNextHookEx, CreatePopupMenu, CreateWindowExW, DefWindowProcW,
+    DestroyMenu, DestroyWindow, DispatchMessageW, GetAsyncKeyState, GetCursorPos, GetKeyState,
+    GetMessageW, LoadIconW, PostQuitMessage, RegisterClassW, SetForegroundWindow,
+    SetWindowsHookExW, ToUnicode, TrackPopupMenu, TranslateMessage, UnhookWindowsHookEx,
+    HC_ACTION, KBDLLHOOKSTRUCT, MF_STRING, MSG, TPM_BOTTOMALIGN, TPM_LEFTALIGN,
+    VK_CAPITAL, VK_CONTROL, VK_MENU, VK_SHIFT, WH_KEYBOARD_LL, WH_MOUSE_LL, WM_APP, WM_COMMAND,
+    WM_DESTROY, WM_KEYDOWN, WM_LBUTTONDOWN, WM_MBUTTONDOWN, WM_RBUTTONDOWN, WM_SYSKEYDOWN,
+    WNDCLASSW,
 };
 
 use crate::windows_input::SYNTHETIC_INPUT_TAG;
 use crate::GLOBAL_LISTENING;
+
+// ---------------------------------------------------------------------------
+// Tray icon constants
+// ---------------------------------------------------------------------------
+
+const WM_TRAYICON: u32 = WM_APP + 1;
+const IDM_EXIT: usize = 1;
+
+fn encode_wide(s: &str) -> Vec<u16> {
+    s.encode_utf16().chain(std::iter::once(0)).collect()
+}
 
 // ---------------------------------------------------------------------------
 // Public types
@@ -307,6 +323,85 @@ unsafe extern "system" fn mouse_hook_proc(
 }
 
 // ---------------------------------------------------------------------------
+// Tray icon window procedure + helpers
+// ---------------------------------------------------------------------------
+
+unsafe extern "system" fn window_proc(
+    hwnd: HWND,
+    msg: u32,
+    w_param: WPARAM,
+    l_param: LPARAM,
+) -> LRESULT {
+    match msg {
+        WM_TRAYICON => {
+            let mouse_msg = (l_param as u32) & 0xFFFF;
+            if mouse_msg == WM_RBUTTONDOWN {
+                unsafe {
+                    let mut pt: POINT = mem::zeroed();
+                    GetCursorPos(&mut pt);
+
+                    let hmenu = CreatePopupMenu();
+                    let label = encode_wide("Close");
+                    AppendMenuW(hmenu, MF_STRING, IDM_EXIT, label.as_ptr());
+
+                    // Required for TrackPopupMenu to dismiss correctly
+                    SetForegroundWindow(hwnd);
+                    TrackPopupMenu(hmenu, TPM_BOTTOMALIGN | TPM_LEFTALIGN, pt.x, pt.y, 0, hwnd, ptr::null());
+                    DestroyMenu(hmenu);
+                }
+            }
+            0
+        }
+        WM_COMMAND => {
+            let cmd = (w_param as u32) & 0xFFFF;
+            if cmd as usize == IDM_EXIT {
+                unsafe {
+                    remove_tray_icon(hwnd);
+                    PostQuitMessage(0);
+                }
+            }
+            0
+        }
+        WM_DESTROY => {
+            unsafe {
+                remove_tray_icon(hwnd);
+                PostQuitMessage(0);
+            }
+            0
+        }
+        _ => unsafe { DefWindowProcW(hwnd, msg, w_param, l_param) },
+    }
+}
+
+unsafe fn add_tray_icon(hwnd: HWND) {
+    unsafe {
+        let mut nid: NOTIFYICONDATAW = mem::zeroed();
+        nid.cbSize = mem::size_of::<NOTIFYICONDATAW>() as u32;
+        nid.hWnd = hwnd;
+        nid.uID = 1;
+        nid.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
+        nid.uCallbackMessage = WM_TRAYICON;
+        nid.hIcon = LoadIconW(GetModuleHandleW(ptr::null()), 1 as *const u16);
+
+        let tip = encode_wide("Text Expander");
+        let len = tip.len().min(nid.szTip.len());
+        nid.szTip[..len].copy_from_slice(&tip[..len]);
+
+        Shell_NotifyIconW(NIM_ADD, &mut nid);
+    }
+}
+
+unsafe fn remove_tray_icon(hwnd: HWND) {
+    unsafe {
+        let mut nid: NOTIFYICONDATAW = mem::zeroed();
+        nid.cbSize = mem::size_of::<NOTIFYICONDATAW>() as u32;
+        nid.hWnd = hwnd;
+        nid.uID = 1;
+        Shell_NotifyIconW(NIM_DELETE, &mut nid);
+    }
+}
+
+// ---------------------------------------------------------------------------
 // Hook installation + message pump
 // ---------------------------------------------------------------------------
 
@@ -318,9 +413,40 @@ pub fn install_hooks_and_run(sender: Sender<HookMessage>) -> Result<(), Box<dyn 
     unsafe {
         let h_instance = GetModuleHandleW(ptr::null());
 
+        // Register window class for tray icon message handling
+        let class_name = encode_wide("TextExpanderTrayClass");
+        let wc = WNDCLASSW {
+            lpfnWndProc: Some(window_proc),
+            hInstance: h_instance,
+            lpszClassName: class_name.as_ptr(),
+            ..mem::zeroed()
+        };
+        RegisterClassW(&wc);
+
+        // Create a message-only window (HWND_MESSAGE parent)
+        let hwnd = CreateWindowExW(
+            0,
+            class_name.as_ptr(),
+            encode_wide("TextExpander").as_ptr(),
+            0,
+            0, 0, 0, 0,
+            -3isize as HWND, // HWND_MESSAGE
+            ptr::null_mut(),
+            h_instance,
+            ptr::null_mut(),
+        );
+
+        if hwnd.is_null() {
+            return Err("Failed to create tray message window".into());
+        }
+
+        add_tray_icon(hwnd);
+
         let kb_hook: HHOOK =
             SetWindowsHookExW(WH_KEYBOARD_LL, Some(keyboard_hook_proc), h_instance, 0);
         if kb_hook.is_null() {
+            remove_tray_icon(hwnd);
+            DestroyWindow(hwnd);
             return Err("Failed to install keyboard hook".into());
         }
 
@@ -328,12 +454,14 @@ pub fn install_hooks_and_run(sender: Sender<HookMessage>) -> Result<(), Box<dyn 
             SetWindowsHookExW(WH_MOUSE_LL, Some(mouse_hook_proc), h_instance, 0);
         if mouse_hook.is_null() {
             UnhookWindowsHookEx(kb_hook);
+            remove_tray_icon(hwnd);
+            DestroyWindow(hwnd);
             return Err("Failed to install mouse hook".into());
         }
 
-        println!("Hooks installed. Listening...");
+        crate::debug_println!("Hooks installed. Listening...");
 
-        // Standard Windows message pump — required for low-level hooks to work
+        // Standard Windows message pump — handles both hooks and tray icon messages
         let mut msg: MSG = mem::zeroed();
         while GetMessageW(&mut msg, ptr::null_mut(), 0, 0) > 0 {
             TranslateMessage(&msg);
@@ -342,6 +470,7 @@ pub fn install_hooks_and_run(sender: Sender<HookMessage>) -> Result<(), Box<dyn 
 
         UnhookWindowsHookEx(kb_hook);
         UnhookWindowsHookEx(mouse_hook);
+        DestroyWindow(hwnd);
     }
 
     Ok(())

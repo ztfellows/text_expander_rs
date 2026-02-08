@@ -159,3 +159,5 @@ Expansion was called via `thread::spawn`, causing unpredictable timing. Fixed by
 - **BACKSPACE_DELAY_MS**: tuned to 30ms (5ms too unreliable across apps)
 - Both debug and release builds compile with zero warnings
 - Tested reliable in both VSCode and Notepad++
+- Updated `expansions.toml` with full production triggers (replaced dev subset)
+- Tuned `BACKSPACE_DELAY_MS` to 5ms — WM_CHAR fix eliminated the timing sensitivity; 5ms reliable, 1ms occasionally drops

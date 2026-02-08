@@ -13,7 +13,7 @@ use std::ptr::null_mut;
 
 /// Delay in milliseconds between each backspace key down+up pair.
 /// Increase if target apps (e.g. EHR software) drop keystrokes.
-pub const BACKSPACE_DELAY_MS: u64 = 30;
+pub const BACKSPACE_DELAY_MS: u64 = 5;
 
 /// Tag placed in dwExtraInfo to identify our synthetic events.
 /// Allows the rdev hook to distinguish self-generated input.

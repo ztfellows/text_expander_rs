@@ -1,36 +1,32 @@
-use std::path::PathBuf;
 use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::mpsc::Receiver;
 use std::sync::Arc;
-use std::{env, fs, usize};
-use std::{collections::HashMap, sync::Mutex};
-use std::sync::{MutexGuard};
-use rdev::{listen, Button, Event, EventType, Key};
-use std::thread::{self, sleep};
+use std::env;
+use std::collections::HashMap;
+use std::sync::Mutex;
+use std::thread;
 use std::time::Duration;
 use serde::Deserialize;
 use arboard::Clipboard;
-use chrono::{Local};
-
-use crate::windows_input::{expand_text_directly};
+use chrono::Local;
 
 mod windows_input;
+mod keyboard_hook;
+
+use keyboard_hook::{KeyId, MouseButton, HookMessage};
 
 
 /// A macro that functions like `println!`, but only compiles in debug builds.
 #[macro_export]
 macro_rules! debug_println {
     ($($arg:tt)*) => {
-        // This version is used in debug builds
         #[cfg(debug_assertions)]
         {
-            print!("[DEBUG] "); // Optional: Add a prefix to easily spot debug prints
+            print!("[DEBUG] ");
             println!($($arg)*);
         }
-        // This version is used in release builds and expands to nothing
         #[cfg(not(debug_assertions))]
         {
-            // The macro call is replaced with an empty expression,
-            // so there is zero performance impact.
         }
     };
 }
@@ -56,11 +52,6 @@ enum TypingState {
     NoMatch,
 }
 
-enum KeyEventMessage {
-    KeyPress(rdev::Key, Option<String>),
-    MouseClick(rdev::Button),
-}
-
 impl ExpansionData {
     fn new(expansion_table: ExpansionFile) -> Self {
         ExpansionData {
@@ -77,30 +68,16 @@ impl ExpansionData {
     }
 
     fn push_to_buffer(&mut self, c: &str) {
-        // Cast the cursor position to usize, as string indexing requires it.
-        // We'll also clamp the value to prevent panics if the cursor is out of bounds.
         let index = (self.cursor_position as usize).min(self.key_buffer.len());
-
-        // Insert the string slice 'c' at the calculated index.
         self.key_buffer.insert_str(index, c);
-
-        // After inserting, we must advance the cursor by the length of what was inserted.
-        // Note: This might cause issues with your i8 type if 'c' is long! (More on this below)
         self.cursor_position += c.len();
     }
-    fn pop_from_buffer(&mut self) {
-        // We can only remove a character if the buffer is not empty AND the cursor is not at the start.
-        if self.cursor_position > 0 && !self.key_buffer.is_empty() {
-            // The cursor is positioned AFTER the character we want to remove.
-            // So, we need to calculate the index of the character to remove.
-            let remove_index = self.cursor_position - 1;
 
-            // Ensure the calculated index is valid before removing.
-            // This check is important if cursor logic and buffer length can get out of sync.
+    fn pop_from_buffer(&mut self) {
+        if self.cursor_position > 0 && !self.key_buffer.is_empty() {
+            let remove_index = self.cursor_position - 1;
             if self.key_buffer.is_char_boundary(remove_index as usize) {
                 self.key_buffer.remove(remove_index as usize);
-                
-                // After removing the character, move the cursor back.
                 self.cursor_position -= 1;
             }
         }
@@ -129,373 +106,350 @@ impl ExpansionData {
     fn increment_cursor_position(&mut self) {
         self.cursor_position += 1;
     }
-    
 }
 
 
-// atomic boolean for listening state
+// Atomic boolean for listening state
 static GLOBAL_LISTENING: AtomicBool = AtomicBool::new(true);
 
 fn main() {
-    // load up toml and create hashmap
     let expansion_table = load_expansion_table().unwrap();
-
     let expansion_data = Arc::new(Mutex::new(ExpansionData::new(expansion_table)));
 
     let (sender, receiver) = std::sync::mpsc::channel();
 
+    // Processing thread — uses explicit loop so we can pass &receiver for draining
     thread::spawn(move || {
-        // This thread loops forever, receiving messages.
-        for message in receiver {
-            // All your complex logic now lives safely on this one thread.
+        loop {
+            let message = match receiver.recv() {
+                Ok(msg) => msg,
+                Err(_) => break, // sender dropped
+            };
+
             match message {
-                KeyEventMessage::KeyPress(key, event_name) => {
-                    handle_key_press(expansion_data.clone(), key, event_name);
-                },
-                KeyEventMessage::MouseClick(button) => {
+                HookMessage::KeyDown { key, vk_code, scan_code } => {
+                    let event_name = keyboard_hook::resolve_character(vk_code, scan_code);
+                    handle_key_press(expansion_data.clone(), key, event_name, &receiver);
+                }
+                HookMessage::MouseDown(button) => {
                     handle_mouse_press(expansion_data.clone(), button);
-                },
+                }
             }
         }
     });
 
-    let callback = move |event: Event| {
-        let message = match event.event_type {
-            EventType::KeyPress(key) => Some(KeyEventMessage::KeyPress(key, event.name)),
-            EventType::ButtonPress(button) => Some(KeyEventMessage::MouseClick(button)),
-            _ => None,
-        };
-
-        if let Some(msg) = message {
-            // Send the thread-safe message. This is non-blocking and very fast.
-            sender.send(msg).unwrap();
-        }
-    };
-
-    if let Err(error) = listen(callback) {
-        println!("Error: {:?}", error)
+    // Install hooks and run message pump (blocks main thread)
+    if let Err(error) = keyboard_hook::install_hooks_and_run(sender) {
+        println!("Error: {:?}", error);
     }
-
-    loop {
-        thread::park();
-    }
-
 }
 
-fn handle_key_press(expansion_data: Arc<Mutex<ExpansionData>>, key: rdev::Key, event_name: Option<String>) {
-
-    
-    if GLOBAL_LISTENING.load(Ordering::SeqCst) == false {
-        // println!("Global listening disabled, ignoring key press");
+fn handle_key_press(
+    expansion_data_arc: Arc<Mutex<ExpansionData>>,
+    key: KeyId,
+    event_name: Option<String>,
+    receiver: &Receiver<HookMessage>,
+) {
+    if !GLOBAL_LISTENING.load(Ordering::SeqCst) {
         return;
     }
 
-    // acquire lock on expansion data
-    let mut expansion_data = expansion_data.lock().unwrap();
+    let mut expansion_data = expansion_data_arc.lock().unwrap();
 
     debug_println!("Key pressed: {:?}", key);
 
     match key {
-        Key::Space | Key::Return => {
+        KeyId::Space | KeyId::Return => {
+            // Space/Enter are swallowed by the hook to prevent WM_CHAR
+            // ordering issues. We must re-inject them if no expansion fires.
+            let (reinject_vk, reinject_scan) = match key {
+                KeyId::Space => (0x20u16, 0x39u16),
+                _ => (0x0Du16, 0x1Cu16), // VK_RETURN, scan 0x1C
+            };
+
             match expansion_data.typing_state {
-                
                 TypingState::Typing => {
-                // check for match; if we don't find one, set primed flag
-                if let Some((trigger_length, completion)) = check_for_completion(&mut expansion_data) {
-                    debug_println!("Found match: {}", completion);
-                    thread::spawn( move || {
-                        expand_trigger_phrase(trigger_length, completion).unwrap();
-                        // expand_text_directly(trigger_length, completion).unwrap();
-                        
-                    });
+                    // Check for expansion match
+                    if let Some((trigger_length, completion)) = check_for_completion(&expansion_data) {
+                        debug_println!("Found match: {}", completion);
+                        expansion_data.reset();
+                        drop(expansion_data);
+                        // No +1: the separator was swallowed by the hook
+                        expand_trigger_phrase(trigger_length, completion, receiver)
+                            .expect("Error in expand_trigger_phrase");
+                        return;
+                    }
 
-                    expansion_data.reset();
-                    return;
+                    // Check for ff trigger
+                    if expansion_data.key_buffer == "ff" {
+                        expansion_data.reset();
+                        drop(expansion_data);
+
+                        disable_keyboard_listening();
+
+                        // Delete "ff" only (separator was swallowed)
+                        windows_input::send_backspaces_fast(2)
+                            .expect("Error sending backspaces for ff");
+                        thread::sleep(Duration::from_millis(30));
+
+                        // Select to end of line and delete
+                        windows_input::send_shift_end()
+                            .expect("Error sending Shift+End for ff");
+                        thread::sleep(Duration::from_millis(10));
+                        windows_input::send_delete_key()
+                            .expect("Error sending Delete for ff");
+
+                        drain_pending_events(receiver);
+                        enable_keyboard_listening();
+                        return;
+                    }
+
+                    // Check for nn (date) trigger
+                    if expansion_data.key_buffer == "nn" {
+                        let now = Local::now();
+                        let date_string = now.format("%-m/%-d/%y: ").to_string();
+                        expansion_data.reset();
+                        drop(expansion_data);
+                        // No +1: separator swallowed
+                        expand_trigger_phrase(2, date_string, receiver)
+                            .expect("Error in expanding date phrase");
+                        return;
+                    }
+
+                    // Check for /wksN and /daysN triggers
+                    if let Some(date_string) = handle_date_expansion(&expansion_data.key_buffer) {
+                        let trigger_length = expansion_data.key_buffer.len();
+                        debug_println!("Date expansion triggered: {}", date_string);
+                        expansion_data.reset();
+                        drop(expansion_data);
+                        // No +1: separator swallowed
+                        expand_trigger_phrase(trigger_length, date_string, receiver)
+                            .expect("Error in date expansion");
+                        return;
+                    }
+
+                    // No match — re-inject the swallowed key and transition
+                    drop(expansion_data);
+                    let _ = windows_input::send_key_tap(reinject_vk, reinject_scan);
+                    let mut expansion_data = expansion_data_arc.lock().unwrap();
+                    if let KeyId::Space = key {
+                        expansion_data.push_to_buffer(" ");
+                        expansion_data.set_typing_state(TypingState::NoMatch);
+                    } else {
+                        expansion_data.reset();
+                    }
                 }
 
-                //check for special cases here, like ff
-                // TODO, build these!
-                if expansion_data.key_buffer == "ff" {
-                    delete_characters(3);
-                    rdev::simulate(&EventType::KeyPress(Key::ShiftLeft)).unwrap();
-                    rdev::simulate(&EventType::KeyPress(Key::ShiftRight)).unwrap();
-                    rdev::simulate(&EventType::KeyPress(Key::End)).unwrap();
-                    rdev::simulate(&EventType::KeyRelease(Key::End)).unwrap();
-                    rdev::simulate(&EventType::KeyPress(Key::Space)).unwrap();
-                    rdev::simulate(&EventType::KeyRelease(Key::Space)).unwrap();                  
-                    rdev::simulate(&EventType::KeyRelease(Key::ShiftLeft)).unwrap();
-                    rdev::simulate(&EventType::KeyRelease(Key::ShiftRight)).unwrap();
+                TypingState::Empty | TypingState::NoMatch => {
+                    if matches!(expansion_data.typing_state, TypingState::NoMatch) {
+                        expansion_data.reset();
+                    }
+                    // Re-inject the swallowed key
+                    drop(expansion_data);
+                    let _ = windows_input::send_key_tap(reinject_vk, reinject_scan);
                 }
-
-                if expansion_data.key_buffer == "nn" {
-                    // inputs date and simulates keys to type: "mm/dd/yy:" without leading 0s
-                    let now = chrono::Local::now();
-                    let date_string = now.format("%-m/%-d/%y: ").to_string();
-                    
-                    // GLOBAL_LISTENING.store(false, Ordering::SeqCst);
-                    // expand w/ a length of 2 since no space here
-                    expand_trigger_phrase(2, date_string)
-                        .expect("Error in expanding date phrase - panic!");
-                    
-                    expansion_data.reset();
-                    return;
-                }
-                    
-                if let Some(date_string) = handle_date_expansion(&expansion_data.key_buffer) {
-                    // GLOBAL_LISTENING.store(false, Ordering::SeqCst);
-                    let trigger_length = expansion_data.key_buffer.len();
-                    debug_println!("Date expansion triggered: {}", date_string);
-                    
-                    // Spawn a thread to do the simulation. Delete the trigger + the space/enter.
-                    // thread::spawn(move || {
-                        expand_trigger_phrase(trigger_length, date_string).unwrap();
-                    // });
-
-                    expansion_data.reset();
-                    return;
-                }
-
-                // no match, set the typing state to NoMatch/prime it
-                // special function if this was a space key
-                if let Key::Space = key {
-                    expansion_data.push_to_buffer(" ");
-                    //expansion_data.increment();
-                    expansion_data.set_typing_state(TypingState::NoMatch);
-                }
-                else { // enter key
-                    expansion_data.reset();
-                }
-                
-                
-                }
-                
-                TypingState::Empty => {}
-                
-                TypingState::NoMatch => { expansion_data.reset(); }
             }
-            
-        
         }
-        
 
-        Key::Backspace => {
+        KeyId::Backspace => {
             expansion_data.pop_from_buffer();
             expansion_data.set_typing_state(TypingState::Typing);
-            //expansion_data.decrement();
-
             debug_println!("{:?}", &expansion_data.key_buffer);
-        },
+        }
 
-        //cases that adjust cursor position
-        Key::LeftArrow => { expansion_data.decrement_cursor_position();}
-        Key::RightArrow => {
-            // if we're at the end of the buffer, reset
+        // Cursor movement
+        KeyId::LeftArrow => {
+            expansion_data.decrement_cursor_position();
+        }
+        KeyId::RightArrow => {
             if expansion_data.key_buffer.len() == expansion_data.cursor_position {
                 expansion_data.reset();
                 return;
-            }
-            else {
+            } else {
                 expansion_data.increment_cursor_position();
             }
-            // if we're not, just increment
         }
 
-        // Key::Delete => {}
-
-        //cases that instantly clear the buffer and resets
-        Key::UpArrow | Key::DownArrow | Key::Escape | Key::Tab |
-        Key::PageDown | Key::PageUp | Key::Home | Key::End => {
+        // Navigation keys — reset
+        KeyId::UpArrow | KeyId::DownArrow | KeyId::Escape | KeyId::Tab
+        | KeyId::PageDown | KeyId::PageUp | KeyId::Home | KeyId::End => {
             expansion_data.reset();
             return;
         }
 
-        Key::KeyA | Key::KeyB | Key::KeyC | Key::KeyD | Key::KeyE | Key::KeyF |
-        Key::KeyG | Key::KeyH | Key::KeyI | Key::KeyJ | Key::KeyK | Key::KeyL | Key::KeyM |
-        Key::KeyN | Key::KeyO | Key::KeyP | Key::KeyQ | Key::KeyR | Key::KeyS | Key::KeyT |
-        Key::KeyU | Key::KeyV | Key::KeyW | Key::KeyX | Key::KeyY | Key::KeyZ |
-        Key::Num0 | Key::Num1 | Key::Num2 | Key::Num3 | Key::Num4 | Key::Num5 |
-        Key::Num6 | Key::Num7 | Key::Num8 | Key::Num9 |
-        Key::Minus | Key::Equal | Key::LeftBracket | Key::RightBracket |
-        Key::Quote | Key::Comma | Key::Dot | Key::Slash => {
+        // Printable characters
+        KeyId::KeyA | KeyId::KeyB | KeyId::KeyC | KeyId::KeyD | KeyId::KeyE | KeyId::KeyF
+        | KeyId::KeyG | KeyId::KeyH | KeyId::KeyI | KeyId::KeyJ | KeyId::KeyK | KeyId::KeyL | KeyId::KeyM
+        | KeyId::KeyN | KeyId::KeyO | KeyId::KeyP | KeyId::KeyQ | KeyId::KeyR | KeyId::KeyS | KeyId::KeyT
+        | KeyId::KeyU | KeyId::KeyV | KeyId::KeyW | KeyId::KeyX | KeyId::KeyY | KeyId::KeyZ
+        | KeyId::Num0 | KeyId::Num1 | KeyId::Num2 | KeyId::Num3 | KeyId::Num4 | KeyId::Num5
+        | KeyId::Num6 | KeyId::Num7 | KeyId::Num8 | KeyId::Num9
+        | KeyId::Minus | KeyId::Equal | KeyId::LeftBracket | KeyId::RightBracket
+        | KeyId::Quote | KeyId::Comma | KeyId::Dot | KeyId::Slash => {
             if matches!(expansion_data.typing_state, TypingState::NoMatch) {
                 expansion_data.reset();
             }
             expansion_data.set_typing_state(TypingState::Typing);
             if let Some(c) = event_name {
                 debug_println!("{:?}", c);
-                debug_println!("Char to push: '{}', len: {}, bytes: {:?}", c, c.len(), c.as_bytes());
-
+                debug_println!(
+                    "Char to push: '{}', len: {}, bytes: {:?}",
+                    c,
+                    c.len(),
+                    c.as_bytes()
+                );
                 expansion_data.push_to_buffer(&c);
                 debug_println!("{:?}", &expansion_data.key_buffer);
             }
-        },
+        }
+
         _ => {}
     }
 }
 
-fn handle_mouse_press(buffer: Arc<Mutex<ExpansionData>>, button: Button) {
-    // handle mouse clicks
+fn handle_mouse_press(buffer: Arc<Mutex<ExpansionData>>, button: MouseButton) {
     match button {
-        rdev::Button::Left | rdev::Button::Right | rdev::Button::Middle => {
-            { buffer.lock().unwrap().reset(); }
+        MouseButton::Left | MouseButton::Right | MouseButton::Middle => {
+            buffer.lock().unwrap().reset();
             debug_println!("Mouse button pressed, buffer cleared");
-        },
-        _ => {}
+        }
     }
 }
 
-fn load_expansion_table() -> Result<ExpansionFile, Box<dyn std::error::Error> > 
-{
-    
-    let mut path: PathBuf = env::current_dir().expect("Failed to get current directory");
-    
-    path.push("expansions.toml");
-    
-    println!("{:?}", path);
-    if let Err(err) = fs::exists(path) {
-        println!("Unable to open: {err}");
-        std::process::exit(1);
-    };
+fn load_expansion_table() -> Result<ExpansionFile, Box<dyn std::error::Error>> {
+    let path = env::current_exe()?
+        .parent()
+        .ok_or("Failed to get executable directory")?
+        .join("expansions.toml");
 
-    let path = "C:\\Projects\\text_expander\\expansions.toml";
-    let contents = std::fs::read_to_string(path)?;
-    let expansion_file: ExpansionFile = toml::from_str(&contents)?;    
-    
-    //for (key, value) in &expansion_file.case_insensitive {
-    //    println!("{}: {}", key, value);
-    //}
-    
+    println!("Loading expansions from: {:?}", path);
+
+    let contents = std::fs::read_to_string(&path)?;
+    let expansion_file: ExpansionFile = toml::from_str(&contents)?;
+
     Ok(expansion_file)
 }
 
-fn check_for_completion(expansion_data: &mut MutexGuard<ExpansionData>) ->
-    Option<(usize, String)> {
-    // returns option containing a tuple of length of the trigger and the resulting expansion
-    // check the buffer against expansion file
+fn check_for_completion(expansion_data: &ExpansionData) -> Option<(usize, String)> {
     let buffer = &expansion_data.key_buffer;
-    
+
+    // Case-sensitive lookup first
     if let Some(expansion) = expansion_data.expansion_table.case_sensitive.get(buffer) {
         return Some((buffer.len(), expansion.clone()));
     }
-    
-    if let Some(expansion) = expansion_data.expansion_table.case_insensitive.get(buffer) {
+
+    // Case-insensitive lookup — lowercase the buffer to match stored keys
+    let lower_buffer = buffer.to_lowercase();
+    if let Some(expansion) = expansion_data.expansion_table.case_insensitive.get(&lower_buffer) {
         return Some((buffer.len(), expansion.clone()));
     }
-    // no matches found? return None
+
     None
 }
 
-fn expand_trigger_phrase(length: usize, completion: String) 
-    -> Result<(), Box<dyn std::error::Error>> {
-    
+/// Backspaces first, then clipboard set, then paste, then restore.
+/// Receives &Receiver to drain synthetic events before re-enabling listening.
+fn expand_trigger_phrase(
+    length: usize,
+    completion: String,
+    receiver: &Receiver<HookMessage>,
+) -> Result<(), Box<dyn std::error::Error>> {
     disable_keyboard_listening();
+
     let completion = completion.replace("\n", "\r\n");
-  
-    // get old clipboard contents and set new
-    let mut clipboard = Clipboard::new().unwrap();
-    let old_clipboard = clipboard.get_text().unwrap_or_default();
-    clipboard.clear()?;
-    
 
-    clipboard.set_text(completion.to_owned()).unwrap();
-    windows_input::force_clipboard_update();
-    
-    // set_clipboard_text_winapi(&completion);
-    thread::sleep(Duration::from_millis(10));    
-
-    // delete_characters(length);
-    windows_input::send_backspaces_fast(length + 1)?;
+    // Step 1: Send backspaces (separator was swallowed by hook, so just trigger length)
+    windows_input::send_backspaces_fast(length)?;
     debug_println!("deleted {} characters", length);
 
-    thread::sleep(Duration::from_millis(100));
-    
+    // Step 2: Wait for target app to finish processing backspaces
+    thread::sleep(Duration::from_millis(30));
+
+    // Step 3: Save old clipboard, set expansion text
+    let mut clipboard = Clipboard::new()?;
+    let old_clipboard = clipboard.get_text().unwrap_or_default();
+
+    // Clear clipboard via WinAPI to force cache invalidation
+    unsafe {
+        if winapi::um::winuser::OpenClipboard(std::ptr::null_mut()) != 0 {
+            winapi::um::winuser::EmptyClipboard();
+            winapi::um::winuser::CloseClipboard();
+        }
+    }
+
+    clipboard.set_text(completion.to_owned())?;
+    windows_input::force_clipboard_update();
+
+    // Step 4: Let clipboard settle
+    thread::sleep(Duration::from_millis(10));
+
+    // Step 5: Paste
     windows_input::send_ctrl_v()?;
-    // rdev::simulate(&EventType::KeyPress(Key::ControlLeft)).unwrap();
-    // rdev::simulate(&EventType::KeyPress(Key::KeyV)).unwrap();
-    // rdev::simulate(&EventType::KeyRelease(Key::KeyV)).unwrap();
-    // rdev::simulate(&EventType::KeyRelease(Key::ControlLeft)).unwrap();
 
-    // println!("pasted: {}", completion);
-    // sleep(Duration::from_millis(50)); // wait a bit to ensure paste is done
-    // restore old clipboard contents
-    clipboard.set_text(old_clipboard).unwrap();
+    // Step 6: Wait for paste to complete
+    thread::sleep(Duration::from_millis(50));
 
+    // Step 7: Restore old clipboard
+    clipboard.set_text(old_clipboard)?;
+
+    // Step 8: Drain any synthetic events that leaked into the channel
+    drain_pending_events(receiver);
+
+    // Step 9: Re-enable listening
     enable_keyboard_listening();
 
     Ok(())
-
 }
 
-fn delete_characters(count: usize) {
-    debug_println!("Deleting {} characters", count);
-
-    for _ in 0..count + 1 {
-
-        thread::sleep(Duration::from_millis(25));
-
-        // println!("Simulating backspace");
-        if let Err(e) = rdev::simulate(&EventType::KeyPress(Key::Backspace)) {
-            println!("Error simulating backspace: {}", e);
-        }
-        thread::sleep(Duration::from_millis(25)); // slight delay to ensure key press is registered
-        // println!("Backspace pressed");
-        if let Err(e) = rdev::simulate(&EventType::KeyRelease(Key::Backspace)) {
-            println!("Error simulating backspace release: {}", e);
-        }
-        // println!("Backspace released");
-    }
-
-    // thread::sleep(Duration::from_millis(25));
+/// Drain all pending events from the channel (discards synthetic self-events).
+fn drain_pending_events(receiver: &Receiver<HookMessage>) {
+    while receiver.try_recv().is_ok() {}
 }
-    
+
 /// Checks for date expansion triggers like "/days40" or "/wks8".
-/// Returns a formatted date string (e.g., "9/16/25") if a valid trigger is found.
 fn handle_date_expansion(buffer: &str) -> Option<String> {
     debug_println!("doing the date expansion thing!");
-    
+
     let (prefix, num_str) = if buffer.starts_with("/days") {
         ("/days", &buffer[5..])
     } else if buffer.starts_with("/wks") {
         ("/wks", &buffer[4..])
     } else {
-        return None; // Not a date expansion trigger
+        return None;
     };
-    
+
     debug_println!("made it through 1st if: {prefix}, {num_str}");
 
-    // Try to parse the number part of the trigger
     if let Ok(num) = num_str.parse::<i64>() {
         let current_date = Local::now();
-        
-        // Calculate the future date safely
+
         let future_date = if prefix == "/days" {
             current_date.checked_add_signed(chrono::Duration::days(num))
-        } else { // "/wks"
+        } else {
             current_date.checked_add_signed(chrono::Duration::weeks(num))
         };
 
-        // Only proceed if we got a valid future date
         if let Some(date) = future_date {
-            // Use format with standard specifiers that work everywhere
-            // %m = month with zero padding, %d = day with zero padding, %y = 2-digit year
             let formatted_with_padding = date.format("%m/%d/%y").to_string();
-            
-            // Now remove leading zeros manually
             let parts: Vec<&str> = formatted_with_padding.split('/').collect();
-            let formatted = format!("{}/{}/{}",
-                parts[0].parse::<u32>().unwrap(),  // Parsing removes leading zeros
+            let formatted = format!(
+                "{}/{}/{}",
+                parts[0].parse::<u32>().unwrap(),
                 parts[1].parse::<u32>().unwrap(),
-                parts[2]  // Year is already 2 digits
+                parts[2]
             );
-            
+
             debug_println!("formatted date str, returning: {formatted}");
             return Some(formatted);
         }
     }
-    
+
     None
 }
 
-fn disable_keyboard_listening() { GLOBAL_LISTENING.store(false, Ordering::SeqCst); }
-fn enable_keyboard_listening() { GLOBAL_LISTENING.store(true, Ordering::SeqCst); }
-
+fn disable_keyboard_listening() {
+    GLOBAL_LISTENING.store(false, Ordering::SeqCst);
+}
+fn enable_keyboard_listening() {
+    GLOBAL_LISTENING.store(true, Ordering::SeqCst);
+}

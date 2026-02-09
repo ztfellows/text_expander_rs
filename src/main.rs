@@ -168,6 +168,7 @@ fn handle_key_press(
                 KeyId::Space => (0x20u16, 0x39u16),
                 _ => (0x0Du16, 0x1Cu16), // VK_RETURN, scan 0x1C
             };
+            let separator = if key == KeyId::Space { " " } else { "\n" };
 
             match expansion_data.typing_state {
                 TypingState::Typing => {
@@ -176,8 +177,7 @@ fn handle_key_press(
                         debug_println!("Found match: {}", completion);
                         expansion_data.reset();
                         drop(expansion_data);
-                        // No +1: the separator was swallowed by the hook
-                        expand_trigger_phrase(trigger_length, completion, receiver)
+                        expand_trigger_phrase(trigger_length, completion, separator, receiver)
                             .expect("Error in expand_trigger_phrase");
                         return;
                     }
@@ -201,7 +201,7 @@ fn handle_key_press(
                         windows_input::send_delete_key()
                             .expect("Error sending Delete for ff");
 
-                        drain_pending_events(receiver);
+                        replay_buffered_keystrokes(receiver);
                         enable_keyboard_listening();
                         return;
                     }
@@ -209,11 +209,10 @@ fn handle_key_press(
                     // Check for nn (date) trigger
                     if expansion_data.key_buffer == "nn" {
                         let now = Local::now();
-                        let date_string = now.format("%-m/%-d/%y: ").to_string();
+                        let date_string = now.format("%-m/%-d/%y:").to_string();
                         expansion_data.reset();
                         drop(expansion_data);
-                        // No +1: separator swallowed
-                        expand_trigger_phrase(2, date_string, receiver)
+                        expand_trigger_phrase(2, date_string, separator, receiver)
                             .expect("Error in expanding date phrase");
                         return;
                     }
@@ -224,8 +223,7 @@ fn handle_key_press(
                         debug_println!("Date expansion triggered: {}", date_string);
                         expansion_data.reset();
                         drop(expansion_data);
-                        // No +1: separator swallowed
-                        expand_trigger_phrase(trigger_length, date_string, receiver)
+                        expand_trigger_phrase(trigger_length, date_string, separator, receiver)
                             .expect("Error in date expansion");
                         return;
                     }
@@ -287,7 +285,8 @@ fn handle_key_press(
         | KeyId::Num0 | KeyId::Num1 | KeyId::Num2 | KeyId::Num3 | KeyId::Num4 | KeyId::Num5
         | KeyId::Num6 | KeyId::Num7 | KeyId::Num8 | KeyId::Num9
         | KeyId::Minus | KeyId::Equal | KeyId::LeftBracket | KeyId::RightBracket
-        | KeyId::Quote | KeyId::Comma | KeyId::Dot | KeyId::Slash => {
+        | KeyId::Quote | KeyId::Comma | KeyId::Dot | KeyId::Slash
+        | KeyId::SemiColon | KeyId::BackSlash | KeyId::BackQuote => {
             if matches!(expansion_data.typing_state, TypingState::NoMatch) {
                 expansion_data.reset();
             }
@@ -340,9 +339,8 @@ fn check_for_completion(expansion_data: &ExpansionData) -> Option<(usize, String
         return Some((buffer.len(), expansion.clone()));
     }
 
-    // Case-insensitive lookup — lowercase the buffer to match stored keys
-    let lower_buffer = buffer.to_lowercase();
-    if let Some(expansion) = expansion_data.expansion_table.case_insensitive.get(&lower_buffer) {
+    // Case-insensitive section — also matched by exact case (all triggers stored lowercase)
+    if let Some(expansion) = expansion_data.expansion_table.case_insensitive.get(buffer) {
         return Some((buffer.len(), expansion.clone()));
     }
 
@@ -354,10 +352,12 @@ fn check_for_completion(expansion_data: &ExpansionData) -> Option<(usize, String
 fn expand_trigger_phrase(
     length: usize,
     completion: String,
+    separator: &str,
     receiver: &Receiver<HookMessage>,
 ) -> Result<(), Box<dyn std::error::Error>> {
     disable_keyboard_listening();
 
+    let completion = format!("{}{}", completion, separator);
     let completion = completion.replace("\n", "\r\n");
 
     // Step 1: Send backspaces (separator was swallowed by hook, so just trigger length)
@@ -370,17 +370,7 @@ fn expand_trigger_phrase(
     // Step 3: Save old clipboard, set expansion text
     let mut clipboard = Clipboard::new()?;
     let old_clipboard = clipboard.get_text().unwrap_or_default();
-
-    // Clear clipboard via WinAPI to force cache invalidation
-    unsafe {
-        if winapi::um::winuser::OpenClipboard(std::ptr::null_mut()) != 0 {
-            winapi::um::winuser::EmptyClipboard();
-            winapi::um::winuser::CloseClipboard();
-        }
-    }
-
     clipboard.set_text(completion.to_owned())?;
-    windows_input::force_clipboard_update();
 
     // Step 4: Let clipboard settle
     thread::sleep(Duration::from_millis(10));
@@ -388,14 +378,16 @@ fn expand_trigger_phrase(
     // Step 5: Paste
     windows_input::send_ctrl_v()?;
 
-    // Step 6: Wait for paste to complete
-    thread::sleep(Duration::from_millis(50));
+    // Step 6: Wait for paste to complete — target app must process Ctrl+V
+    // from its message queue and read clipboard before we restore it.
+    // 50ms was too short for some apps; 100ms gives comfortable margin.
+    thread::sleep(Duration::from_millis(100));
 
     // Step 7: Restore old clipboard
     clipboard.set_text(old_clipboard)?;
 
-    // Step 8: Drain any synthetic events that leaked into the channel
-    drain_pending_events(receiver);
+    // Step 8: Replay any keystrokes the user typed during expansion
+    replay_buffered_keystrokes(receiver);
 
     // Step 9: Re-enable listening
     enable_keyboard_listening();
@@ -403,9 +395,15 @@ fn expand_trigger_phrase(
     Ok(())
 }
 
-/// Drain all pending events from the channel (discards synthetic self-events).
-fn drain_pending_events(receiver: &Receiver<HookMessage>) {
-    while receiver.try_recv().is_ok() {}
+/// Replay keystrokes that were buffered during expansion.
+/// Re-injects them as synthetic key taps so the hook passes them to the target
+/// app without re-sending them to the channel. Mouse events are discarded.
+fn replay_buffered_keystrokes(receiver: &Receiver<HookMessage>) {
+    while let Ok(msg) = receiver.try_recv() {
+        if let HookMessage::KeyDown { vk_code, scan_code, .. } = msg {
+            let _ = windows_input::send_key_tap(vk_code as u16, scan_code as u16);
+        }
+    }
 }
 
 /// Checks for date expansion triggers like "/days40", "/wks8", or "/mo3".

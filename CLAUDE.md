@@ -26,6 +26,11 @@ cargo run --release      # Run release
 
 **Build order**: Always build debug first, then release. Debug compiles faster, so errors surface sooner.
 
+**Release binary locked**: If the release build fails with "Access is denied" because `text_expander.exe` is running, kill it before building:
+```bash
+powershell.exe -Command "Stop-Process -Name text_expander -Force -ErrorAction SilentlyContinue; Start-Sleep -Seconds 1; cd C:\Projects\text_expander; cargo build --release"
+```
+
 From WSL, you can invoke the Windows toolchain:
 ```bash
 powershell.exe -Command "cd C:\Projects\text_expander; cargo build"            # Debug first

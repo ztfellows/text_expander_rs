@@ -266,10 +266,19 @@ unsafe extern "system" fn keyboard_hook_proc(
 
         let msg_type = w_param as u32;
 
-        // When not listening (expansion in progress), block non-synthetic
-        // keydown events from reaching the target app.
+        // When not listening (expansion in progress), buffer real keydown
+        // events into the channel for later replay, but block them from
+        // reaching the target app.
         if !GLOBAL_LISTENING.load(Ordering::SeqCst) {
             if msg_type == WM_KEYDOWN as u32 || msg_type == WM_SYSKEYDOWN as u32 {
+                if let Some(sender) = HOOK_SENDER.get() {
+                    let key = vk_to_key_id(kb.vkCode);
+                    let _ = sender.send(HookMessage::KeyDown {
+                        key,
+                        vk_code: kb.vkCode,
+                        scan_code: kb.scanCode,
+                    });
+                }
                 return 1;
             }
         }

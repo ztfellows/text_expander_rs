@@ -3,13 +3,11 @@ use winapi::um::winuser::{
     SendInput, INPUT, INPUT_KEYBOARD,
     KEYEVENTF_KEYUP, VK_BACK, VK_CONTROL, VK_SHIFT,
     VK_END, VK_DELETE,
-    OpenClipboard, CloseClipboard,
 };
 use winapi::shared::minwindef::WORD;
 use std::mem;
 use std::thread;
 use std::time::Duration;
-use std::ptr::null_mut;
 
 /// Delay in milliseconds between each backspace key down+up pair.
 /// Increase if target apps (e.g. EHR software) drop keystrokes.
@@ -261,13 +259,4 @@ pub fn send_key_tap(vk: u16, scan: u16) -> Result<(), Box<dyn std::error::Error>
         return Err("Failed to re-inject key tap".into());
     }
     Ok(())
-}
-
-/// Open and close clipboard to force Windows to process pending updates.
-pub fn force_clipboard_update() {
-    unsafe {
-        if OpenClipboard(null_mut()) != 0 {
-            CloseClipboard();
-        }
-    }
 }

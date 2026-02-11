@@ -197,7 +197,7 @@ fn handle_key_press(
                         // Select to end of line and delete
                         windows_input::send_shift_end()
                             .expect("Error sending Shift+End for ff");
-                        thread::sleep(Duration::from_millis(10));
+                        thread::sleep(Duration::from_millis(30));
                         windows_input::send_delete_key()
                             .expect("Error sending Delete for ff");
 

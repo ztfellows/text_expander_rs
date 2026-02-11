@@ -1,7 +1,7 @@
 // src/windows_input.rs
 use winapi::um::winuser::{
     SendInput, INPUT, INPUT_KEYBOARD,
-    KEYEVENTF_KEYUP, VK_BACK, VK_CONTROL, VK_SHIFT,
+    KEYEVENTF_KEYUP, KEYEVENTF_EXTENDEDKEY, VK_BACK, VK_CONTROL, VK_SHIFT,
     VK_END, VK_DELETE,
 };
 use winapi::shared::minwindef::WORD;
@@ -143,14 +143,14 @@ pub fn send_shift_end() -> Result<(), Box<dyn std::error::Error>> {
     }
     inputs.push(shift_down);
 
-    // End down
+    // End down (extended key — nav cluster, not numpad)
     let mut end_down: INPUT = unsafe { mem::zeroed() };
     unsafe {
         end_down.type_ = INPUT_KEYBOARD;
         let ki = end_down.u.ki_mut();
         ki.wVk = VK_END as WORD;
         ki.wScan = 0x4F; // scan code for End
-        ki.dwFlags = 0;
+        ki.dwFlags = KEYEVENTF_EXTENDEDKEY;
         ki.dwExtraInfo = SYNTHETIC_INPUT_TAG;
     }
     inputs.push(end_down);
@@ -162,7 +162,7 @@ pub fn send_shift_end() -> Result<(), Box<dyn std::error::Error>> {
         let ki = end_up.u.ki_mut();
         ki.wVk = VK_END as WORD;
         ki.wScan = 0x4F;
-        ki.dwFlags = KEYEVENTF_KEYUP;
+        ki.dwFlags = KEYEVENTF_KEYUP | KEYEVENTF_EXTENDEDKEY;
         ki.dwExtraInfo = SYNTHETIC_INPUT_TAG;
     }
     inputs.push(end_up);
@@ -194,7 +194,7 @@ pub fn send_shift_end() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-/// Send a single Delete key press+release.
+/// Send a single Delete key press+release (extended key — nav cluster).
 pub fn send_delete_key() -> Result<(), Box<dyn std::error::Error>> {
     // Key down
     let mut key_down: INPUT = unsafe { mem::zeroed() };
@@ -203,7 +203,7 @@ pub fn send_delete_key() -> Result<(), Box<dyn std::error::Error>> {
         let ki = key_down.u.ki_mut();
         ki.wVk = VK_DELETE as WORD;
         ki.wScan = 0x53; // scan code for Delete
-        ki.dwFlags = 0;
+        ki.dwFlags = KEYEVENTF_EXTENDEDKEY;
         ki.dwExtraInfo = SYNTHETIC_INPUT_TAG;
     }
 
@@ -219,7 +219,7 @@ pub fn send_delete_key() -> Result<(), Box<dyn std::error::Error>> {
         let ki = key_up.u.ki_mut();
         ki.wVk = VK_DELETE as WORD;
         ki.wScan = 0x53;
-        ki.dwFlags = KEYEVENTF_KEYUP;
+        ki.dwFlags = KEYEVENTF_KEYUP | KEYEVENTF_EXTENDEDKEY;
         ki.dwExtraInfo = SYNTHETIC_INPUT_TAG;
     }
 

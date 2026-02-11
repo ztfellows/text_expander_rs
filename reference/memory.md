@@ -161,3 +161,10 @@ Expansion was called via `thread::spawn`, causing unpredictable timing. Fixed by
 - Tested reliable in both VSCode and Notepad++
 - Updated `expansions.toml` with full production triggers (replaced dev subset)
 - Tuned `BACKSPACE_DELAY_MS` to 5ms — WM_CHAR fix eliminated the timing sensitivity; 5ms reliable, 1ms occasionally drops
+
+### Session 4 — 2026-02-11
+- **Fixed intermittent `ff` trigger failure**: text after caret wasn't being deleted — cursor moved to end of line but nothing was selected/deleted
+- **Added `KEYEVENTF_EXTENDEDKEY` flag** to End and Delete key events in `send_shift_end()` and `send_delete_key()`. These are navigation-cluster extended keys; without the flag, scan codes (0x4F End, 0x53 Delete) could be interpreted as numpad keys by some apps, breaking Shift+selection behavior
+- **Increased Shift+End → Delete delay** from 10ms to 30ms — target apps (especially EHR software) need time to process the selection before Delete arrives
+- `ff` sequence is now: backspaces(2) → 30ms → Shift+End (EXTENDEDKEY) → 30ms → Delete (EXTENDEDKEY)
+- Both debug and release builds compile clean

@@ -177,7 +177,7 @@ fn handle_key_press(
                         debug_println!("Found match: {}", completion);
                         expansion_data.reset();
                         drop(expansion_data);
-                        expand_trigger_phrase(trigger_length, completion, separator, receiver)
+                        expand_trigger_phrase(trigger_length, completion, separator, receiver, &expansion_data_arc)
                             .expect("Error in expand_trigger_phrase");
                         return;
                     }
@@ -201,7 +201,7 @@ fn handle_key_press(
                         windows_input::send_delete_key()
                             .expect("Error sending Delete for ff");
 
-                        replay_buffered_keystrokes(receiver);
+                        replay_buffered_keystrokes(receiver, &expansion_data_arc);
                         enable_keyboard_listening();
                         return;
                     }
@@ -212,7 +212,7 @@ fn handle_key_press(
                         let date_string = now.format("%-m/%-d/%y:").to_string();
                         expansion_data.reset();
                         drop(expansion_data);
-                        expand_trigger_phrase(2, date_string, separator, receiver)
+                        expand_trigger_phrase(2, date_string, separator, receiver, &expansion_data_arc)
                             .expect("Error in expanding date phrase");
                         return;
                     }
@@ -223,7 +223,7 @@ fn handle_key_press(
                         debug_println!("Date expansion triggered: {}", date_string);
                         expansion_data.reset();
                         drop(expansion_data);
-                        expand_trigger_phrase(trigger_length, date_string, separator, receiver)
+                        expand_trigger_phrase(trigger_length, date_string, separator, receiver, &expansion_data_arc)
                             .expect("Error in date expansion");
                         return;
                     }
@@ -354,6 +354,7 @@ fn expand_trigger_phrase(
     completion: String,
     separator: &str,
     receiver: &Receiver<HookMessage>,
+    expansion_data_arc: &Arc<Mutex<ExpansionData>>,
 ) -> Result<(), Box<dyn std::error::Error>> {
     disable_keyboard_listening();
 
@@ -367,27 +368,37 @@ fn expand_trigger_phrase(
     // Step 2: Wait for target app to finish processing backspaces
     thread::sleep(Duration::from_millis(30));
 
-    // Step 3: Save old clipboard, set expansion text
+    // Step 3: Save old clipboard, set expansion text, verify it took
     let mut clipboard = Clipboard::new()?;
     let old_clipboard = clipboard.get_text().unwrap_or_default();
     clipboard.set_text(completion.to_owned())?;
 
-    // Step 4: Let clipboard settle
-    thread::sleep(Duration::from_millis(10));
+    // Step 4: Verify clipboard actually updated before pasting.
+    // OleSetClipboard can return before the data is globally visible.
+    // Poll up to 25 times (2ms each = 50ms max), then proceed anyway.
+    for _ in 0..25 {
+        if let Ok(current) = clipboard.get_text() {
+            if current == completion {
+                break;
+            }
+        }
+        thread::sleep(Duration::from_millis(2));
+    }
 
     // Step 5: Paste
     windows_input::send_ctrl_v()?;
 
     // Step 6: Wait for paste to complete — target app must process Ctrl+V
     // from its message queue and read clipboard before we restore it.
-    // 50ms was too short for some apps; 100ms gives comfortable margin.
-    thread::sleep(Duration::from_millis(100));
+    // Chrome extension text boxes route paste through multi-process IPC
+    // (browser → renderer → extension) which can occasionally exceed 100ms.
+    thread::sleep(Duration::from_millis(150));
 
     // Step 7: Restore old clipboard
     clipboard.set_text(old_clipboard)?;
 
     // Step 8: Replay any keystrokes the user typed during expansion
-    replay_buffered_keystrokes(receiver);
+    replay_buffered_keystrokes(receiver, expansion_data_arc);
 
     // Step 9: Re-enable listening
     enable_keyboard_listening();
@@ -397,11 +408,32 @@ fn expand_trigger_phrase(
 
 /// Replay keystrokes that were buffered during expansion.
 /// Re-injects them as synthetic key taps so the hook passes them to the target
-/// app without re-sending them to the channel. Mouse events are discarded.
-fn replay_buffered_keystrokes(receiver: &Receiver<HookMessage>) {
-    while let Ok(msg) = receiver.try_recv() {
-        if let HookMessage::KeyDown { vk_code, scan_code, .. } = msg {
-            let _ = windows_input::send_key_tap(vk_code as u16, scan_code as u16);
+/// app, and also feeds printable characters through the state machine so the
+/// buffer tracks what was typed. Separators (Space/Enter) are only re-injected
+/// to avoid recursive expansion during replay.
+fn replay_buffered_keystrokes(
+    receiver: &Receiver<HookMessage>,
+    expansion_data_arc: &Arc<Mutex<ExpansionData>>,
+) {
+    let buffered: Vec<HookMessage> =
+        std::iter::from_fn(|| receiver.try_recv().ok()).collect();
+
+    for msg in buffered {
+        match msg {
+            HookMessage::KeyDown { key, vk_code, scan_code } => {
+                // Re-inject to target app
+                let _ = windows_input::send_key_tap(vk_code as u16, scan_code as u16);
+
+                // Feed printable keys through the state machine so the buffer
+                // tracks them. Skip separators to avoid recursive expansion.
+                if !matches!(key, KeyId::Space | KeyId::Return) {
+                    let event_name = keyboard_hook::resolve_character(vk_code, scan_code);
+                    handle_key_press(expansion_data_arc.clone(), key, event_name, receiver);
+                }
+            }
+            HookMessage::MouseDown(button) => {
+                handle_mouse_press(expansion_data_arc.clone(), button);
+            }
         }
     }
 }
